@@ -1,0 +1,67 @@
+/*TODO: Footer Style */
+
+.footer #button {
+	width: 50px;
+	height: 50px;
+	border: var(--primary) 10px solid;
+	border-radius: 50px;
+	margin: 0 auto;
+	position: relative;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;
+	z-index: 9999;
+}
+
+.footer {
+	bottom: 0;
+	left: 0;
+	position: fixed;
+	width: 100%;
+	height: 1.2em;
+	overflow: hidden;
+	margin: 0 auto;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;
+	z-index: 999;
+}
+
+.footer:hover {
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;
+	height: 6em;
+}
+
+.footer #container {
+	margin-top: 3px;
+	width: 100%;
+	height: 100%;
+	position: relative;
+	top: 0;
+	left: 0;
+	background: var(--primary);
+	display: flex;
+	justify-content: center;
+}
+
+.footer h3 {
+	top: -45px;
+	width: 100%;
+	position: relative;
+	text-align: center;
+	color: var(--white);
+	font-size: 0.9rem;
+	font-weight: 100;
+	margin-top: 58px;
+	white-space: nowrap;
+}
+
+/*! *****************************/

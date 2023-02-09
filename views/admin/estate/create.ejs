@@ -1,0 +1,174 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/persian-datepicker.min.css" />
+<link rel="stylesheet" href="/css/select2.css" />
+<link rel="stylesheet" href="/css/profilepicker.css" />
+<link rel="stylesheet" href="/css/radio.css" />
+<link href="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.css" rel="stylesheet" type="text/css">
+<script src="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.js" type="text/javascript"></script>
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>ایجاد املاکی جدید</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">لیست مشاوران</a></li>
+					<li class="breadcrumb-item active">ایجاد املاکی جدید</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<form class="form-horizontal content" action="/admin/estate/create?_csrf=<%= req.csrfToken() %>" method="post">
+			<%- include(viewPath('layouts/errors')) -%>
+
+			<!--? Select Avatar -->
+			<label>انتخاب آواتار کاربر مدیر</label>
+			<div class="content-group">
+				<div class="row">
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-01.png"
+								checked />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-01.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" class="radio-select" name="avatar" value="/images/avatar-02.png" />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-02.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-03.png" />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-03.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" class="radio-select" name="avatar" value="/images/avatar-04.png" />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-04.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-06.png" />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-06.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" class="radio-select" name="avatar" value="/images/avatar-05.png" />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-05.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-07.png" />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-07.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" class="radio-select" name="avatar" value="/images/avatar-08.png" />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-08.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-09.png" />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-09.png" class="img-avatar" />
+						</label>
+					</div>
+					<div class="col-xs-4">
+						<label class="radio">
+							<input type="radio" name="avatar" class="radio-select" value="/images/avatar-10.png" />
+							<span class="radio-checkmark"></span>
+							<img src="/images/avatar-10.png" class="img-avatar" />
+						</label>
+					</div>
+				</div>
+			</div>
+			<!--! Select Avatar -->
+
+			<input name="mobile" type="text" class="form-control formObject" value="<%= complete('mobile') %>"
+				placeholder="* موبایل" dir="ltr" maxlength="11" />
+
+			<input name="name" type="text" class="form-control formObject" placeholder="نام و نام خانوادگی *"
+				value="<%= complete('name') %>" />
+
+			<input name="title" type="text" class="form-control formObject" placeholder="نام دفتر املاک *"
+				value="<%= complete('title') %>" />
+
+			<input name="address" type="text" class="form-control formObject" placeholder="آدرس *"
+				value="<%= complete('address') %>" />
+
+			<label>استان</label>
+			<select class="form-control select" id="state" name="state">
+				<% states.forEach(state => { %>
+				<option value="<%= state._id %>"><%= state.title %></option>
+				<% }) %>
+			</select>
+
+			<label>شهر</label>
+			<select class="form-control select" id="city" name="city"></select>
+
+			<button type="submit" class="btn btn-danger formObject" style="margin-top: 15px;">
+				ثبت
+			</button>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/plugins/jquery/dist/jquery.min.js"></script>
+<script src="/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/js/persian-date.min.js"></script>
+<script src="/js/persian-datepicker.min.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+<script src="/js/profilepicker.js"></script>
+<script src="/js/datepicker.js"></script>
+<script src="/js/fetch.js"></script>
+
+<script>
+	const URL = '/admin/estate/create/city?_csrf=<%= req.csrfToken() %>';
+
+	$(document).ready(function () {
+		let id = $('#state option:selected').val();
+		postData(URL, { id }).then((data) => {
+			data.map((city) => {
+				$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+			});
+		});
+	});
+
+	$('#state').change(() => {
+		let id = $('#state option:selected').val();
+		$('#city option').remove();
+		postData(URL, { id }).then((data) => {
+			data.map((city) => {
+				$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+			});
+		});
+	});
+</script>

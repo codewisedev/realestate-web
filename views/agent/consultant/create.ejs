@@ -1,0 +1,253 @@
+<% contentFor('style') %>
+<style>
+	.center {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+
+	.center label,
+	.center p {
+		text-align: center;
+	}
+
+	.error {
+		color: var(--red);
+	}
+
+	.otp {
+		direction: ltr;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: row;
+	}
+
+	.otp input {
+		width: 30px;
+		height: 50px;
+		border-radius: 5px;
+		background-color: var(--light-gray);
+		border: none;
+		line-height: 50px;
+		text-align: center;
+		font-size: 24px;
+		font-family: 'Raleway', sans-serif;
+		font-weight: 200;
+		color: var(--font-color);
+		margin: 0 2px;
+	}
+
+	.otp .splitter {
+		padding: 0 5px;
+		color: var(--font-color);
+		font-size: 24px;
+	}
+
+	.prompt {
+		margin-bottom: 20px;
+		font-size: 20px;
+		color: var(--font-color);
+	}
+
+	#timer {
+		margin-top: 15px;
+		text-align: center;
+		color: var(--font-color);
+	}
+
+	#changeMobile {
+		margin-top: 15px;
+		text-align: center;
+		text-decoration: none;
+	}
+</style>
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>ثبت مشاور جدید</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">مشاوران</a></li>
+					<li class="breadcrumb-item active">ثبت مشاور جدید</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<form action="/agent/consultant/register?_csrf=<%= req.csrfToken() %>" class="center" method="GET" id="verify">
+
+			<div class="center col-md-6" id="mobileBox">
+				<label>شماره موبایل مشاور</label>
+				<div class="col-md-6">
+					<div class="input-group">
+						<input type="text" id="mobile" name="mobile" class="form-control"
+							data-inputmask='"mask": "0999 99 99 999"' data-mask dir="ltr" />
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-phone"></i></span>
+						</div>
+					</div>
+				</div>
+				<p class="error" id="registered" style="margin-top: 15px;">شما قبلا ثبت نام کرده اید</p>
+				<p class="error" id="fail" style="margin-top: 15px;">شماره موبایل را صحیح وارد کنید</p>
+				<input type="button" id="submitMobile" style="margin: 15px 0px;" class="btn btn-info" value="ارسال" />
+			</div>
+
+			<div class="center col-md-6" id="verifyBox">
+				<label class="form-control">کد فعالسازی</label>
+				<div class="otp">
+					<input type="text" id="digit-1" name="code1" data-next="digit-2" autofocus />
+					<span class="splitter">&ndash;</span>
+					<input type="text" id="digit-2" name="code2" data-next="digit-3" data-previous="digit-1" />
+					<span class="splitter">&ndash;</span>
+					<input type="text" id="digit-3" name="code3" data-next="digit-4" data-previous="digit-2" />
+					<span class="splitter">&ndash;</span>
+					<input type="text" id="digit-4" name="code4" data-next="digit-5" data-previous="digit-3" />
+				</div>
+				<p class="error" id="error" style="margin-top: 15px;">کد صحیح نمی باشد</p>
+				<input type="button" style="margin-top: 15px;" id="resend" class="btn btn-warning"
+					value="ارسال مجدد کد" />
+				<input type="button" style="margin-top: 15px;" id="submitVerify" class="btn btn-success"
+					value="تایید" />
+			</div>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<script src="/js/fetch.js"></script>
+
+<script>
+	$('[data-mask]').inputmask();
+
+	$('#verifyBox').hide();
+	$('#registered').hide();
+	$('#fail').hide();
+	$('#submitMobile').click(() => {
+		let mobile = $('#mobile').val();
+
+		if (mobile.length < 14 || !mobile.startsWith('09')) {
+			$('#fail').show().fadeOut(3000);
+		}
+		else {
+			var myHeaders = new Headers();
+			myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+			var urlencoded = new URLSearchParams();
+			urlencoded.append('mobile', mobile);
+
+			var requestOptions = {
+				method: 'POST',
+				headers: myHeaders,
+				body: urlencoded,
+				redirect: 'follow',
+			};
+
+			fetch('/agent/consultant/sendcode?_csrf=<%= req.csrfToken() %>', requestOptions)
+				.then((response) => response.text())
+				.then((result) => {
+					if (result != 'false') {
+						$('#mobileBox').hide();
+						$('#verifyBox').show();
+					} else {
+						$('#registered').show().fadeOut(3000);
+					}
+				})
+				.catch((error) => console.log('error', error));
+		}
+	});
+
+	$('#resend').click(() => {
+		clear();
+		$('#verifyBox').hide();
+		$('#mobileBox').show();
+	});
+
+	$('#error').hide();
+	$('#submitVerify').click(() => {
+		let mobile = $('#mobile').val();
+		let code =
+			$('#digit-1').val() +
+			$('#digit-2').val() +
+			$('#digit-3').val() +
+			$('#digit-4').val();
+
+		var myHeaders = new Headers();
+		myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+		var urlencoded = new URLSearchParams();
+		urlencoded.append('mobile', mobile);
+		urlencoded.append('code', code);
+
+		var requestOptions = {
+			method: 'POST',
+			headers: myHeaders,
+			body: urlencoded,
+			redirect: 'follow',
+		};
+
+		fetch('/agent/consultant/verify?_csrf=<%= req.csrfToken() %>', requestOptions)
+			.then((response) => response.text())
+			.then((result) => {
+				if (result != 'false') {
+					$('#verify').submit();
+				} else {
+					clear();
+					$('#error').show().fadeOut(3000);
+				}
+			})
+			.catch((error) => console.log('error', error));
+	});
+
+	function clear() {
+		$('#digit-1').val('');
+		$('#digit-2').val('');
+		$('#digit-3').val('');
+		$('#digit-4').val('');
+	}
+
+	$('.otp')
+		.find('input')
+		.each(function () {
+			$(this).attr('maxlength', 1);
+			$(this).on('keyup', function (e) {
+				var parent = $($(this).parent());
+
+				if (e.keyCode === 8 || e.keyCode === 37) {
+					var prev = parent.find('input#' + $(this).data('previous'));
+
+					if (prev.length) {
+						$(prev).select();
+					}
+				} else if (
+					(e.keyCode >= 48 && e.keyCode <= 57) ||
+					(e.keyCode >= 65 && e.keyCode <= 90) ||
+					(e.keyCode >= 96 && e.keyCode <= 105) ||
+					e.keyCode === 39
+				) {
+					var next = parent.find('input#' + $(this).data('next'));
+
+					if (next.length) {
+						$(next).select();
+					} else {
+						if (parent.data('autosubmit')) {
+							parent.submit();
+						}
+					}
+				}
+			});
+		});
+</script>

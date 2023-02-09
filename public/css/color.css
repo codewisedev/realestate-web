@@ -1,0 +1,33 @@
+/*TODO: Set Colors */
+
+:root {
+	/*? Main Colors */
+	--main: #016257 !important;
+	--primary: #004f49 !important;
+	--accent: #4eb859 !important;
+
+	/*? Object Colors */
+	--wrapper-color: #fafafa;
+	--hr-color: rgb(210, 210, 210);
+	--font-color: #333333;
+
+	/*? Gradients */
+	--nav-gradient: linear-gradient(45deg, var(--main), var(--primary));
+
+	/*? Base Colors */
+	--white: #ffffff !important;
+	--black: rgb(30, 30, 30) !important;
+	--dark-gray: #2f3640 !important;
+	--middle-gray: #838383 !important;
+	--light-gray: #ecf0f1 !important;
+	--red: #e74c3c !important;
+	--light-red: #ffdbdb !important;
+	--green: #27ae60 !important;
+	--light-green: #8ff0b7 !important;
+	--blue: #3498db !important;
+	--dark-blue: #192a56 !important;
+	--middle-blue: #7ed6df !important;
+	--yellow: #f1c40f !important;
+	--orange: #e67e22 !important;
+	--purple: #8e44ad !important;
+}

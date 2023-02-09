@@ -1,0 +1,97 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap4.css" />
+<link rel="stylesheet" href="/css/table.css" />
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>لیست بلاگ ها</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">بلاگ</a></li>
+					<li class="breadcrumb-item active">لیست بلاگ ها</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<div class="search-wrapper">
+			<div class="input-holder">
+				<input id="search" type="text" class="search-input" placeholder="جستجو در جدول..." />
+				<button class="search-icon" onclick="searchToggle(this, event);">
+					<span></span>
+				</button>
+			</div>
+			<span class="close" onclick="searchToggle(this, event);"></span>
+			<div class="result-container"></div>
+		</div>
+
+		<!--? Table -->
+		<table id="table" class="table table-bordered table-striped display responsive nowrap dt-center">
+			<thead>
+				<tr>
+					<th>نوع دستگاه</th>
+					<th>نام دستگاه</th>
+					<th>IP</th>
+					<th>Mac Address</th>
+					<th>تاریخ آخرین ورود</th>
+					<th>وضعیت</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% logs.forEach(log => { %>
+				<tr>
+					<td><%= log.title %></td>
+					<td><%= log.host %></td>
+					<td><%= log.ip %></td>
+					<td><%= log.mac %></td>
+					<td><%= date(log.time).format('jYYYY/jMM/jDD - HH:mm:ss') %></td>
+					<td>
+						<% if(log.ip != user.currentIp) { %>
+						<% if(log.status == true) { %>
+						<form action="/agent/log/condition/false/<%= log._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-success input-group">
+									مجاز
+								</button>
+							</div>
+						</form>
+						<% } else { %>
+						<form action="/agent/log/condition/true/<%= log._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-danger">غیر مجاز</button>
+							</div>
+						</form>
+						<% } %>
+						<% } else { %>
+						<div class="btn-group btn-group-sm">
+							<button type="submit" class="btn btn-secondary">آدرس فعلی</button>
+						</div>
+						<% } %>
+					</td>
+				</tr>
+				<% }) %>
+			</tbody>
+		</table>
+		<!--! Table -->
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap4.js"></script>
+<script src="/js/datatables.js"></script>
+
+<script>
+	datatable('#table', [4, 'desc'], [{ orderable: false, targets: [5] }]);
+</script>

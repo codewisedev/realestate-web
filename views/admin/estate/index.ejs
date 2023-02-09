@@ -1,0 +1,122 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap4.css" />
+<link rel="stylesheet" href="/css/table.css" />
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>لیست مشاوران</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">مشاورین املاک</a></li>
+					<li class="breadcrumb-item active">لیست مشاوران</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Header -->
+	<div class="card-header">
+		<h3 class="card-title">
+			لیست مشاوران
+			<a href="/admin/estate/create" class="btn btn-sm btn-success card-btn">
+				<span>
+					<i class="fa fa-plus"></i>
+				</span>
+				نماینده جدید
+			</a>
+		</h3>
+	</div>
+	<!--! Card Header -->
+
+	<!--? Card Body -->
+	<div class="card-body">
+		<div class="search-wrapper">
+			<div class="input-holder">
+				<input id="search" type="text" class="search-input" placeholder="جستجو در جدول..." />
+				<button class="search-icon" onclick="searchToggle(this, event);">
+					<span></span>
+				</button>
+			</div>
+			<span class="close" onclick="searchToggle(this, event);"></span>
+			<div class="result-container"></div>
+		</div>
+
+		<!--? Table -->
+		<table id="table" class="table table-bordered table-striped display responsive nowrap dt-center">
+			<thead>
+				<tr>
+					<th>عنوان املاکی</th>
+					<th>کد املاکی</th>
+					<th>تاریخ عضویت</th>
+					<th>وضعیت</th>
+					<th>جواز</th>
+					<th>جزئیات</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% agents.forEach(agent => { %>
+				<tr>
+					<td><%= agent.title %></td>
+					<td><%= agent.ref %></td>
+					<td><%= date(agent.createdAt).format('jYYYY/jMM/jDD') %></td>
+					<td>
+						<% if(agent.condition == true) { %>
+						<form action="/admin/estate/condition/false/<%= agent._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-success">فعال</button>
+							</div>
+						</form>
+						<% } else { %>
+						<form action="/admin/estate/condition/true/<%= agent._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-danger">غیر فعال</button>
+							</div>
+						</form>
+						<% } %>
+					</td>
+					<td>
+						<% if(agent.agentValid.status == true) { %>
+						<form action="/admin/estate/valid/false/<%= agent._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-success">مجاز</button>
+							</div>
+						</form>
+						<% } else { %>
+						<form action="/admin/estate/valid/true/<%= agent._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-danger">غیر مجاز</button>
+							</div>
+						</form>
+						<% } %>
+					</td>
+					<td>
+						<a class="btn btn-primary" target="_blank"
+							href="/admin/estate/details/<%= agent._id %>">جزئیات</a>
+					</td>
+				</tr>
+				<% }) %>
+			</tbody>
+		</table>
+		<!--! Table -->
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap4.js"></script>
+<script src="/js/datatables.js"></script>
+
+<script>
+	datatable('#table', [2, 'desc'], [{ orderable: false, targets: [3, 4, 5] }]);
+</script>

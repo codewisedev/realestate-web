@@ -1,0 +1,59 @@
+<!--? Inner Heading Start -->
+<div class="innerHeading agenciesHeading">
+    <div class="container">
+        <h1>املاکی ها</h1>
+    </div>
+</div>
+<!--! Inner Heading End -->
+
+<!--? Inner Content Start -->
+<div class="innercontent">
+    <div class="container">
+        <div class="listing_wrap">
+            <ul class="row agentWrp">
+                <!--? List Start -->
+                <% agencies.forEach(agent => { %>
+                <li class="col-lg-4 col-md-6">
+                    <div class="property_box wow fadeInUp">
+                        <div class="propertyImg">
+                            <img alt="" src="/images/agent-profile.jpg">
+                        </div>
+                        <h3><a href="#"><%= agent.title %></a> <span>تهران</span></h3>
+                        <div class="propert_info">
+                            <ul class="row">
+                                <li class="col-4">
+                                    <div class="agent_box">
+                                        <a href="#">
+                                            <div class="proprty_icon"><i class="fas fa-phone-alt"></i></div>
+                                            <h5>تلفن</h5>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="col-4">
+                                    <div class="agent_box">
+                                        <a href="#">
+                                            <div class="proprty_icon"><i class="far fa-envelope"></i></div>
+                                            <h5>ایمیل</h5>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="col-4">
+                                    <div class="agent_box">
+                                        <a href="#">
+                                            <div class="proprty_icon"><i class="fas fa-map-marker-alt"></i></div>
+                                            <h5>آدرس</h5>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <% }) %>
+                <!--! List End -->
+            </ul>
+            <%- include(viewPath('layouts/pagination'), { pagination : agencies }) %>
+        </div>
+    </div>
+</div>
+<!--! Inner Content End -->

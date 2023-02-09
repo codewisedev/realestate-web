@@ -1,0 +1,336 @@
+<% contentFor('style') %>
+<style>
+	.img-size-50 {
+		width: 50px;
+		height: 50px;
+		object-fit: cover;
+	}
+
+	.modal-dialog {
+		max-width: 750px !important;
+		max-height: 500px !important;
+		display: inline-block;
+		text-align: left;
+		vertical-align: middle;
+	}
+
+	.modal {
+		text-align: center;
+	}
+
+	.pdf-img {
+		width: 150px;
+		height: 150px;
+		cursor: pointer;
+	}
+
+	@media screen and (min-width: 768px) {
+		.modal:before {
+			display: inline-block;
+			vertical-align: middle;
+			content: " ";
+			height: 100%;
+		}
+	}
+
+	.modal-body {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.modal-image {
+		max-width: 700px !important;
+		max-height: 450px !important;
+		object-fit: cover;
+	}
+
+	.mt100 {
+		margin-top: 100px;
+	}
+
+	.image-holder {
+		height: 200px;
+	}
+
+	.panel .panel-body {
+		position: relative;
+		padding: 0 !important;
+		overflow: hidden;
+		height: auto;
+	}
+
+	.panel .panel-body a img {
+		display: block;
+		margin: 0;
+		width: 100%;
+		height: 150px;
+		transition: all 0.5s;
+		-moz-transition: all 0.5s;
+		-webkit-transition: all 0.5s;
+		-o-transition: all 0.5s;
+		object-fit: cover;
+	}
+
+	.panel .panel-body a.zoom:hover img {
+		transform: scale(1.3);
+		-ms-transform: scale(1.3);
+		-webkit-transform: scale(1.3);
+		-o-transform: scale(1.3);
+		-moz-transform: scale(1.3);
+	}
+
+	.panel .panel-body a.zoom span.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		visibility: hidden;
+		height: 100%;
+		width: 100%;
+		background-color: #000;
+		opacity: 0;
+		transition: opacity .25s ease-out;
+		-moz-transition: opacity .25s ease-out;
+		-webkit-transition: opacity .25s ease-out;
+		-o-transition: opacity .25s ease-out;
+	}
+
+	.panel .panel-body a.zoom:hover span.overlay {
+		display: block;
+		visibility: visible;
+		opacity: 0.55;
+		-moz-opacity: 0.55;
+		-webkit-opacity: 0.55;
+		filter: alpha(opacity=65);
+		-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=65)";
+	}
+
+	.panel .panel-body a.zoom:hover span.overlay i {
+		position: absolute;
+		top: 45%;
+		left: 0%;
+		width: 100%;
+		font-size: 2.25em;
+		color: #fff !important;
+		text-align: center;
+		opacity: 1;
+		-moz-opacity: 1;
+		-webkit-opacity: 1;
+		filter: alpha(opacity=1);
+		-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=1)";
+	}
+
+	#lightbox .modal-content {
+		display: inline-block;
+		text-align: center;
+	}
+
+	.chat-header {
+		flex-direction: column !important;
+	}
+</style>
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1><%= message.title %></h1>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<div class="chat-header">
+			<div class="mt-1 media">
+				<img src="<%= message.user.avatar %>" alt="User Avatar" class="img-size-50 ml-3 img-circle" />
+				<div class="media-body">
+					<h3 class="dropdown-item-title">
+						<%= message.user.name %>
+					</h3>
+					<p class="mt-1 mb-1 text-sm text-muted">
+						<i class="fa fa-clock"></i>
+						<%= date(message.createdAt).format('jYYYY/jMM/jDD - HH:mm:ss') %>
+					</p>
+				</div>
+			</div>
+			<div>
+				<section class="row mt-4">
+					<% if(message.images) message.images.forEach(image => { %>
+					<div class="col-lg-3 col-sm-4 col-xs-6 image-holder">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<a href="#" class="zoom" data-toggle="modal" data-target="#lightbox">
+									<img src="<%= image %>">
+									<span class="overlay"><i class="glyphicon glyphicon-fullscreen"></i></span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<% }) %>
+					<% if(message.file) { %>
+					<div class="col-lg-3 col-sm-4 col-xs-6">
+						<a href="<%= message.file %>"><img class="pdf-img" src="/images/pdf.png" /></a>
+					</div>
+					<% } %>
+				</section>
+
+				<!--? Modal -->
+				<div id="lightbox" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body">
+								<img class="modal-image" src="" alt="" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--! Modal -->
+			</div>
+		</div>
+
+		<div class="dropdown-divider"></div>
+
+		<div id="chat-body" class="chat-body">
+			<ul id="chat">
+				<li class="you col-md-12">
+					<div class="info">
+						<span class="status green"></span>
+						<h2><%= message.user.name %></h2>
+						<h3>
+							<%= date(message.createdAt).format('jYYYY/jMM/jDD - HH:mm:ss') %>
+						</h3>
+					</div>
+					<div class="triangle"></div>
+					<div class="message">
+						<p><%= htmlToText(message.content) %></p>
+					</div>
+				</li>
+
+				<% if(message.response.length > 0) message.response.forEach(res => { %>
+				<li class="<%= req.user._id.equals(res.user._id) ? 'me' : 'you' %> col-md-12" id="<%= res._id %>">
+					<div class="info">
+						<span class="status green"></span>
+						<h2><%= res.user.name %></h2>
+						<h3>
+							<%= date(res.createdAt).format('jYYYY/jMM/jDD - HH:mm:ss') %>
+						</h3>
+					</div>
+					<div class="triangle"></div>
+					<div class="message">
+						<p><%= htmlToText(res.content) %></p>
+						<a code="<%= res._id %>" class="close fa fa-trash"></a>
+					</div>
+				</li>
+				<% }) %>
+			</ul>
+		</div>
+
+		<div class="dropdown-divider"></div>
+
+		<form class="form-horizontal content" action="#">
+			<div class="row chat-footer">
+				<textarea id="editor" name="response" class="chat-textbox" autofocus></textarea>
+				<button style="height: 100px;" id="submit" class="btn btn-danger" disabled>
+					<i class="fa fa-paper-plane" aria-hidden="true"></i>
+				</button>
+			</div>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/js/fetch.js"></script>
+
+<script>
+	let chat = document.getElementById('chat-body');
+	chat.scrollTop = chat.scrollHeight;
+
+	$('#editor').keydown((e) => {
+		if ($.trim($('#editor').val()).length < 1)
+			$('#submit').prop('disabled', true);
+		else $('#submit').prop('disabled', false);
+	});
+
+	function remove() {
+		$('.close').click(function () {
+			Swal.fire({
+				text: 'آیا پیام حذف شود؟',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				cancelButtonText: 'خیر',
+				confirmButtonText: 'بله',
+			}).then((result) => {
+				if (result.value) {
+					let id = $(this).attr('code').trim();
+					const URL =
+						'/admin/message/<%= message._id %>?_method=DELETE&_csrf=<%= req.csrfToken() %>';
+					postData(URL, { id }).then((data) => { });
+					$(`#${id}`).remove();
+				}
+			});
+		});
+	}
+
+	remove();
+
+	const URL = '/admin/message/<%= message._id %>?_csrf=<%= req.csrfToken() %>';
+	$('#submit').click(async (e) => {
+		e.preventDefault();
+		let response = $('#editor').val();
+		await postData(URL, { response }).then((data) => {
+			$('#chat').append(`
+				<li id="${data._id}" class="me col-md-12">
+					<div class="info">
+						<span class="status green"></span>
+						<h2><%= user.name %></h2>
+						<h3>
+							<%= date(new Date()).format('jYYYY/jMM/jDD - HH:mm:ss') %>
+						</h3>
+					</div>
+					<div class="triangle"></div>
+					<div class="message">
+						<p><%= htmlToText('${data.content}') %></p>
+						<a code="${data._id}" class="close fa fa-trash"></a>
+					</div>
+				</li>
+			`);
+		});
+		chat.scrollTop = chat.scrollHeight;
+		$('#submit').prop('disabled', true);
+		$('#editor').val('');
+		$('#editor').focus();
+		remove();
+	});
+
+	$(document).ready(function () {
+		var $lightbox = $('#lightbox');
+		$('[data-target="#lightbox"]').on('click', function (event) {
+			var $img = $(this).find('img'),
+				src = $img.attr('src'),
+				alt = $img.attr('alt'),
+				css = {
+					'maxWidth': $(window).width() - 100,
+					'maxHeight': $(window).height() - 100
+				};
+			$lightbox.find('img').attr('src', src);
+			$lightbox.find('img').attr('alt', alt);
+			$lightbox.find('img').css(css);
+		});
+		$lightbox.on('shown.bs.modal', function (e) {
+			var $img = $lightbox.find('img');
+			$lightbox.find('.modal-content').css({ 'width': $img.width() + 50 });
+			$lightbox.find('.modal-content').css({ 'height': $img.height() + 50 });
+			$lightbox.find('.close').removeClass('hidden');
+		});
+	});
+</script>

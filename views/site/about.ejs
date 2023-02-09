@@ -1,0 +1,144 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/owlcarousel/dist/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/plugins/owlcarousel/dist/assets/owl.theme.default.min.css">
+
+<% contentFor('body') %>
+<!--? Inner Heading Start -->
+<div class="innerHeading aboutHeading">
+    <div class="container">
+        <h1>درباره ما</h1>
+    </div>
+</div>
+<!--! Inner Heading End -->
+
+<!--? Inner Content Start -->
+<div class="innercontent">
+    <div class="container">
+        <div class="row aboutWrap">
+            <div class="col-lg-6">
+                <div class="about_box">
+                    <%- about.text %>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="aboutImg"><img alt="" src="/images/about-content.jpg"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--? Slogan Start -->
+<section class="slogan wow fadeInUp">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="perfect_text">
+                    <h1>شک نکن، بهترین رو انتخاب کردی!</h1>
+                    <span>
+                        مشاوره املاک جایگزینی مدرن و هوشمند برای روش سنتی دفاتر ثبت ملک مشاوران املاک
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="readmore"><a href="/about">ویژگی های مشاوره املاک</a></div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--! Slogan End -->
+
+<!--? Customer Slider Start -->
+<div class="property-wrap wow fadeInUp">
+    <div class="container">
+        <section class="user-blog">
+            <div class="container" style="padding-top: 40px;">
+                <div class="heading">
+                    <h1>
+                        نظرات مشتریان
+                    </h1>
+                </div>
+                <div id="demo3">
+                    <div id="owl-demo3" class="owl-carousel">
+                        <div class="item" dir="rtl">
+                            <div class="testService">
+                                <div class="testi-info">
+                                    <div class="client-image"><img src="/images/avatar-04.png" alt=""></div>
+                                    <div class="name">نام</div>
+                                    <p>
+                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از
+                                    </p>
+                                    <ul class="client_rating">
+                                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<!--! Customer Slider End -->
+
+<!--? Buy and Sell Start -->
+<div class="why-wrap wow fadeInUp">
+    <div class="container">
+        <div class="title">
+            <h1>خانه بخرید یا بفروشید</h1>
+        </div>
+        <p>
+            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون
+            بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع
+            با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه
+            و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی.
+        </p>
+        <div class="start_btn">
+            <span><a href="#">جستجو را شروع کنید</a></span>
+            <span><a href="#">ویژگی ها را مرور کنید</a></span>
+        </div>
+    </div>
+</div>
+<!--! Buy and Sell Start -->
+
+<!--? Our Team Start -->
+<section class="our_team_wrap wow fadeInUp">
+    <div class="container">
+        <h1>تیم مشاوره املاک</h1>
+        <div class="row" style="margin: 50px 0px;">
+            <% teams.forEach(team => { %>
+            <div class="col-lg-4">
+                <div class="team_wrp">
+                    <div class="team_member wow fadeInUp">
+                        <div class="team_img"><img class="grayscale" src="<%= team.image[480] %>"></div>
+                        <div class="team_icons">
+                            <ul>
+                                <li><a href="<%= team.twitter %>"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                                </li>
+                                <li class="instagram"><a href="<%= team.instagram %>"><i class="fab fa-instagram"
+                                            aria-hidden="true"></i></a></li>
+                                <li><a href="<%= team.linkedin %>"><i class="fab fa-linkedin-in"
+                                            aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="team_name">
+                            <h3><%= team.name %></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</section>
+<!--! Our Team End -->
+
+<!--! Inner Content End -->
+
+<% contentFor('script') %>
+<script src="/plugins/owlcarousel/dist/owl.carousel.min.js"></script>
+<script src="/js/coursel.js"></script>

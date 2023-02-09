@@ -1,0 +1,18 @@
+/*TODO: Modal Style */
+
+.modal-close {
+	left: 0;
+	position: absolute;
+}
+
+.large-modal-dialog,
+.large-modal-content {
+	height: 80%;
+}
+
+.large-modal-body {
+	max-height: calc(100% - 120px);
+	overflow-y: scroll;
+}
+
+/*! *****************************/

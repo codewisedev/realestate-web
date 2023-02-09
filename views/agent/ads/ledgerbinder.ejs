@@ -1,0 +1,1117 @@
+<% contentFor('style') %>
+<script src="/js/jquery-ui.min.js"></script>
+
+<style>
+	/** Properties */
+	.property-wrap {
+		padding: 60px 0;
+	}
+
+	.title {
+		text-align: center;
+	}
+
+	.title h1 {
+		font-size: 46px;
+		color: var(--dark-gray);
+	}
+
+	.title h1 span {
+		display: block;
+		font-size: 14px;
+		margin-top: 10px;
+	}
+
+	.property_box {
+		margin-right: 10px;
+		border-radius: 10px;
+		background: white;
+		padding: 18px;
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+		word-break: break-word;
+	}
+
+	.propertyImg {
+		overflow: hidden;
+		height: 100%;
+	}
+
+	.propertyImg img {
+		width: 100%;
+		-webkit-transform: scale(1);
+		transform: scale(1);
+		-webkit-transition: all 0.5s ease 0s;
+		transition: all 0.5s ease 0s;
+		height: 100%;
+		background-size: cover;
+		object-fit: cover;
+	}
+
+	.property_box h4 {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+
+	.property_box h4 a {
+		text-decoration: none;
+		font-size: 16px;
+		color: var(--dark-gray);
+	}
+
+	.property_box h4 a:hover {
+		color: var(--accent);
+	}
+
+	.property_location i {
+		padding-left: 6px;
+		font-size: 14px;
+		color: var(--middle-gray);
+	}
+
+	.property_location {
+		font-size: 14px;
+		color: var(--middle-gray);
+	}
+
+	.heart_info {
+		display: flex;
+		margin-top: 15px;
+		flex-wrap: wrap;
+	}
+
+	.heart_icon {
+		margin-left: 5px;
+	}
+
+	.heart_icon a {
+		font-size: 14px;
+		color: var(--light-gray);
+		width: 30px;
+		display: block;
+		text-align: center;
+		line-height: 30px;
+		height: 30px;
+		border: 1px solid var(--light-gray);
+		background: var(--light-gray);
+	}
+
+	.property_price {
+		font-size: 16px;
+		color: var(--dark-gray);
+		font-weight: 300;
+	}
+
+	.price_title {
+		font-size: 16px;
+		color: var(--accent);
+		font-weight: bold;
+	}
+
+	.propert_info {
+		text-align: center;
+		margin-top: 15px;
+		padding: 7px;
+	}
+
+	.propert_info h5 {
+		font-size: 12px;
+		margin-bottom: 0;
+		font-family: Yekan, Arial, Helvetica, sans-serif;
+		color: var(--dark-gray);
+		margin-top: 5px;
+	}
+
+	.propert_info ul li {
+		position: relative;
+	}
+
+	.propert_info ul li:before {
+		content: '';
+		background: var(--light-gray);
+		width: 1px;
+		height: 58px;
+		position: absolute;
+		top: -8px;
+		right: 0;
+	}
+
+	.propert_info ul li:first-child:before {
+		display: none;
+	}
+
+	.property_box:hover .propertyImg img {
+		-webkit-transform: scale(1.1);
+		transform: scale(1.1);
+	}
+
+	.rent_info {
+		display: flex;
+	}
+
+	.aType {
+		background: var(--accent);
+		font-size: 14px;
+		font-weight: 300;
+		z-index: 1000;
+		position: relative;
+		padding: 10px 18px;
+		width: 55%;
+		color: white;
+		font-family: Yekan, Arial, Helvetica, sans-serif;
+	}
+
+	.aType:after {
+		content: '';
+		background: var(--accent);
+		z-index: -1;
+		width: 40px;
+		height: 100%;
+		transform: skew(30deg);
+		position: absolute;
+		top: 0;
+		left: -15px;
+	}
+
+	.tType {
+		background: var(--dark-gray);
+		padding: 10px;
+		text-align: center;
+		color: white;
+		width: 45%;
+		font-size: 14px;
+		font-weight: 300;
+		font-family: Yekan, Arial, Helvetica, sans-serif;
+	}
+
+	.archive {
+		overflow: auto;
+		white-space: nowrap;
+		padding: 15px 0px;
+	}
+
+	.archive>li {
+		margin: 0px 10px;
+		white-space: normal;
+		display: inline-block;
+	}
+
+	.section,
+	.section>ul {
+		transform: rotateX(180deg);
+	}
+
+	.section {
+		align-items: stretch;
+	}
+
+	/*! ********************************/
+</style>
+
+<% let sale = advertisings.filter(ads => { return ads.transactionType == 1 && ads.archived == false}) %>
+<% let mortage = advertisings.filter(ads => { return ads.transactionType == 2 && ads.archived == false}) %>
+<% let rents = advertisings.filter(ads => { return ads.transactionType == 3 && ads.archived == false}) %>
+<% let preSale = advertisings.filter(ads => { return ads.transactionType == 4 && ads.archived == false}) %>
+<% let exchange = advertisings.filter(ads => { return ads.transactionType == 5 && ads.archived == false}) %>
+<% let participation = advertisings.filter(ads => { return ads.transactionType == 6 && ads.archived == false}) %>
+<% let archive = advertisings.filter(ads => { return ads.archived == true}) %>
+
+<% contentFor('body') %>
+<div class="card collapsed-card" style="margin: 15px 0px;">
+	<div class="card-header">
+		<h3 class="card-title">لیست املاک آرشیو شده</h3>
+		<div class="card-tools" style="position: absolute; left: 15px;">
+			<button style="position: absolute; left: 0;" type="button" class="btn btn-tool" data-widget="collapse">
+				<i class="fa fa-minus"></i>
+			</button>
+		</div>
+	</div>
+
+	<div class="card-body p-0">
+		<div class="col-md-12">
+			<div style="padding: 15px;">
+				<ul id="sortable7" class="connectedSortable archive disable-sort-item">
+					<% archive.forEach(ads => { %>
+					<li id="<%= ads._id %>" class="ui-card-seven">
+						<div class="property_box">
+							<div class="propertyImg mt-2">
+								<img style="width: 380px;" src="<%= ads.images[0] %>">
+							</div>
+							<h4 class="mt-3"><a href="/ads/<%= ads._id %>" target="_blank"><%= ads.title %></a></h4>
+							<div class="property_location mt-2">
+								<i class="fas fa-map-marker-alt"></i>
+								<%= ads.location.city.title %> / <%= ads.location.state.title %>
+							</div>
+							<div class="heart_info">
+								<div class="price_title"> قیمت: </div>
+								<div class="property_price mr-2"><%= financial(ads.price.price) %> تومان</div>
+							</div>
+							<div class="propert_info col-12 mt-4">
+								<ul class="row">
+									<% if(ads.material.bedroomCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 6)) { %>
+									<li class="info-item col-3">
+										<div class="proprty_icon">
+											<img alt="" src="/images/bedroom_icon.png" />
+										</div>
+										<h5>اتاق خواب</h5>
+										<h5><%= ads.material.bedroomCount %></h5>
+									</li>
+									<% } %>
+									<% if(ads.material.bathCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 10 || ads.adsType == 11)) { %>
+									<li class="info-item col-3">
+										<div class="proprty_icon">
+											<img alt="" src="/images/bathroom_icon.png" />
+										</div>
+										<h5>سرویس بهداشتی</h5>
+										<h5><%= ads.material.bathCount %></h5>
+									</li>
+									<% } %>
+									<% if(ads.material.showerCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 11)) { %>
+									<li class="info-item col-3 penthouse apartment complex house suite villa office">
+										<div class="proprty_icon">
+											<img alt="" src="/images/shower_icon.png" />
+										</div>
+										<h5>حمام</h5>
+										<h5><%= ads.material.showerCount %></h5>
+									</li>
+									<% } %>
+									<% if(ads.material.parkingCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 5 || ads.adsType == 11)) { %>
+									<li class="info-item col-3">
+										<div class="proprty_icon">
+											<img alt="" src="/images/garage_icon.png" />
+										</div>
+										<h5>پارکینگ</h5>
+										<h5><%= ads.material.parkingCount %></h5>
+									</li>
+									<% } %>
+								</ul>
+							</div>
+							<div class="rent_info mb-2">
+								<% if(ads.adsType == 1) { %>
+								<div class="aType">پنت هاوس</div>
+								<% } else if(ads.adsType == 2) { %>
+								<div class="aType">آپارتمان</div>
+								<% } else if(ads.adsType == 3) { %>
+								<div class="aType">مجتمع مسکونی</div>
+								<% } else if(ads.adsType == 4) { %>
+								<div class="aType">خانه ویلایی</div>
+								<% } else if(ads.adsType == 5) { %>
+								<div class="aType">سوییت</div>
+								<% } else if(ads.adsType == 6) { %>
+								<div class="aType">ویلا</div>
+								<% } else if(ads.adsType == 7) { %>
+								<div class="aType">باغ</div>
+								<% } else if(ads.adsType == 8) { %>
+								<div class="aType">زمین ملکی</div>
+								<% } else if(ads.adsType == 9) { %>
+								<div class="aType">زمین زراعی</div>
+								<% } else if(ads.adsType == 10) { %>
+								<div class="aType">مغازه و تجاری</div>
+								<% } else if(ads.adsType == 11) { %>
+								<div class="aType">اداری</div>
+								<% } else if(ads.adsType == 12) { %>
+								<div class="aType">هتل</div>
+								<% } else if(ads.adsType == 13) { %>
+								<div class="aType">هتل آپارتمان</div>
+								<% } else if(ads.adsType == 14) { %>
+								<div class="aType">کارگاه</div>
+								<% } else if(ads.adsType == 15) { %>
+								<div class="aType">سالن</div>
+								<% } else if(ads.adsType == 16) { %>
+								<div class="aType">انبار</div>
+								<% } else { %>
+								<div class="aType">کارخانه</div>
+								<% } %>
+
+								<% if(ads.transactionType == 1) { %>
+								<div class="tType">فروش</div>
+								<% } else if(ads.transactionType == 2) { %>
+								<div class="tType">رهن کامل</div>
+								<% } else if(ads.transactionType == 3) { %>
+								<div class="tType">رهن و اجاره</div>
+								<% } else if(ads.transactionType == 4) { %>
+								<div class="tType">پیش خرید</div>
+								<% } else if(ads.transactionType == 5) { %>
+								<div class="tType">معاوضه</div>
+								<% } else { %>
+								<div class="tType">مشارکت</div>
+								<% } %>
+							</div>
+
+							<div>
+								<form action="/agent/ads/archived/false/<%= ads._id %>?_method=PUT" method="post">
+									<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+									<button type="submit" class="btn btn-danger">حذف از آرشیو</button>
+								</form>
+							</div>
+						</div>
+					</li>
+					<% }) %>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="grid-container">
+	<div id="content" class="section">
+		<ul id="sortable1">
+			<div class="list-header disable-sort-item">
+				<h2>فروش</h2>
+				<hr />
+			</div>
+			<% sale.forEach(ads => { %>
+			<li id="<%= ads._id %>" class="ui-card-one">
+				<div class="property_box">
+					<div class="propertyImg mt-2">
+						<img style="width: 380px;" src="<%= ads.images[0] %>">
+					</div>
+					<h4 class="mt-3"><a href="/ads/<%= ads._id %>" target="_blank"><%= ads.title %></a></h4>
+					<div class="property_location mt-2">
+						<i class="fas fa-map-marker-alt"></i>
+						<%= ads.location.city.title %> / <%= ads.location.state.title %>
+					</div>
+					<div class="heart_info">
+						<div class="price_title"> قیمت: </div>
+						<div class="property_price mr-2"><%= financial(ads.price.price) %> تومان</div>
+					</div>
+					<div class="propert_info col-12 mt-4">
+						<ul class="row">
+							<% if(ads.material.bedroomCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 6)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bedroom_icon.png" />
+								</div>
+								<h5>اتاق خواب</h5>
+								<h5><%= ads.material.bedroomCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.bathCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 10 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bathroom_icon.png" />
+								</div>
+								<h5>سرویس بهداشتی</h5>
+								<h5><%= ads.material.bathCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.showerCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3 penthouse apartment complex house suite villa office">
+								<div class="proprty_icon">
+									<img alt="" src="/images/shower_icon.png" />
+								</div>
+								<h5>حمام</h5>
+								<h5><%= ads.material.showerCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.parkingCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/garage_icon.png" />
+								</div>
+								<h5>پارکینگ</h5>
+								<h5><%= ads.material.parkingCount %></h5>
+							</li>
+							<% } %>
+						</ul>
+					</div>
+					<div class="rent_info mb-2">
+						<% if(ads.adsType == 1) { %>
+						<div class="aType">پنت هاوس</div>
+						<% } else if(ads.adsType == 2) { %>
+						<div class="aType">آپارتمان</div>
+						<% } else if(ads.adsType == 3) { %>
+						<div class="aType">مجتمع مسکونی</div>
+						<% } else if(ads.adsType == 4) { %>
+						<div class="aType">خانه ویلایی</div>
+						<% } else if(ads.adsType == 5) { %>
+						<div class="aType">سوییت</div>
+						<% } else if(ads.adsType == 6) { %>
+						<div class="aType">ویلا</div>
+						<% } else if(ads.adsType == 7) { %>
+						<div class="aType">باغ</div>
+						<% } else if(ads.adsType == 8) { %>
+						<div class="aType">زمین ملکی</div>
+						<% } else if(ads.adsType == 9) { %>
+						<div class="aType">زمین زراعی</div>
+						<% } else if(ads.adsType == 10) { %>
+						<div class="aType">مغازه و تجاری</div>
+						<% } else if(ads.adsType == 11) { %>
+						<div class="aType">اداری</div>
+						<% } else if(ads.adsType == 12) { %>
+						<div class="aType">هتل</div>
+						<% } else if(ads.adsType == 13) { %>
+						<div class="aType">هتل آپارتمان</div>
+						<% } else if(ads.adsType == 14) { %>
+						<div class="aType">کارگاه</div>
+						<% } else if(ads.adsType == 15) { %>
+						<div class="aType">سالن</div>
+						<% } else if(ads.adsType == 16) { %>
+						<div class="aType">انبار</div>
+						<% } else { %>
+						<div class="aType">کارخانه</div>
+						<% } %>
+
+						<% if(ads.transactionType == 1) { %>
+						<div class="tType">فروش</div>
+						<% } else if(ads.transactionType == 2) { %>
+						<div class="tType">رهن کامل</div>
+						<% } else if(ads.transactionType == 3) { %>
+						<div class="tType">رهن و اجاره</div>
+						<% } else if(ads.transactionType == 4) { %>
+						<div class="tType">پیش خرید</div>
+						<% } else if(ads.transactionType == 5) { %>
+						<div class="tType">معاوضه</div>
+						<% } else { %>
+						<div class="tType">مشارکت</div>
+						<% } %>
+					</div>
+				</div>
+			</li>
+			<% }) %>
+		</ul>
+
+		<ul id="sortable2">
+			<div class="list-header disable-sort-item">
+				<h2>رهن کامل</h2>
+				<hr />
+			</div>
+			<% mortage.forEach(ads => { %>
+			<li id="<%= ads._id %>" class="ui-card-two">
+				<div class="property_box">
+					<div class="propertyImg mt-2">
+						<img style="width: 380px;" src="<%= ads.images[0] %>">
+					</div>
+					<h4 class="mt-3"><a href="/ads/<%= ads._id %>" target="_blank"><%= ads.title %></a></h4>
+					<div class="property_location mt-2">
+						<i class="fas fa-map-marker-alt"></i>
+						<%= ads.location.city.title %> / <%= ads.location.state.title %>
+					</div>
+					<div class="heart_info">
+						<div class="price_title"> پول پیش: </div>
+						<div class="property_price mr-2"><%= financial(ads.price.price) %> تومان</div>
+					</div>
+					<div class="propert_info col-12 mt-4">
+						<ul class="row">
+							<% if(ads.material.bedroomCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 6)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bedroom_icon.png" />
+								</div>
+								<h5>اتاق خواب</h5>
+								<h5><%= ads.material.bedroomCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.bathCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 10 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bathroom_icon.png" />
+								</div>
+								<h5>سرویس بهداشتی</h5>
+								<h5><%= ads.material.bathCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.showerCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3 penthouse apartment complex house suite villa office">
+								<div class="proprty_icon">
+									<img alt="" src="/images/shower_icon.png" />
+								</div>
+								<h5>حمام</h5>
+								<h5><%= ads.material.showerCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.parkingCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/garage_icon.png" />
+								</div>
+								<h5>پارکینگ</h5>
+								<h5><%= ads.material.parkingCount %></h5>
+							</li>
+							<% } %>
+						</ul>
+					</div>
+					<div class="rent_info mb-2">
+						<% if(ads.adsType == 1) { %>
+						<div class="aType">پنت هاوس</div>
+						<% } else if(ads.adsType == 2) { %>
+						<div class="aType">آپارتمان</div>
+						<% } else if(ads.adsType == 3) { %>
+						<div class="aType">مجتمع مسکونی</div>
+						<% } else if(ads.adsType == 4) { %>
+						<div class="aType">خانه ویلایی</div>
+						<% } else if(ads.adsType == 5) { %>
+						<div class="aType">سوییت</div>
+						<% } else if(ads.adsType == 6) { %>
+						<div class="aType">ویلا</div>
+						<% } else if(ads.adsType == 7) { %>
+						<div class="aType">باغ</div>
+						<% } else if(ads.adsType == 8) { %>
+						<div class="aType">زمین ملکی</div>
+						<% } else if(ads.adsType == 9) { %>
+						<div class="aType">زمین زراعی</div>
+						<% } else if(ads.adsType == 10) { %>
+						<div class="aType">مغازه و تجاری</div>
+						<% } else if(ads.adsType == 11) { %>
+						<div class="aType">اداری</div>
+						<% } else if(ads.adsType == 12) { %>
+						<div class="aType">هتل</div>
+						<% } else if(ads.adsType == 13) { %>
+						<div class="aType">هتل آپارتمان</div>
+						<% } else if(ads.adsType == 14) { %>
+						<div class="aType">کارگاه</div>
+						<% } else if(ads.adsType == 15) { %>
+						<div class="aType">سالن</div>
+						<% } else if(ads.adsType == 16) { %>
+						<div class="aType">انبار</div>
+						<% } else { %>
+						<div class="aType">کارخانه</div>
+						<% } %>
+
+						<% if(ads.transactionType == 1) { %>
+						<div class="tType">فروش</div>
+						<% } else if(ads.transactionType == 2) { %>
+						<div class="tType">رهن کامل</div>
+						<% } else if(ads.transactionType == 3) { %>
+						<div class="tType">رهن و اجاره</div>
+						<% } else if(ads.transactionType == 4) { %>
+						<div class="tType">پیش خرید</div>
+						<% } else if(ads.transactionType == 5) { %>
+						<div class="tType">معاوضه</div>
+						<% } else { %>
+						<div class="tType">مشارکت</div>
+						<% } %>
+					</div>
+				</div>
+			</li>
+			<% }) %>
+		</ul>
+
+		<ul id="sortable3">
+			<div class="list-header disable-sort-item">
+				<h2>رهن و اجاره</h2>
+				<hr />
+			</div>
+			<% rents.forEach(ads => { %>
+			<li id="<%= ads._id %>" class="ui-card-three">
+				<div class="property_box">
+					<div class="propertyImg mt-2">
+						<img style="width: 380px;" src="<%= ads.images[0] %>">
+					</div>
+					<h4 class="mt-3"><a href="/ads/<%= ads._id %>" target="_blank"><%= ads.title %></a></h4>
+					<div class="property_location mt-2">
+						<i class="fas fa-map-marker-alt"></i>
+						<%= ads.location.city.title %> / <%= ads.location.state.title %>
+					</div>
+					<div class="heart_info col-md-12">
+						<div class="col-md-12" style="display: flex;">
+							<div class="price_title"> پول پیش: </div>
+							<div class="property_price mr-2"><%= financial(ads.price.price) %> تومان</div>
+						</div>
+						<div class="col-md-12" style="display: flex;">
+							<div class="price_title"> اجاره: </div>
+							<div class="property_price mr-2"><%= financial(ads.price.rent) %> تومان</div>
+						</div>
+					</div>
+					<div class="propert_info col-12 mt-4">
+						<ul class="row">
+							<% if(ads.material.bedroomCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 6)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bedroom_icon.png" />
+								</div>
+								<h5>اتاق خواب</h5>
+								<h5><%= ads.material.bedroomCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.bathCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 10 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bathroom_icon.png" />
+								</div>
+								<h5>سرویس بهداشتی</h5>
+								<h5><%= ads.material.bathCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.showerCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3 penthouse apartment complex house suite villa office">
+								<div class="proprty_icon">
+									<img alt="" src="/images/shower_icon.png" />
+								</div>
+								<h5>حمام</h5>
+								<h5><%= ads.material.showerCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.parkingCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/garage_icon.png" />
+								</div>
+								<h5>پارکینگ</h5>
+								<h5><%= ads.material.parkingCount %></h5>
+							</li>
+							<% } %>
+						</ul>
+					</div>
+					<div class="rent_info mb-2">
+						<% if(ads.adsType == 1) { %>
+						<div class="aType">پنت هاوس</div>
+						<% } else if(ads.adsType == 2) { %>
+						<div class="aType">آپارتمان</div>
+						<% } else if(ads.adsType == 3) { %>
+						<div class="aType">مجتمع مسکونی</div>
+						<% } else if(ads.adsType == 4) { %>
+						<div class="aType">خانه ویلایی</div>
+						<% } else if(ads.adsType == 5) { %>
+						<div class="aType">سوییت</div>
+						<% } else if(ads.adsType == 6) { %>
+						<div class="aType">ویلا</div>
+						<% } else if(ads.adsType == 7) { %>
+						<div class="aType">باغ</div>
+						<% } else if(ads.adsType == 8) { %>
+						<div class="aType">زمین ملکی</div>
+						<% } else if(ads.adsType == 9) { %>
+						<div class="aType">زمین زراعی</div>
+						<% } else if(ads.adsType == 10) { %>
+						<div class="aType">مغازه و تجاری</div>
+						<% } else if(ads.adsType == 11) { %>
+						<div class="aType">اداری</div>
+						<% } else if(ads.adsType == 12) { %>
+						<div class="aType">هتل</div>
+						<% } else if(ads.adsType == 13) { %>
+						<div class="aType">هتل آپارتمان</div>
+						<% } else if(ads.adsType == 14) { %>
+						<div class="aType">کارگاه</div>
+						<% } else if(ads.adsType == 15) { %>
+						<div class="aType">سالن</div>
+						<% } else if(ads.adsType == 16) { %>
+						<div class="aType">انبار</div>
+						<% } else { %>
+						<div class="aType">کارخانه</div>
+						<% } %>
+
+						<% if(ads.transactionType == 1) { %>
+						<div class="tType">فروش</div>
+						<% } else if(ads.transactionType == 2) { %>
+						<div class="tType">رهن کامل</div>
+						<% } else if(ads.transactionType == 3) { %>
+						<div class="tType">رهن و اجاره</div>
+						<% } else if(ads.transactionType == 4) { %>
+						<div class="tType">پیش خرید</div>
+						<% } else if(ads.transactionType == 5) { %>
+						<div class="tType">معاوضه</div>
+						<% } else { %>
+						<div class="tType">مشارکت</div>
+						<% } %>
+					</div>
+				</div>
+			</li>
+			<% }) %>
+		</ul>
+		<ul id="sortable4">
+			<div class="list-header disable-sort-item">
+				<h2>پیش فروش</h2>
+				<hr />
+			</div>
+			<% preSale.forEach(ads => { %>
+			<li id="<%= ads._id %>" class="ui-card-four">
+				<div class="property_box">
+					<div class="propertyImg mt-2">
+						<img style="width: 380px;" src="<%= ads.images[0] %>">
+					</div>
+					<h4 class="mt-3"><a href="/ads/<%= ads._id %>" target="_blank"><%= ads.title %></a></h4>
+					<div class="property_location mt-2">
+						<i class="fas fa-map-marker-alt"></i>
+						<%= ads.location.city.title %> / <%= ads.location.state.title %>
+					</div>
+					<div class="heart_info">
+						<div class="price_title"> قیمت: </div>
+						<div class="property_price mr-2"><%= financial(ads.price.price) %> تومان</div>
+					</div>
+					<div class="propert_info col-12 mt-4">
+						<ul class="row">
+							<% if(ads.material.bedroomCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 6)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bedroom_icon.png" />
+								</div>
+								<h5>اتاق خواب</h5>
+								<h5><%= ads.material.bedroomCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.bathCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 10 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bathroom_icon.png" />
+								</div>
+								<h5>سرویس بهداشتی</h5>
+								<h5><%= ads.material.bathCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.showerCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3 penthouse apartment complex house suite villa office">
+								<div class="proprty_icon">
+									<img alt="" src="/images/shower_icon.png" />
+								</div>
+								<h5>حمام</h5>
+								<h5><%= ads.material.showerCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.parkingCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/garage_icon.png" />
+								</div>
+								<h5>پارکینگ</h5>
+								<h5><%= ads.material.parkingCount %></h5>
+							</li>
+							<% } %>
+						</ul>
+					</div>
+					<div class="rent_info mb-2">
+						<% if(ads.adsType == 1) { %>
+						<div class="aType">پنت هاوس</div>
+						<% } else if(ads.adsType == 2) { %>
+						<div class="aType">آپارتمان</div>
+						<% } else if(ads.adsType == 3) { %>
+						<div class="aType">مجتمع مسکونی</div>
+						<% } else if(ads.adsType == 4) { %>
+						<div class="aType">خانه ویلایی</div>
+						<% } else if(ads.adsType == 5) { %>
+						<div class="aType">سوییت</div>
+						<% } else if(ads.adsType == 6) { %>
+						<div class="aType">ویلا</div>
+						<% } else if(ads.adsType == 7) { %>
+						<div class="aType">باغ</div>
+						<% } else if(ads.adsType == 8) { %>
+						<div class="aType">زمین ملکی</div>
+						<% } else if(ads.adsType == 9) { %>
+						<div class="aType">زمین زراعی</div>
+						<% } else if(ads.adsType == 10) { %>
+						<div class="aType">مغازه و تجاری</div>
+						<% } else if(ads.adsType == 11) { %>
+						<div class="aType">اداری</div>
+						<% } else if(ads.adsType == 12) { %>
+						<div class="aType">هتل</div>
+						<% } else if(ads.adsType == 13) { %>
+						<div class="aType">هتل آپارتمان</div>
+						<% } else if(ads.adsType == 14) { %>
+						<div class="aType">کارگاه</div>
+						<% } else if(ads.adsType == 15) { %>
+						<div class="aType">سالن</div>
+						<% } else if(ads.adsType == 16) { %>
+						<div class="aType">انبار</div>
+						<% } else { %>
+						<div class="aType">کارخانه</div>
+						<% } %>
+
+						<% if(ads.transactionType == 1) { %>
+						<div class="tType">فروش</div>
+						<% } else if(ads.transactionType == 2) { %>
+						<div class="tType">رهن کامل</div>
+						<% } else if(ads.transactionType == 3) { %>
+						<div class="tType">رهن و اجاره</div>
+						<% } else if(ads.transactionType == 4) { %>
+						<div class="tType">پیش خرید</div>
+						<% } else if(ads.transactionType == 5) { %>
+						<div class="tType">معاوضه</div>
+						<% } else { %>
+						<div class="tType">مشارکت</div>
+						<% } %>
+					</div>
+				</div>
+			</li>
+			<% }) %>
+		</ul>
+
+		<ul id="sortable5">
+			<div class="list-header disable-sort-item">
+				<h2>معاوضه</h2>
+				<hr />
+			</div>
+			<% exchange.forEach(ads => { %>
+			<li id="<%= ads._id %>" class="ui-card-five">
+				<div class="property_box">
+					<div class="propertyImg mt-2">
+						<img style="width: 380px;" src="<%= ads.images[0] %>">
+					</div>
+					<h4 class="mt-3"><a href="/ads/<%= ads._id %>" target="_blank"><%= ads.title %></a></h4>
+					<div class="property_location mt-2">
+						<i class="fas fa-map-marker-alt"></i>
+						<%= ads.location.city.title %> / <%= ads.location.state.title %>
+					</div>
+					<div class="heart_info">
+						<div class="price_title"> قیمت: </div>
+						<div class="property_price mr-2"><%= financial(ads.price.price) %> تومان</div>
+					</div>
+					<div class="propert_info col-12 mt-4">
+						<ul class="row">
+							<% if(ads.material.bedroomCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 6)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bedroom_icon.png" />
+								</div>
+								<h5>اتاق خواب</h5>
+								<h5><%= ads.material.bedroomCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.bathCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 10 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bathroom_icon.png" />
+								</div>
+								<h5>سرویس بهداشتی</h5>
+								<h5><%= ads.material.bathCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.showerCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3 penthouse apartment complex house suite villa office">
+								<div class="proprty_icon">
+									<img alt="" src="/images/shower_icon.png" />
+								</div>
+								<h5>حمام</h5>
+								<h5><%= ads.material.showerCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.parkingCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/garage_icon.png" />
+								</div>
+								<h5>پارکینگ</h5>
+								<h5><%= ads.material.parkingCount %></h5>
+							</li>
+							<% } %>
+						</ul>
+					</div>
+					<div class="rent_info mb-2">
+						<% if(ads.adsType == 1) { %>
+						<div class="aType">پنت هاوس</div>
+						<% } else if(ads.adsType == 2) { %>
+						<div class="aType">آپارتمان</div>
+						<% } else if(ads.adsType == 3) { %>
+						<div class="aType">مجتمع مسکونی</div>
+						<% } else if(ads.adsType == 4) { %>
+						<div class="aType">خانه ویلایی</div>
+						<% } else if(ads.adsType == 5) { %>
+						<div class="aType">سوییت</div>
+						<% } else if(ads.adsType == 6) { %>
+						<div class="aType">ویلا</div>
+						<% } else if(ads.adsType == 7) { %>
+						<div class="aType">باغ</div>
+						<% } else if(ads.adsType == 8) { %>
+						<div class="aType">زمین ملکی</div>
+						<% } else if(ads.adsType == 9) { %>
+						<div class="aType">زمین زراعی</div>
+						<% } else if(ads.adsType == 10) { %>
+						<div class="aType">مغازه و تجاری</div>
+						<% } else if(ads.adsType == 11) { %>
+						<div class="aType">اداری</div>
+						<% } else if(ads.adsType == 12) { %>
+						<div class="aType">هتل</div>
+						<% } else if(ads.adsType == 13) { %>
+						<div class="aType">هتل آپارتمان</div>
+						<% } else if(ads.adsType == 14) { %>
+						<div class="aType">کارگاه</div>
+						<% } else if(ads.adsType == 15) { %>
+						<div class="aType">سالن</div>
+						<% } else if(ads.adsType == 16) { %>
+						<div class="aType">انبار</div>
+						<% } else { %>
+						<div class="aType">کارخانه</div>
+						<% } %>
+
+						<% if(ads.transactionType == 1) { %>
+						<div class="tType">فروش</div>
+						<% } else if(ads.transactionType == 2) { %>
+						<div class="tType">رهن کامل</div>
+						<% } else if(ads.transactionType == 3) { %>
+						<div class="tType">رهن و اجاره</div>
+						<% } else if(ads.transactionType == 4) { %>
+						<div class="tType">پیش خرید</div>
+						<% } else if(ads.transactionType == 5) { %>
+						<div class="tType">معاوضه</div>
+						<% } else { %>
+						<div class="tType">مشارکت</div>
+						<% } %>
+					</div>
+				</div>
+			</li>
+			<% }) %>
+		</ul>
+		<ul id="sortable6">
+			<div class="list-header disable-sort-item">
+				<h2>مشارکت</h2>
+				<hr />
+			</div>
+			<% participation.forEach(ads => { %>
+			<li id="<%= ads._id %>" class="ui-card-six">
+				<div class="property_box">
+					<div class="propertyImg mt-2">
+						<img style="width: 380px;" src="<%= ads.images[0] %>">
+					</div>
+					<h4 class="mt-3"><a href="/ads/<%= ads._id %>" target="_blank"><%= ads.title %></a></h4>
+					<div class="property_location mt-2">
+						<i class="fas fa-map-marker-alt"></i>
+						<%= ads.location.city.title %> / <%= ads.location.state.title %>
+					</div>
+					<div class="heart_info">
+						<div class="price_title"> قیمت: </div>
+						<div class="property_price mr-2"><%= financial(ads.price.price) %> تومان</div>
+					</div>
+					<div class="propert_info col-12 mt-4">
+						<ul class="row">
+							<% if(ads.material.bedroomCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 6)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bedroom_icon.png" />
+								</div>
+								<h5>اتاق خواب</h5>
+								<h5><%= ads.material.bedroomCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.bathCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 10 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/bathroom_icon.png" />
+								</div>
+								<h5>سرویس بهداشتی</h5>
+								<h5><%= ads.material.bathCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.showerCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 4 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3 penthouse apartment complex house suite villa office">
+								<div class="proprty_icon">
+									<img alt="" src="/images/shower_icon.png" />
+								</div>
+								<h5>حمام</h5>
+								<h5><%= ads.material.showerCount %></h5>
+							</li>
+							<% } %>
+							<% if(ads.material.parkingCount && (ads.adsType == 1 || ads.adsType == 2 || ads.adsType == 3 || ads.adsType == 5 || ads.adsType == 11)) { %>
+							<li class="info-item col-3">
+								<div class="proprty_icon">
+									<img alt="" src="/images/garage_icon.png" />
+								</div>
+								<h5>پارکینگ</h5>
+								<h5><%= ads.material.parkingCount %></h5>
+							</li>
+							<% } %>
+						</ul>
+					</div>
+					<div class="rent_info mb-2">
+						<% if(ads.adsType == 1) { %>
+						<div class="aType">پنت هاوس</div>
+						<% } else if(ads.adsType == 2) { %>
+						<div class="aType">آپارتمان</div>
+						<% } else if(ads.adsType == 3) { %>
+						<div class="aType">مجتمع مسکونی</div>
+						<% } else if(ads.adsType == 4) { %>
+						<div class="aType">خانه ویلایی</div>
+						<% } else if(ads.adsType == 5) { %>
+						<div class="aType">سوییت</div>
+						<% } else if(ads.adsType == 6) { %>
+						<div class="aType">ویلا</div>
+						<% } else if(ads.adsType == 7) { %>
+						<div class="aType">باغ</div>
+						<% } else if(ads.adsType == 8) { %>
+						<div class="aType">زمین ملکی</div>
+						<% } else if(ads.adsType == 9) { %>
+						<div class="aType">زمین زراعی</div>
+						<% } else if(ads.adsType == 10) { %>
+						<div class="aType">مغازه و تجاری</div>
+						<% } else if(ads.adsType == 11) { %>
+						<div class="aType">اداری</div>
+						<% } else if(ads.adsType == 12) { %>
+						<div class="aType">هتل</div>
+						<% } else if(ads.adsType == 13) { %>
+						<div class="aType">هتل آپارتمان</div>
+						<% } else if(ads.adsType == 14) { %>
+						<div class="aType">کارگاه</div>
+						<% } else if(ads.adsType == 15) { %>
+						<div class="aType">سالن</div>
+						<% } else if(ads.adsType == 16) { %>
+						<div class="aType">انبار</div>
+						<% } else { %>
+						<div class="aType">کارخانه</div>
+						<% } %>
+
+						<% if(ads.transactionType == 1) { %>
+						<div class="tType">فروش</div>
+						<% } else if(ads.transactionType == 2) { %>
+						<div class="tType">رهن کامل</div>
+						<% } else if(ads.transactionType == 3) { %>
+						<div class="tType">رهن و اجاره</div>
+						<% } else if(ads.transactionType == 4) { %>
+						<div class="tType">پیش خرید</div>
+						<% } else if(ads.transactionType == 5) { %>
+						<div class="tType">معاوضه</div>
+						<% } else { %>
+						<div class="tType">مشارکت</div>
+						<% } %>
+					</div>
+				</div>
+			</li>
+			<% }) %>
+		</ul>
+	</div>
+</div>
+
+<% contentFor('script') %>
+<script>
+	$(function () {
+		$(
+			'#sortable1, #sortable2, #sortable3, #sortable4, #sortable5, #sortable6, #sortable7',
+		).sortable({
+			appendTo: document.body,
+			cancel: '.disable-sort-item',
+			cursor: 'move',
+			opacity: 0.5,
+			zIndex: 9999,
+			distance: 50,
+			items: '> li',
+			placeholder: 'sortable-placeholder',
+			dropOnEmpty: true,
+			forcePlaceholderSize: true,
+			tolerance: 'pointer',
+			start: function (e, ui) {
+				$(ui.placeholder).hide(300);
+			},
+			stop: async function (e, ui) {
+				let parent = $(ui.item).parent();
+				if (parent[0].id == 'sortable7') {
+					let id = ui.item[0].id;
+					let div = document.createElement('div');
+					div.className = 'propertyImg mt-2';
+					div.innerHTML = `
+						<form action="/agent/ads/archived/false/${id}?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<button type="submit" class="btn btn-danger">حذف از آرشیو</button>
+						</form>
+					`;
+					ui.item[0].childNodes[1].appendChild(div);
+					const URL = `/agent/ads/archived/true/${id}?_csrf=<%= req.csrfToken() %>`;
+					await fetch(URL, {
+						method: 'PUT',
+						headers: {
+							Accept: 'application/json',
+							'Content-Type': 'application/json',
+						},
+					});
+				}
+			},
+			change: function (e, ui) {
+				$(ui.placeholder).hide().show(300);
+			},
+		});
+
+		$(
+			'#sortable1, #sortable2, #sortable3, #sortable4, #sortable5, #sortable6',
+		).sortable({
+			connectWith: '.connectedSortable',
+			remove: function (event, ui) {
+				$(ui.item).addClass('ui-card-seven', 500, 'easeOutSine');
+			},
+		});
+	});
+//! *****************************
+</script>

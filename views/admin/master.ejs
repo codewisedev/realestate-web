@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="description" content="The Insurance Management" />
+	<meta name="keywords" content="RealEstate" />
+	<meta name="author" content="SMR" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<title><%- defineContent('title') || 'مشاوره املاک' %></title>
+
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="/images/favicon.ico" />
+
+	<!-- Fonts -->
+	<link rel="stylesheet" href="/fonts/font.css" />
+	<link rel="stylesheet" href="/plugins/fontawesome/css/all.css" />
+	<link rel="stylesheet" href="/plugins/fontawesome/css/fontawesome.css" />
+
+	<!-- Style -->
+	<link rel="stylesheet" href="/plugins/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap-rtl.min.css" />
+	<link rel="stylesheet" href="/css/reset.css" />
+	<link rel="stylesheet" href="/css/color.css" />
+	<link rel="stylesheet" href="/css/scroll.css" />
+	<link rel="stylesheet" href="/css/footer.css" />
+	<link rel="stylesheet" href="/css/pace.css" />
+	<link rel="stylesheet" href="/css/alert.css" />
+	<link rel="stylesheet" href="/css/main.css" />
+	<link rel="stylesheet" href="/css/admin.css" />
+	<link rel="stylesheet" href="/css/toastr.min.css" />
+	<%- style %>
+</head>
+
+<!--? Body -->
+
+<body class="hold-transition sidebar-mini">
+	<!--? Wrapper -->
+	<section class="wrapper">
+		<!--? Header -->
+		<header>
+			<!--? Nav -->
+			<nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+				<!--? Left navbar links -->
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" data-widget="pushmenu" href="#">
+							<i class="fa fa-bars"></i>
+						</a>
+					</li>
+				</ul>
+				<div class="text-muted" id="txt"></div>
+				<div class="text-muted" style="margin-right: 15px;">تاریخ:
+					<%= date(Date.now()).format('jYYYY/jMM/jDD') %></div>
+				<!--! Left navbar links -->
+
+				<!--? Right navbar links -->
+				<ul class="navbar-nav mr-auto">
+					<!--? Messages Dropdown Menu -->
+					<li class="nav-item dropdown message">
+						<a class="nav-link" data-toggle="dropdown" href="#">
+							<i class="fa fa-comment"></i>
+							<% if (agentMessages.length > 0) { %>
+							<span class="badge badge-danger navbar-badge"><%= agentMessages.length %></span>
+							<% } %>
+						</a>
+						<div class="dropdown-menu dropdown-menu-lg dropdown-menu-left">
+							<div class="dropdown-body">
+								<% agentMessages.forEach(message => { %>
+								<!--? Message Start -->
+								<a href="/admin/message/<%= message._id %>" class="dropdown-item">
+									<div class="mt-1 media">
+										<img src="<%= message.user.avatar %>" alt="User Avatar"
+											class="img-size-50 ml-3 img-circle" />
+										<div class="media-body">
+											<h3 class="dropdown-item-title">
+												<%= message.user.name %>
+												<span class="float-left text-sm text-danger">
+													<i class="fa fa-star"></i>
+												</span>
+											</h3>
+											<p class="mt-2 text-sm"><%= message.title %></p>
+											<p class="mt-1 mb-1 text-sm text-muted">
+												<i class="fa fa-clock"></i>
+												<%= date(message.updatedAt).fromNow() %>
+											</p>
+										</div>
+									</div>
+									<div class="dropdown-divider"></div>
+								</a>
+								<!--! Message End -->
+								<% }) %>
+							</div>
+							<div class="dropdown-divider"></div>
+							<a href="/admin/message" class="dropdown-item dropdown-footer">
+								مشاهده تمام پیام‌ ها
+							</a>
+						</div>
+					</li>
+					<!--! Messages Dropdown Menu -->
+
+					<!--? Notifications Dropdown Menu -->
+					<li class="nav-item dropdown message">
+						<a class="nav-link" data-toggle="dropdown" href="#">
+							<i class="fa fa-bell"></i>
+							<% if (alerts.length > 0) { %>
+							<span class="badge badge-warning navbar-badge"><%= alerts.length %></span>
+							<% } %>
+						</a>
+						<div class="dropdown-menu dropdown-menu-lg dropdown-menu-left">
+							<!--? Alert Start -->
+							<div style="max-height: 300px; overflow-y: auto;">
+								<% alerts.forEach(alert => { %>
+								<a href="/admin/profile" class="dropdown-item">
+									<img src="<%= alert.icon %>" class="ml-2" />
+									<%= alert.title %>
+									<span
+										class="float-left text-muted text-sm"><%= date(alert.createdAt).fromNow() %></span>
+								</a>
+								<% }) %>
+							</div>
+							<div class="dropdown-divider"></div>
+							<a href="/admin/profile" class="dropdown-item dropdown-footer">
+								مشاهده تمام اعلانات
+							</a>
+						</div>
+					</li>
+					<!--! Notifications Dropdown Menu -->
+
+					<!--? Profile Dropdown Menu -->
+					<li class="nav-item dropdown">
+						<a class="nav-link" data-toggle="dropdown" href="#">
+							<i class="fa fa-user"></i>
+						</a>
+						<div class="dropdown-menu dropdown-menu-lg dropdown-menu-left">
+							<a href="/admin/profile" class="dropdown-item dropdown-footer">
+								مشاهده پروفایل
+							</a>
+							<div class="dropdown-divider"></div>
+							<a href="/admin/logout" class="dropdown-item dropdown-footer">
+								خروج
+							</a>
+						</div>
+					</li>
+					<!--! Profile Dropdown Menu -->
+				</ul>
+				<!--! Right navbar links -->
+			</nav>
+			<!--! Nav -->
+		</header>
+		<!--! Header -->
+
+		<aside class="main-sidebar sidebar-theme elevation-4">
+			<!--? Brand Logo -->
+			<a href="/admin" class="brand-link">
+				<img src="/images/icon.png" class="brand-image" style="opacity: 0.8;" />
+				<span class="brand-text">پنل مدیریت مشاوره املاک</span>
+			</a>
+			<!--! Brand Logo -->
+
+			<!--? Sidebar -->
+			<div class="sidebar">
+				<div>
+					<!--? Sidebar User Panel -->
+					<div class="user-panel mt-1 pb-1 mb-1 d-flex">
+						<div class="image">
+							<img src="<%= user.avatar %>" class="img-circle elevation-2" alt="User Image">
+						</div>
+						<div class="info">
+							<span class="name"><%= user.name %></span>
+							<span class="role"><%= user.role %></span>
+						</div>
+					</div>
+					<!--! Sidebar User Panel -->
+
+					<!--? Sidebar Menu -->
+					<nav class="mt-2">
+						<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+							data-accordion="false">
+							<% if (auth.url === "/admin") { %>
+							<li class="nav-item">
+								<a href="/admin" class="nav-link active">
+									<i class="nav-icon fab fa-buffer"></i>
+									<p>
+										داشبورد
+									</p>
+								</a>
+							</li>
+							<% } else { %>
+							<li class="nav-item">
+								<a href="/admin" class="nav-link">
+									<i class="nav-icon fab fa-buffer"></i>
+									<p>
+										داشبورد
+									</p>
+								</a>
+							</li>
+							<% } %>
+
+							<li class="nav-header">مشاوره املاک</li>
+
+							<% if (auth.url.includes("/admin/estate")) { %>
+							<li class="nav-item has-treeview menu-open">
+								<a href="#" class="nav-link active">
+									<i class="nav-icon fas fa-store-alt"></i>
+									<p>
+										مشاورین املاک
+										<i class="right fa fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/admin/estate" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>لیست مشاوران</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/estate/create" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>مشاور جدید</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<% } else { %>
+							<li class="nav-item has-treeview">
+								<a href="#" class="nav-link">
+									<i class="nav-icon fas fa-store-alt"></i>
+									<p>
+										مشاورین املاک
+										<i class="right fa fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/admin/estate" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>لیست مشاوران</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/estate/create" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>مشاور جدید</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<% } %>
+
+							<% if (auth.url.includes("/admin/location")) { %>
+							<li class="nav-item has-treeview menu-open">
+								<a href="#" class="nav-link active">
+									<i class="nav-icon fas fa-street-view"></i>
+									<p>
+										مدیریت مناطق
+										<i class="right fa fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<!-- <%if(user.permissions.indexOf('5ec9040643cc7477c834c7b2') > -1){%>
+											<% } %> -->
+									<li class="nav-item">
+										<a href="/admin/location/state" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>مدیریت استان ها</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/location/city" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>مدیریت شهر ها</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/location/region" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>مدیریت ناحیه ها</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<% } else { %>
+							<li class="nav-item has-treeview">
+								<a href="#" class="nav-link">
+									<i class="nav-icon fas fa-street-view"></i>
+									<p>
+										مدیریت مناطق
+										<i class="right fa fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/admin/location/state" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>مدیریت استان ها</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/location/city" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>مدیریت شهر ها</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/location/region" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>مدیریت ناحیه ها</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<% } %>
+
+							<% if (auth.url.includes("/admin/blog")) { %>
+							<li class="nav-item has-treeview menu-open">
+								<a href="#" class="nav-link active">
+									<i class="nav-icon fas fa-blog"></i>
+									<p>
+										بلاگ
+										<i class="right fa fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/admin/blog" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>لیست بلاگ ها</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/blog/create" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>ایجاد بلاگ</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<% } else { %>
+							<li class="nav-item has-treeview">
+								<a href="#" class="nav-link">
+									<i class="nav-icon fas fa-blog"></i>
+									<p>
+										بلاگ
+										<i class="right fa fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/admin/blog" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>لیست بلاگ ها</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/blog/create" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>ایجاد بلاگ</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<% } %>
+
+							<% if (auth.url.includes("/admin/comments")) { %>
+							<li class="nav-item">
+								<a href="/admin/comments" class="nav-link active">
+									<i class="nav-icon fas fa-comments"></i>
+									<p>لیست نظرات</p>
+								</a>
+							</li>
+							<% } else { %>
+							<li class="nav-item">
+								<a href="/admin/comments" class="nav-link">
+									<i class="nav-icon fas fa-comments"></i>
+									<p>لیست نظرات</p>
+								</a>
+							</li>
+							<% } %>
+
+							<li class="nav-header">مدیریت کاربران</li>
+
+							<% if (auth.url.includes("/admin/users")) { %>
+							<li class="nav-item has-treeview menu-open">
+								<a href="#" class="nav-link active">
+									<i class="nav-icon fas fa-users"></i>
+									<p>
+										لیست کاربران
+										<i class="right fa fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/admin/users/site" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>لیست کاربران سایت</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/users/operator" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>لیست اپراتورها</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/users/roles" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>سطح دسترسی</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<% } else { %>
+							<li class="nav-item has-treeview">
+								<a href="#" class="nav-link">
+									<i class="nav-icon fas fa-users"></i>
+									<p>
+										لیست کابران
+										<i class="right fa fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/admin/users/site" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>لیست کاربران سایت</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/users/operator" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>لیست اپراتورها</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/users/roles" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>سطح دسترسی</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<% } %>
+
+							<% if (auth.url === "/message") { %>
+							<li class="nav-item">
+								<a href="/admin/message" class="nav-link active">
+									<i class="nav-icon fas fa-envelope"></i>
+									<p>
+										پیام
+										<span class="badge badge-info right"
+											style="top: 8px !important;"><%= agentMessages.length %></span>
+									</p>
+								</a>
+							</li>
+							<% } else { %>
+							<li class="nav-item">
+								<a href="/admin/message" class="nav-link">
+									<i class="nav-icon fas fa-envelope"></i>
+									<p>
+										<span class="badge badge-info right"
+											style="top: 8px !important;"><%= agentMessages.length %></span>
+										پیام
+									</p>
+								</a>
+							</li>
+							<% } %>
+
+							<li class="nav-header">تنظیمات</li>
+
+							<% if (auth.url.includes("/admin/setting/page")) { %>
+							<li class="nav-item has-treeview menu-open">
+								<a href="#" class="nav-link active">
+									<i class="nav-icon fa fa-pencil-square-o"></i>
+									<p>
+										صفحات سایت
+										<i class="right fa fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/admin/setting/page/about" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>درباره ما</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/setting/page/team" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>تیم مشاوره املاک</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<% } else { %>
+							<li class="nav-item has-treeview">
+								<a href="#" class="nav-link">
+									<i class="nav-icon fa fa-pencil-square-o"></i>
+									<p>
+										صفحات سایت
+										<i class="right fa fa-angle-left"></i>
+									</p>
+								</a>
+								<ul class="nav nav-treeview">
+									<li class="nav-item">
+										<a href="/admin/setting/page/about" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>درباره ما</p>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="/admin/setting/page/team" class="nav-link">
+											<i class="fas fa-circle nav-icon nav-icon-small"></i>
+											<p>تیم مشاوره املاک</p>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<% } %>
+
+							<li class="nav-header">امنیت</li>
+
+							<% if (auth.url === "/admin/log") { %>
+							<li class="nav-item">
+								<a href="/admin/log" class="nav-link active">
+									<i class="nav-icon fa fa-book"></i>
+									<p>
+										گزارش ورود به پنل
+									</p>
+								</a>
+							</li>
+							<% } else { %>
+							<li class="nav-item">
+								<a href="/admin/log" class="nav-link">
+									<i class="nav-icon fa fa-book"></i>
+									<p>
+										گزارش ورود به پنل
+									</p>
+								</a>
+							</li>
+							<% } %>
+
+							<% if (auth.url === "/admin/password") { %>
+							<li class="nav-item">
+								<a href="/admin/password" class="nav-link active">
+									<i class="nav-icon fa fa-key"></i>
+									<p>
+										تغییر رمز عبور
+									</p>
+								</a>
+							</li>
+							<% } else { %>
+							<li class="nav-item">
+								<a href="/admin/password" class="nav-link">
+									<i class="nav-icon fa fa-key"></i>
+									<p>
+										تغییر رمز عبور
+									</p>
+								</a>
+							</li>
+							<% } %>
+
+						</ul>
+					</nav>
+					<!--! Sidebar Menu -->
+				</div>
+			</div>
+			<!--! Sidebar -->
+		</aside>
+
+		<!--? Main Content -->
+		<div class="content-wrapper">
+			<section class="content">
+				<%- body %>
+			</section>
+		</div>
+		<!--! Main Content -->
+	</section>
+	<!--! Wrapper -->
+
+	<!--? Footer -->
+	<footer class="footer">
+		<div id="button"></div>
+		<div id="container">
+			<div id="cont">
+				<div class="footer_center">
+					<h3>
+						Copyright &COPY; 2020 All rights reserved. Design By SMR
+					</h3>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!--! Footer -->
+
+	<!-- Script -->
+	<script src="/plugins/jquery/dist/jquery.min.js"></script>
+	<script src="/plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+	<script src="/plugins/fastclick/fastclick.js"></script>
+	<script src="/plugins/PACE/pace.min.js"></script>
+	<script src="/js/main.js"></script>
+	<script src="/js/toastr.min.js"></script>
+	<script src="/js/sweetalert.min.js"></script>
+
+	<!-- Toast Alert -->
+	</script>
+	<% let toast = req.flash('toast')
+				if(toast.length) {
+				let data = toast[0]; %>
+	<script>
+		toastr.error('<%= data.text %>', '', {
+			iconClass: '<%= data.iconClass %>',
+			tapToDismiss: true,
+			toastClass: 'toast',
+			containerId: 'toast-container',
+			debug: false,
+			showMethod: 'fadeIn',
+			showDuration: 300,
+			showEasing: 'swing',
+			onShown: undefined,
+			onHidden: undefined,
+			hideMethod: 'fadeOut',
+			hideDuration: 1000,
+			hideEasing: 'swing',
+			closeMethod: false,
+			closeDuration: false,
+			closeEasing: false,
+			extendedTimeOut: 1000,
+			iconClasses: {
+				error: 'toast-error',
+				info: 'toast-info',
+				success: 'toast-success',
+				warning: 'toast-warning'
+			},
+			positionClass: 'toast-bottom-left',
+			timeOut: 1500,
+			titleClass: 'toast-title',
+			messageClass: 'toast-message',
+			escapeHtml: false,
+			target: 'body',
+			newestOnTop: true,
+			preventDuplicates: false,
+			progressBar: true
+		});
+	</script>
+	<% } %>
+
+	<script>
+		function startTime() {
+			var today = new Date();
+			var h = today.getHours();
+			var m = today.getMinutes();
+			var s = today.getSeconds();
+			m = checkTime(m);
+			s = checkTime(s);
+			document.getElementById('txt').innerHTML =
+				'ساعت: ' + h + ":" + m + ":" + s;
+			var t = setTimeout(startTime, 500);
+		}
+
+		function checkTime(i) {
+			if (i < 10) {
+				i = "0" + i
+			};
+			return i;
+		}
+		startTime();
+	</script>
+	<%- script %>
+</body>
+<!--! Body -->
+
+</html>

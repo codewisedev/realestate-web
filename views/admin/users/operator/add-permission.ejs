@@ -1,0 +1,84 @@
+<% contentFor('style') %>
+<style>
+	.material {
+		background-color: var(--light-gray);
+		border-radius: 3px;
+		margin: 0px 10px;
+		text-align: center;
+		padding: 5px;
+		width: 50px;
+	}
+
+	.input-checkbox {
+		width: 20px;
+		height: 20px;
+		cursor: pointer;
+	}
+
+	.label-checkbox {
+		cursor: pointer;
+		margin: 5px 10px 5px 0px;
+	}
+
+	.checkbox-body {
+		display: flex;
+		flex-wrap: wrap;
+		padding-left: 0;
+	}
+
+	.checkbox-item {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		margin: 5px;
+		padding: 10px;
+	}
+</style>
+
+<% contentFor('body') %>
+<div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+	<h2>سطح دسترسی</h2>
+</div>
+
+<div class="card" style="margin-top: 15px;">
+	<div class="card-header">
+		<h3 class="card-title"><%= user.name %></h3>
+		<div class="card-tools" style="position: absolute; left: 15px;">
+			<button style="position: absolute; left: 0;" type="button" class="btn btn-tool" data-widget="collapse">
+				<i class="fa fa-minus"></i>
+			</button>
+		</div>
+	</div>
+
+	<div class="card-body p-0">
+		<div class="col-md-12">
+			<form class="form-horizontal" action="/admin/users/operator/addrole/<%= user.id %>?_method=put"
+				method="POST">
+				<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+				<%- include(viewPath('layouts/errors')) -%>
+
+				<div class="form-group row">
+					<% permissions.forEach(permission => { %>
+					<div class="checkbox-body">
+						<div class="card checkbox-item">
+							<input name="permissions" class="input-checkbox" type="checkbox" id="<%= permission._id %>"
+								value="<%= permission._id %>"
+								<%= complete('permissions' , user.permissions).indexOf(permission._id) !== -1 ? 'checked' : ''%> />
+							<label class="label-checkbox" for="<%= permission._id %>">
+								<%= permission.desc %>
+							</label>
+						</div>
+					</div>
+					<% }) %>
+				</div>
+
+				<div class="form-group row">
+					<div class="col">
+						<button type="submit" class="btn btn-primary">ویرایش</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

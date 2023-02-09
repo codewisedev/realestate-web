@@ -1,0 +1,41 @@
+<% contentFor('body') %>
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+	<h2>لیست مجوز دسترسی</h2>
+	<div class="btn-group">
+		<a href="/admin/users/permissions/create" class="btn btn-sm btn-danger">
+			افزودن مجوز دسترسی جدید
+		</a>
+		<a href="/admin/users/roles" class="btn btn-sm btn-info">بخش نقش ها</a>
+	</div>
+</div>
+<div class="table-responsive">
+	<table class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<th>برچسب</th>
+				<th>توضیحات</th>
+				<th>تنظیمات</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% permissions.docs.forEach(permission => { %>
+			<tr>
+				<td><%= permission.label %></td>
+				<td><%= permission.desc %></td>
+				<td>
+					<form action="/admin/users/permissions/<%= permission.id %>?_method=DELETE" method="post">
+						<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+						<div class="btn-group btn-group-sm">
+							<a href="/admin/users/permissions/<%= permission.id %>/edit" class="btn btn-primary">
+								ویرایش
+							</a>
+							<button type="submit" class="btn btn-danger">حذف</button>
+						</div>
+					</form>
+				</td>
+			</tr>
+			<% }) %>
+		</tbody>
+	</table>
+	<%- include(viewPath('layouts/pagination-dashboard') ,{ pagination : permissions}) %>
+</div>

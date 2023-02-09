@@ -1,0 +1,2342 @@
+<% contentFor('style') %>
+<link href="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.css" rel="stylesheet" type="text/css">
+<script src="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.js" type="text/javascript"></script>
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/select2.css" />
+<link rel="stylesheet" href="/css/imagepicker.css" />
+<link rel="stylesheet" href="/css/select.css" />
+
+<style>
+	input:required:invalid {
+		background-color: #fceaea;
+	}
+
+	input:required:valid {
+		background-color: #effaef;
+	}
+
+	input[type="radio"]:required:invalid,
+	input[type="radio"]:required:valid {
+		background-color: var(--dark-gray);
+	}
+
+	input[type="radio"]:required:valid:checked {
+		background-color: var(--accent);
+	}
+
+	textarea:required:invalid {
+		background-color: #fceaea;
+	}
+
+	textarea:required:valid {
+		background-color: #effaef;
+	}
+
+	.material {
+		background-color: var(--light-gray);
+		border-radius: 3px;
+		margin: 0px 10px;
+		text-align: center;
+		padding: 5px;
+		width: 50px;
+	}
+
+	.input-checkbox {
+		width: 20px;
+		height: 20px;
+		cursor: pointer;
+	}
+
+	.label-checkbox {
+		cursor: pointer;
+		margin: 5px 10px 5px 0px;
+	}
+
+	.checkbox-body {
+		display: flex;
+		flex-wrap: wrap;
+		padding-left: 0;
+	}
+
+	.checkbox-item {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		margin: 5px;
+		padding: 10px;
+	}
+
+	.button-prev,
+	.button-next {
+		background-color: var(--main);
+		color: var(--white);
+		float: left;
+		margin: 15px 0px 0px 10px;
+	}
+
+	.button-prev:hover,
+	.button-next:hover {
+		background-color: var(--primary);
+		color: var(--white);
+	}
+
+	.swiper-pagination-bullet {
+		width: 25px;
+		height: 25px;
+		text-align: center;
+		line-height: 27px;
+		font-size: 12px;
+		font-weight: bold;
+		color: #000;
+		opacity: 1;
+		background: rgba(0, 0, 0, 0.2);
+		margin: 10px 4px !important;
+	}
+
+	.swiper-pagination-bullet-active {
+		color: #fff;
+		background: var(--accent);
+	}
+
+	.swiper-button-disabled:hover,
+	.swiper-button-disabled {
+		background-color: var(--middle-gray);
+	}
+
+	.toggle,
+	.toggle::after,
+	.toggle *,
+	.toggle *::after {
+		transition: 0.25s ease all;
+	}
+
+	.toggle {
+		display: inline-block;
+		position: relative;
+		width: 60px;
+		height: 34px;
+		margin: 0.5rem;
+	}
+
+	.toggle input {
+		display: none;
+	}
+
+	.toggle .trigger {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: #666;
+	}
+
+	.toggle .trigger,
+	.toggle .trigger::after {
+		border-radius: 1rem;
+	}
+
+	.toggle .trigger::after {
+		position: absolute;
+		content: "";
+		height: 26px;
+		width: 26px;
+		left: 4px;
+		bottom: 4px;
+		background-color: white;
+	}
+
+	.toggle .trigger:hover {
+		cursor: pointer;
+	}
+
+	.toggle input:checked~.trigger {
+		background: var(--accent);
+	}
+
+	.toggle input:checked~.trigger::after {
+		transform: translateX(100%);
+	}
+
+	.toggle.x2 {
+		transform: scale(2);
+	}
+
+	.map {
+		min-height: 350px;
+		width: 100%;
+		background: #eee;
+		border: 2px solid #aaa;
+		margin-bottom: 15px;
+	}
+</style>
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>ویرایش ملک</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">ملک ها</a></li>
+					<li class="breadcrumb-item active">ویرایش ملک</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<form id="myForm" class="form-horizontal content" action="/agent/ads/create?_csrf=<%= req.csrfToken() %>"
+			method="POST" enctype="multipart/form-data">
+
+			<div class="alert alert-danger">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span>×</span>
+				</button>
+				<br />
+			</div>
+
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide" style="margin-bottom: 50px;">
+						<div class="alert alert-warning" role="alert">
+							پر کردن موارد قرمز رنگ الزامی است!
+							<i class="fas fa-info-circle" style="margin-left: 20px; font-size: 1.5rem;"></i>
+						</div>
+
+						<label>نوع معامله</label>
+						<div class="radio">
+							<input label="فروش" type="radio" name="transactionType" value="1" onchange="sale()"
+								class="transactionType" <%= ads.transactionType === 1 ? 'checked' : '' %> disabled>
+							<input label="رهن کامل" type="radio" name="transactionType" value="2" onchange="mortage()"
+								class="transactionType" <%= ads.transactionType === 2 ? 'checked' : '' %> disabled>
+							<input label="رهن و اجاره" type="radio" name="transactionType" value="3" onchange="rents()"
+								class="transactionType" <%= ads.transactionType === 3 ? 'checked' : '' %> disabled>
+							<input label="پیش خرید" type="radio" name="transactionType" value="4" onchange="preSale()"
+								class="transactionType" <%= ads.transactionType === 4 ? 'checked' : '' %> disabled>
+							<input label="معاوضه" type="radio" name="transactionType" value="5" onchange="exchanges()"
+								class="transactionType" <%= ads.transactionType === 5 ? 'checked' : '' %> disabled>
+							<input label="مشارکت" type="radio" name="transactionType" value="6"
+								onchange="participation()" class="transactionType"
+								<%= ads.transactionType === 6 ? 'checked' : '' %> disabled>
+						</div>
+
+						<div id="adsType" class="mt-3">
+							<label>نوع ملک</label>
+							<div class="radio">
+								<input label="پنت هاوس" type="radio" name="adsType" value="1" onchange="penthouse()"
+									class="adsType sale mortage rents preSale exchange"
+									<%= ads.adsType === 1 ? 'checked' : '' %> disabled />
+								<input label="آپارتمان" type="radio" name="adsType" value="2" onchange="apartment()"
+									class="adsType sale mortage rents preSale exchange participation"
+									<%= ads.adsType === 2 ? 'checked' : '' %> disabled />
+								<input label="مجتمع مسکونی" type="radio" name="adsType" value="3" onchange="complex()"
+									class="adsType sale mortage rents preSale exchange participation"
+									<%= ads.adsType === 3 ? 'checked' : '' %> disabled />
+								<input label="خانه ویلایی" type="radio" name="adsType" value="4" onchange="house()"
+									class="adsType sale mortage rents exchange participation"
+									<%= ads.adsType === 4 ? 'checked' : '' %> disabled />
+								<input label="سوییت" type="radio" name="adsType" value="5" onchange="suite()"
+									class="adsType sale mortage rents preSale exchange"
+									<%= ads.adsType === 5 ? 'checked' : '' %> disabled />
+								<input label="ویلا" type="radio" name="adsType" value="6" onchange="villa()"
+									class="adsType sale mortage rents preSale exchange participation"
+									<%= ads.adsType === 6 ? 'checked' : '' %> disabled />
+								<input label="باغ" type="radio" name="adsType" value="7" onchange="garden()"
+									class="adsType sale exchange" <%= ads.adsType === 7 ? 'checked' : '' %> disabled />
+								<input label="زمین ملکی" type="radio" name="adsType" value="8" onchange="land()"
+									class="adsType sale exchange participation"
+									<%= ads.adsType === 8 ? 'checked' : '' %> disabled />
+								<input label="زمین زراعی" type="radio" name="adsType" value="9" onchange="farm()"
+									class="adsType sale mortage exchange" <%= ads.adsType === 9 ? 'checked' : '' %>
+									disabled />
+								<input label="مغازه و تجاری" type="radio" name="adsType" value="10" onchange="shop()"
+									class="adsType sale mortage rents preSale exchange participation"
+									<%= ads.adsType === 10 ? 'checked' : '' %> disabled />
+								<input label="اداری" type="radio" name="adsType" value="11" onchange="office()"
+									class="adsType sale mortage rents preSale exchange participation"
+									<%= ads.adsType === 11 ? 'checked' : '' %> disabled />
+								<input label="هتل" type="radio" name="adsType" value="12" onchange="hotel()"
+									class="adsType sale preSale exchange participation"
+									<%= ads.adsType === 12 ? 'checked' : '' %> disabled />
+								<input label="هتل آپارتمان" type="radio" name="adsType" value="13"
+									class="adsType sale preSale exchange participation" onchange="hotel()"
+									<%= ads.adsType === 13 ? 'checked' : '' %> disabled />
+								<input label="کارگاه" type="radio" name="adsType" value="14" onchange="workshop()"
+									class="adsType sale mortage rents exchange"
+									<%= ads.adsType === 14 ? 'checked' : '' %> disabled />
+								<input label="سالن" type="radio" name="adsType" value="15" onchange="hall()"
+									class="adsType sale mortage rents exchange"
+									<%= ads.adsType === 15 ? 'checked' : '' %> disabled />
+								<input label="انبار" type="radio" name="adsType" value="16" onchange="store()"
+									class="adsType sale mortage rents exchange"
+									<%= ads.adsType === 16 ? 'checked' : '' %> disabled />
+								<input label="کارخانه" type="radio" name="adsType" value="17" onchange="factory()"
+									class="adsType sale exchange" <%= ads.adsType === 17 ? 'checked' : '' %> disabled />
+							</div>
+						</div>
+
+						<div class="alert alert-primary" role="alert">
+							اطلاعات مالک فقط برای شما نمایش داده می شود
+						</div>
+						<label>اطلاعات مالک</label>
+						<div class="row">
+							<div class="col-md-4">
+								<input name="ownerName" type="text" class="form-control formObject"
+									placeholder="نام مالک" value="<%= ads.ownerName %>" />
+							</div>
+							<div class="col-md-4">
+								<input name="ownerMobile" type="text" class="form-control formObject"
+									placeholder="شماره موبایل مالک" dir="ltr" value="<%= ads.ownerMobile %>" />
+							</div>
+							<div class="col-md-4">
+								<input name="ownerPhone" type="text" class="form-control formObject"
+									placeholder="شماره تلفن مالک" dir="ltr" value="<%= ads.ownerTell %>" />
+							</div>
+						</div>
+
+						<div class="alert alert-primary" role="alert">
+							درصورت فعال کردن گزینه "نمایش عمومی آگهی" در سایت و صفحه عمومی شما نمایش داده می شود
+						</div>
+						<div class="row">
+							<div class="col-md-3">
+								<h6 class="formObject">نمایش عمومی آگهی</h6>
+								<label class="toggle">
+									<input name="priv" type="checkbox" <%= ads.priv ? '' : 'checked' %> />
+									<span class="trigger"> </span>
+								</label>
+							</div>
+							<div class="col-md-9">
+								<label class="formObject">عنوان آگهی</label>
+								<input name="title" type="text" class="form-control formObject" value="<%= ads.title %>"
+									required />
+							</div>
+						</div>
+					</div>
+					<div class="swiper-slide">
+						<div class="col-md-12" style="display: flex; flex-wrap: wrap;">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>استان *</label>
+									<select class="form-control select" id="state" name="state">
+										<% states.forEach(state => { %>
+										<option value="<%= state._id %>"
+											<%= ads.location.state._id.equals(state._id) ? 'selected' : '' %>>
+											<%= state.title %></option>
+										<% }) %>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>شهر *</label>
+									<select class="form-control select" id="city" name="city"></select>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>ناحیه *</label>
+									<select class="form-control select" id="region" name="region"></select>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-12">
+							<label>آدرس</label>
+							<input name="address" type="text" class="form-control formObject" placeholder="آدرس *"
+								value="<%= ads.location.address %>" required />
+						</div>
+
+						<label>انتخاب موقعیت مکانی بر روی نقشه</label>
+						<div style="margin-top: 15px; display: none;">
+							<input id="lat" name="lat" type="text" value="<%= ads.location.lat %>" />
+							<input id="lon" name="lon" type="text" value="<%= ads.location.lon %>" />
+						</div>
+						<div id="map" class="map"></div>
+					</div>
+
+					<div class="swiper-slide" style="margin-bottom: 50px;">
+						<div class="row" style="margin: 20px 0px 50px 0px;">
+							<div class="col-md-4 sale preSale exchange participation">
+								<div class="form-group">
+									<label>نوع سند</label>
+									<select class="form-control select" id="doc" name="doc">
+										<option value="1" <%= ads.material.doc == "1" ? 'selected' : '' %>>ملکی</option>
+										<option value="2" <%= ads.material.doc == "2" ? 'selected' : '' %>>قولنامه ای
+										</option>
+										<option value="3" <%= ads.material.doc == "3" ? 'selected' : '' %>>سرقفلی
+										</option>
+										<option value="4" <%= ads.material.doc == "4" ? 'selected' : '' %>>وکالتی
+										</option>
+										<option value="5" <%= ads.material.doc == "5" ? 'selected' : '' %>>مشاع</option>
+										<option value="6" <%= ads.material.doc == "6" ? 'selected' : '' %>>اوقاف
+										</option>
+										<option value="7" <%= ads.material.doc == "7" ? 'selected' : '' %>>آستان قدس
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div
+								class="col-md-4 penthouse apartment complex house suite villa shop office hotel workshop hall store factory">
+								<div class="form-group">
+									<label>سن بنا (سال)</label>
+									<select class="form-control formObject select" id="age" name="age"></select>
+								</div>
+							</div>
+
+							<div class="col-md-4 land">
+								<label>عرض گذر</label>
+								<input name="width" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.width %>" />
+							</div>
+
+							<div class="col-md-4 shop">
+								<label>ارتفاع</label>
+								<input name="height" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.height %>" />
+							</div>
+
+							<div class="col-md-4 land farm">
+								<label>عرض زمین</label>
+								<input name="breadth" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.breadth %>" />
+							</div>
+
+							<div class="col-md-4 house land shop garden workshop">
+								<label>طول بر</label>
+								<input name="length" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.length %>" />
+							</div>
+
+							<div
+								class="col-md-4 apartment complex house villa garden land farm hotel workshop hall store factory">
+								<label>متراژ زمین</label>
+								<input name="landArea" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.landArea %>" />
+							</div>
+
+							<div
+								class="col-md-4 penthouse apartment complex house suite villa shop office hotel workshop hall store factory">
+								<label>زیر بنا</label>
+								<input name="infrastructureArea" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.infrastructureArea %>" />
+							</div>
+
+							<div class="col-md-4 land farm">
+								<label>متراژ اصلاحی</label>
+								<input name="modifiedArea" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.modifiedArea %>" />
+							</div>
+
+							<div
+								class="col-md-4 penthouse apartment complex house suite villa land farm office hotel factory">
+								<div class="form-group">
+									<label>موقعیت</label>
+									<select class="form-control formObject select" id="position" name="position">
+										<option value="0" <%= ads.material.modifiedArea == 0 ? 'selected' : '' %>>
+											بدون انتخاب
+										</option>
+										<option value="1" <%= ads.material.modifiedArea == 1 ? 'selected' : '' %>>
+											شمالی
+										</option>
+										<option value="2" <%= ads.material.modifiedArea == 2 ? 'selected' : '' %>>
+											جنوبی
+										</option>
+										<option value="3" <%= ads.material.modifiedArea == 3 ? 'selected' : '' %>>
+											شمالی و جنوبی
+										</option>
+										<option value="4" <%= ads.material.modifiedArea == 4 ? 'selected' : '' %>>
+											شرقی
+										</option>
+										<option value="5" <%= ads.material.modifiedArea == 5 ? 'selected' : '' %>>
+											غربی
+										</option>
+										<option value="6" <%= ads.material.modifiedArea == 6 ? 'selected' : '' %>>
+											شرقی و غربی
+										</option>
+										<option value="7" <%= ads.material.modifiedArea == 7 ? 'selected' : '' %>>
+											دونبش
+										</option>
+										<option value="8" <%= ads.material.modifiedArea == 8 ? 'selected' : '' %>>
+											سه نبش
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-4 penthouse apartment complex hotel">
+								<div class="form-group">
+									<label>تعداد طبقات</label>
+									<select class="form-control formObject select" id="floorCount" name="floorCount">
+										<option value="1" <%= ads.material.floorCount == 1 ? 'selected' : '' %>>
+											1
+										</option>
+										<option value="2" <%= ads.material.floorCount == 2 ? 'selected' : '' %>>
+											2
+										</option>
+										<option value="3" <%= ads.material.floorCount == 3 ? 'selected' : '' %>>
+											3
+										</option>
+										<option value="4" <%= ads.material.floorCount == 4 ? 'selected' : '' %>>
+											4
+										</option>
+										<option value="5" <%= ads.material.floorCount == 5 ? 'selected' : '' %>>
+											5
+										</option>
+										<option value="6" <%= ads.material.floorCount == 6 ? 'selected' : '' %>>
+											6
+										</option>
+										<option value="7" <%= ads.material.floorCount == 7 ? 'selected' : '' %>>
+											7
+										</option>
+										<option value="8" <%= ads.material.floorCount == 8 ? 'selected' : '' %>>
+											8
+										</option>
+										<option value="9" <%= ads.material.floorCount == 9 ? 'selected' : '' %>>
+											9
+										</option>
+										<option value="10" <%= ads.material.floorCount == 10 ? 'selected' : '' %>>
+											10
+										</option>
+										<option value="11" <%= ads.material.floorCount == 11 ? 'selected' : '' %>>
+											11
+										</option>
+										<option value="12" <%= ads.material.floorCount == 12 ? 'selected' : '' %>>
+											12
+										</option>
+										<option value="13" <%= ads.material.floorCount == 13 ? 'selected' : '' %>>
+											13
+										</option>
+										<option value="14" <%= ads.material.floorCount == 14 ? 'selected' : '' %>>
+											14
+										</option>
+										<option value="15" <%= ads.material.floorCount == 15 ? 'selected' : '' %>>
+											15
+										</option>
+										<option value="16" <%= ads.material.floorCount == 16 ? 'selected' : '' %>>
+											16
+										</option>
+										<option value="17" <%= ads.material.floorCount == 17 ? 'selected' : '' %>>
+											17
+										</option>
+										<option value="18" <%= ads.material.floorCount == 18 ? 'selected' : '' %>>
+											18
+										</option>
+										<option value="19" <%= ads.material.floorCount == 19 ? 'selected' : '' %>>
+											19
+										</option>
+										<option value="20" <%= ads.material.floorCount == 20 ? 'selected' : '' %>>
+											+20
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-4 apartment complex">
+								<div class="form-group">
+									<label>طبقه</label>
+									<select class="form-control formObject select" id="floor" name="floor">
+										<option value="1" <%= ads.material.floor == 1 ? 'selected' : '' %>>
+											1
+										</option>
+										<option value="2" <%= ads.material.floor == 2 ? 'selected' : '' %>>
+											2
+										</option>
+										<option value="3" <%= ads.material.floor == 3 ? 'selected' : '' %>>
+											3
+										</option>
+										<option value="4" <%= ads.material.floor == 4 ? 'selected' : '' %>>
+											4
+										</option>
+										<option value="5" <%= ads.material.floor == 5 ? 'selected' : '' %>>
+											5
+										</option>
+										<option value="6" <%= ads.material.floor == 6 ? 'selected' : '' %>>
+											6
+										</option>
+										<option value="7" <%= ads.material.floor == 7 ? 'selected' : '' %>>
+											7
+										</option>
+										<option value="8" <%= ads.material.floor == 8 ? 'selected' : '' %>>
+											8
+										</option>
+										<option value="9" <%= ads.material.floor == 9 ? 'selected' : '' %>>
+											9
+										</option>
+										<option value="10" <%= ads.material.floor == 10 ? 'selected' : '' %>>
+											10
+										</option>
+										<option value="11" <%= ads.material.floor == 11 ? 'selected' : '' %>>
+											11
+										</option>
+										<option value="12" <%= ads.material.floor == 12 ? 'selected' : '' %>>
+											12
+										</option>
+										<option value="13" <%= ads.material.floor == 13 ? 'selected' : '' %>>
+											13
+										</option>
+										<option value="14" <%= ads.material.floor == 14 ? 'selected' : '' %>>
+											14
+										</option>
+										<option value="15" <%= ads.material.floor == 15 ? 'selected' : '' %>>
+											15
+										</option>
+										<option value="16" <%= ads.material.floor == 16 ? 'selected' : '' %>>
+											16
+										</option>
+										<option value="17" <%= ads.material.floor == 17 ? 'selected' : '' %>>
+											17
+										</option>
+										<option value="18" <%= ads.material.floor == 18 ? 'selected' : '' %>>
+											18
+										</option>
+										<option value="19" <%= ads.material.floor == 19 ? 'selected' : '' %>>
+											19
+										</option>
+										<option value="20" <%= ads.material.floor == 20 ? 'selected' : '' %>>
+											+20
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-4 apartment complex office hotel">
+								<div class="form-group">
+									<label>تعداد واحد در هر طبقه</label>
+									<select class="form-control formObject select" id="unitPerFloor"
+										name="unitPerFloor">
+										<option value="1" <%= ads.material.unitPerFloor == 1 ? 'selected' : '' %>>
+											1
+										</option>
+										<option value="2" <%= ads.material.unitPerFloor == 2 ? 'selected' : '' %>>
+											2
+										</option>
+										<option value="3" <%= ads.material.unitPerFloor == 3 ? 'selected' : '' %>>
+											3
+										</option>
+										<option value="4" <%= ads.material.unitPerFloor == 4 ? 'selected' : '' %>>
+											4
+										</option>
+										<option value="5" <%= ads.material.unitPerFloor == 5 ? 'selected' : '' %>>
+											5
+										</option>
+										<option value="6" <%= ads.material.unitPerFloor == 6 ? 'selected' : '' %>>
+											6
+										</option>
+										<option value="7" <%= ads.material.unitPerFloor == 7 ? 'selected' : '' %>>
+											7
+										</option>
+										<option value="8" <%= ads.material.unitPerFloor == 8 ? 'selected' : '' %>>
+											+8
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-4 penthouse house villa">
+								<div class="form-group">
+									<label>نوع واحد</label>
+									<select class="form-control formObject select" id="unitType" name="unitType">
+										<option value="0" <%= ads.material.unitType == 0 ? 'selected' : '' %>>
+											بدون انتخاب
+										</option>
+										<option value="1" <%= ads.material.unitType == 1 ? 'selected' : '' %>>
+											دوبلکس
+										</option>
+										<option value="2" <%= ads.material.unitType == 2 ? 'selected' : '' %>>
+											تریبلکس
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-4 hotel">
+								<label>تعداد کل واحد ها</label>
+								<input name="unitCount" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.unitCount %>" />
+							</div>
+
+							<div class="col-md-4 house land">
+								<label>تراکم</label>
+								<select class="form-control formObject select" id="density" name="density">
+									<option value="0" <%= ads.material.density == 1 ? 'selected' : '' %>>
+										بدون انتخاب
+									</option>
+									<option value="1" <%= ads.material.density == 2 ? 'selected' : '' %>>
+										کم
+									</option>
+									<option value="2" <%= ads.material.density == 3 ? 'selected' : '' %>>
+										متوسط
+									</option>
+									<option value="3" <%= ads.material.density == 4 ? 'selected' : '' %>>
+										زیاد
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-4 land">
+								<label>مجوز ساخت</label>
+								<select class="form-control formObject select" id="constructionPermit"
+									name="constructionPermit">
+									<option value="1" <%= ads.material.constructionPermit == 1 ? 'selected' : '' %>>
+										دارد
+									</option>
+									<option value="2" <%= ads.material.constructionPermit == 2 ? 'selected' : '' %>>
+										ندارد
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-4 shop office">
+								<label>مجوز تجاری</label>
+								<select class="form-control formObject select" id="businessPermit"
+									name="businessPermit">
+									<option value="1" <%= ads.material.businessPermit == 1 ? 'selected' : '' %>>
+										ندارد
+									</option>
+									<option value="2" <%= ads.material.businessPermit == 2 ? 'selected' : '' %>>
+										موقت
+									</option>
+									<option value="3" <%= ads.material.businessPermit == 3 ? 'selected' : '' %>>
+										دائم
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-4 land farm shop office workshop hall store factory">
+								<label>مناسب برای</label>
+								<input name="suitableFor" type="text" class="form-control formObject"
+									value="<%= ads.material.suitableFor %>" />
+							</div>
+
+							<div class="col-md-4 apartment complex house suite villa shop office hotel">
+								<div class="form-group">
+									<label>نما</label>
+									<select class="form-control formObject select" id="front" name="front">
+										<option value="1" <%= ads.material.front == 1 ? 'selected' : '' %>>
+											سنگ
+										</option>
+										<option value="2" <%= ads.material.front == 2 ? 'selected' : '' %>>
+											آجر سه سانت
+										</option>
+										<option value="3" <%= ads.material.front == 3 ? 'selected' : '' %>>
+											ترکیبی
+										</option>
+										<option value="4" <%= ads.material.front == 4 ? 'selected' : '' %>>
+											آجر سفال
+										</option>
+										<option value="5" <%= ads.material.front == 5 ? 'selected' : '' %>>
+											شیشه سکوریت
+										</option>
+										<option value="6" <%= ads.material.front == 6 ? 'selected' : '' %>>
+											رومی
+										</option>
+										<option value="7" <%= ads.material.front == 7 ? 'selected' : '' %>>
+											آجر نما
+										</option>
+										<option value="8" <%= ads.material.front == 8 ? 'selected' : '' %>>
+											سرامیک
+										</option>
+										<option value="9" <%= ads.material.front == 9 ? 'selected' : '' %>>
+											سیمان
+										</option>
+										<option value="10" <%= ads.material.front == 10 ? 'selected' : '' %>>
+											آجر گری
+										</option>
+										<option value="11" <%= ads.material.front == 11 ? 'selected' : '' %>>
+											کامپوزیت
+										</option>
+										<option value="12" <%= ads.material.front == 12 ? 'selected' : '' %>>
+											گرانولیت
+										</option>
+										<option value="13" <%= ads.material.front == 13 ? 'selected' : '' %>>
+											تراورتن
+										</option>
+										<option value="14" <%= ads.material.front == 14 ? 'selected' : '' %>>
+											گرانیت
+										</option>
+										<option value="15" <%= ads.material.front == 15 ? 'selected' : '' %>>
+											سیمان سفید
+										</option>
+										<option value="16" <%= ads.material.front == 16 ? 'selected' : '' %>>
+											آلومینیوم
+										</option>
+										<option value="17" <%= ads.material.front == 17 ? 'selected' : '' %>>
+											شیشه رفلکس
+										</option>
+										<option value="18" <%= ads.material.front == 18 ? 'selected' : '' %>>
+											سنگ و شیشه
+										</option>
+										<option value="19" <%= ads.material.front == 19 ? 'selected' : '' %>>
+											سیمان رنگی
+										</option>
+										<option value="20" <%= ads.material.front == 20 ? 'selected' : '' %>>
+											کنیتکس
+										</option>
+										<option value="21" <%= ads.material.front == 21 ? 'selected' : '' %>>
+											آلوتایل
+										</option>
+										<option value="22" <%= ads.material.front == 22 ? 'selected' : '' %>>
+											چوب
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-4 penthouse apartment complex house suite villa shop office hotel">
+								<div class="form-group">
+									<label>کابینت</label>
+									<select class="form-control formObject select" id="cabinet" name="cabinet">
+										<option value="1" <%= ads.material.cabinet == 1 ? 'selected' : '' %>>
+											ام دی اف
+										</option>
+										<option value="2" <%= ads.material.cabinet == 2 ? 'selected' : '' %>>
+											فلزی
+										</option>
+										<option value="3" <%= ads.material.cabinet == 3 ? 'selected' : '' %>>
+											های گلاس
+										</option>
+										<option value="4" <%= ads.material.cabinet == 4 ? 'selected' : '' %>>
+											طرح ام دی اف
+										</option>
+										<option value="5" <%= ads.material.cabinet == 5 ? 'selected' : '' %>>
+											چوب
+										</option>
+										<option value="6" <%= ads.material.cabinet == 6 ? 'selected' : '' %>>
+											وکیوم
+										</option>
+										<option value="7" <%= ads.material.cabinet == 7 ? 'selected' : '' %>>
+											ملامینه
+										</option>
+										<option value="8" <%= ads.material.cabinet == 8 ? 'selected' : '' %>>
+											اچ دی اف
+										</option>
+										<option value="9" <%= ads.material.cabinet == 9 ? 'selected' : '' %>>
+											ماج نما
+										</option>
+										<option value="10" <%= ads.material.cabinet == 10 ? 'selected' : '' %>>
+											فورمات
+										</option>
+										<option value="11" <%= ads.material.cabinet == 11 ? 'selected' : '' %>>
+											اچ پی ال
+										</option>
+										<option value="12" <%= ads.material.cabinet == 12 ? 'selected' : '' %>>
+											گازر
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-4 penthouse apartment complex house suite villa shop office hotel">
+								<div class="form-group">
+									<label>کفپوش</label>
+									<select class="form-control formObject select" id="flooring" name="flooring">
+										<option value="1" <%= ads.material.flooring == 1 ? 'selected' : '' %>>
+											سرامیک
+										</option>
+										<option value="2" <%= ads.material.flooring == 2 ? 'selected' : '' %>>
+											موکت
+										</option>
+										<option value="3" <%= ads.material.flooring == 3 ? 'selected' : '' %>>
+											پارکت
+										</option>
+										<option value="4" <%= ads.material.flooring == 4 ? 'selected' : '' %>>
+											سنگ
+										</option>
+										<option value="5" <%= ads.material.flooring == 5 ? 'selected' : '' %>>
+											موزاییک
+										</option>
+										<option value="6" <%= ads.material.flooring == 6 ? 'selected' : '' %>>
+											تک سرام
+										</option>
+										<option value="7" <%= ads.material.flooring == 7 ? 'selected' : '' %>>
+											سیمان
+										</option>
+										<option value="8" <%= ads.material.flooring == 8 ? 'selected' : '' %>>
+											گرانیت
+										</option>
+										<option value="9" <%= ads.material.flooring == 9 ? 'selected' : '' %>>
+											لمینت
+										</option>
+										<option value="10" <%= ads.material.flooring == 10 ? 'selected' : '' %>>
+											کاشی
+										</option>
+										<option value="11" <%= ads.material.flooring == 11 ? 'selected' : '' %>>
+											اچ دی اف
+										</option>
+										<option value="12" <%= ads.material.flooring == 12 ? 'selected' : '' %>>
+											برنز
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-4 hotel">
+								<label>تعداد اتاق های یک تخته</label>
+								<input name="oneBedUnitCount" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.oneBedUnitCount %>" />
+							</div>
+
+							<div class="col-md-4 hotel">
+								<label>تعداد اتاق های دو تخته</label>
+								<input name="twoBedUnitCount" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.twoBedUnitCount %>" />
+							</div>
+
+							<div class="col-md-4 hotel">
+								<label>تعداد اتاق های سه تخته</label>
+								<input name="threeBedUnitCount" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.threeBedUnitCount %>" />
+							</div>
+
+							<div class="col-md-4 hotel">
+								<label>تعداد تخت خواب</label>
+								<input name="bedCount" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.bedCount %>" />
+							</div>
+
+							<div class="col-md-4 hotel">
+								<label>تعداد سوئیت ها</label>
+								<input name="suiteCount" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.suiteCount %>" />
+							</div>
+
+							<div class="col-md-4 penthouse apartment complex house villa">
+								<label>تعداد اتاق خواب</label>
+								<select class="form-control formObject select" id="bedroomCount" name="bedroomCount">
+									<option value="1" <%= ads.material.bedroomCount == 1 ? 'selected' : '' %>>
+										1
+									</option>
+									<option value="2" <%= ads.material.bedroomCount == 2 ? 'selected' : '' %>>
+										2
+									</option>
+									<option value="3" <%= ads.material.bedroomCount == 3 ? 'selected' : '' %>>
+										3
+									</option>
+									<option value="4" <%= ads.material.bedroomCount == 4 ? 'selected' : '' %>>
+										4
+									</option>
+									<option value="5" <%= ads.material.bedroomCount == 5 ? 'selected' : '' %>>
+										5
+									</option>
+									<option value="6" <%= ads.material.bedroomCount == 6 ? 'selected' : '' %>>
+										6
+									</option>
+									<option value="7" <%= ads.material.bedroomCount == 7 ? 'selected' : '' %>>
+										+7
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-4 penthouse apartment complex house suite villa office">
+								<label>تعداد حمام</label>
+								<select class="form-control formObject select" id="showerCount" name="showerCount">
+									<option value="1" <%= ads.material.showerCount == 1 ? 'selected' : '' %>>
+										1
+									</option>
+									<option value="2" <%= ads.material.showerCount == 2 ? 'selected' : '' %>>
+										2
+									</option>
+									<option value="3" <%= ads.material.showerCount == 3 ? 'selected' : '' %>>
+										3
+									</option>
+									<option value="4" <%= ads.material.showerCount == 4 ? 'selected' : '' %>>
+										4
+									</option>
+									<option value="5" <%= ads.material.showerCount == 5 ? 'selected' : '' %>>
+										5
+									</option>
+									<option value="6" <%= ads.material.showerCount == 6 ? 'selected' : '' %>>
+										6
+									</option>
+									<option value="7" <%= ads.material.showerCount == 7 ? 'selected' : '' %>>
+										+7
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-4 penthouse apartment complex house suite shop office">
+								<label>تعداد سرویس بهداشتی</label>
+								<select class="form-control formObject select" id="bathCount" name="bathCount">
+									<option value="1" <%= ads.material.bathCount == 1 ? 'selected' : '' %>>
+										1
+									</option>
+									<option value="2" <%= ads.material.bathCount == 2 ? 'selected' : '' %>>
+										2
+									</option>
+									<option value="3" <%= ads.material.bathCount == 3 ? 'selected' : '' %>>
+										3
+									</option>
+									<option value="4" <%= ads.material.bathCount == 4 ? 'selected' : '' %>>
+										4
+									</option>
+									<option value="5" <%= ads.material.bathCount == 5 ? 'selected' : '' %>>
+										5
+									</option>
+									<option value="6" <%= ads.material.bathCount == 6 ? 'selected' : '' %>>
+										6
+									</option>
+									<option value="7" <%= ads.material.bathCount == 7 ? 'selected' : '' %>>
+										+7
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-4 penthouse apartment complex suite office">
+								<label>تعداد پارکینگ</label>
+								<select class="form-control formObject select" id="parkingCount" name="parkingCount">
+									<option value="1" <%= ads.material.parkingCount == 1 ? 'selected' : '' %>>
+										1
+									</option>
+									<option value="2" <%= ads.material.parkingCount == 2 ? 'selected' : '' %>>
+										2
+									</option>
+									<option value="3" <%= ads.material.parkingCount == 3 ? 'selected' : '' %>>
+										3
+									</option>
+									<option value="4" <%= ads.material.parkingCount == 4 ? 'selected' : '' %>>
+										+4
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-4 garden">
+								<label>تعداد اصله درخت</label>
+								<input name="treeCount" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.material.treeCount %>" />
+							</div>
+
+							<div
+								class="col-md-4 mt-4 penthouse apartment complex house suite villa shop office hotel workshop hall store factory">
+								<label>وضعیت ملک</label>
+								<div class="radio formObject">
+									<input label="تخلیه است" type="radio" name="isEmpty" value="true"
+										<%= ads.isEmpty === true ? 'checked' : '' %>>
+									<input label="ساکن دارد" type="radio" name="isEmpty" value="false"
+										<%= ads.isEmpty === false ? 'checked' : '' %>>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="swiper-slide" style="margin-bottom: 50px;">
+						<div class="row" style="margin-bottom: 50px;">
+							<div class="col-md-4 participation exchange preSale sale mortage rents">
+								<label class="formObject" id="price">قیمت (تومان)</label>
+								<input name="price" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.price.price %>" required />
+							</div>
+
+							<div class="col-md-4 rents">
+								<label class="formObject">اجاره (تومان)</label>
+								<input name="rent" type="text" dir="ltr" class="form-control formObject"
+									value="<%= ads.price.rent %>" />
+							</div>
+
+							<div class="col-md-2 rents">
+								<h6 class="formObject">قابل تبدیل</h6>
+								<label class="toggle">
+									<input name="exchangeable" type="checkbox"
+										<%= ads.price.exchangeable ? 'checked' : '' %> />
+									<span class="trigger"> </span>
+								</label>
+							</div>
+
+							<div class="col-md-4 exchange">
+								<label>معاوضه با</label>
+								<input name="exchange" type="text" class="form-control formObject"
+									value="<%= ads.price.exchange %>" />
+							</div>
+
+							<div class="col-md-4 preSale">
+								<div class="form-group">
+									<label>ماه تحویل</label>
+									<select class="form-control formObject select" id="deliveredMonth"
+										name="deliveredMonth">
+										<option value="1" <%= ads.material.deliveredMonth == "1" ? 'selected' : '' %>>
+											فروردین
+										</option>
+										<option value="2" <%= ads.material.deliveredMonth == "2" ? 'selected' : '' %>>
+											اردیبهشت
+										</option>
+										<option value="3" <%= ads.material.deliveredMonth == "3" ? 'selected' : '' %>>
+											خرداد
+										</option>
+										<option value="4" <%= ads.material.deliveredMonth == "4" ? 'selected' : '' %>>
+											تیر
+										</option>
+										<option value="5" <%= ads.material.deliveredMonth == "5" ? 'selected' : '' %>>
+											مرداد
+										</option>
+										<option value="6" <%= ads.material.deliveredMonth == "6" ? 'selected' : '' %>>
+											شهریور
+										</option>
+										<option value="7" <%= ads.material.deliveredMonth == "7" ? 'selected' : '' %>>
+											مهر
+										</option>
+										<option value="8" <%= ads.material.deliveredMonth == "8" ? 'selected' : '' %>>
+											آبان
+										</option>
+										<option value="9" <%= ads.material.deliveredMonth == "9" ? 'selected' : '' %>>
+											آذر
+										</option>
+										<option value="10" <%= ads.material.deliveredMonth == "10" ? 'selected' : '' %>>
+											دی
+										</option>
+										<option value="11" <%= ads.material.deliveredMonth == "11" ? 'selected' : '' %>>
+											بهمن
+										</option>
+										<option value="12" <%= ads.material.deliveredMonth == "12" ? 'selected' : '' %>>
+											اسفند
+										</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-4 preSale">
+								<label>سال تحویل</label>
+								<input name="deliveredYear" type="text" dir="ltr" class="form-control formObject"
+									maxlength="4" value="<%= ads.price.deliveredYear %>" />
+							</div>
+
+							<div class="col-md-2 sale preSale exchange">
+								<h6 class="formObject">وام</h6>
+								<label class="toggle">
+									<input name="loanCheck" type="checkbox" id="loanCheck" onclick="loanChecks()"
+										<%= ads.price.loanCheck ? 'checked' : '' %> />
+									<span class="trigger"> </span>
+								</label>
+							</div>
+
+							<div id="loan" class="col-md-6 row" style="display: none;">
+								<div class="col-md-6 sale preSale exchange">
+									<label class="formObject">مبلغ وام (تومان)</label>
+									<input name="loan" type="text" dir="ltr" class="form-control formObject"
+										value="<%= ads.price.loan %>" />
+								</div>
+
+								<div class="col-md-6 sale preSale exchange">
+									<label class="formObject">قسط وام (تومان)</label>
+									<input name="installment" type="text" dir="ltr" class="form-control formObject"
+										value="<%= ads.price.installment %>" />
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="swiper-slide" style="margin-bottom: 50px;">
+						<h5>تجهیزات و امکانات</h5>
+						<div class="row">
+							<div class="col-md-2 penthouse apartment complex office hotel">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "1") != -1 ? 'checked' : ''%>
+											value="1-آسانسور" />
+										<label class="label-checkbox">
+											آسانسور
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 apartment complex">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "2") != -1 ? 'checked' : ''%>
+											value="2-انباری" />
+										<label class="label-checkbox">
+											انباری
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house suite villa">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "3") != -1 ? 'checked' : ''%>
+											value="3-کمد دیواری" />
+										<label class="label-checkbox">
+											کمد دیواری
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house suite villa shop office hotel">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "4") != -1 ? 'checked' : ''%>
+											value="4-نقاشی" />
+										<label class="label-checkbox">
+											نقاشی
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex office">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "5") != -1 ? 'checked' : ''%>
+											value="5-تراس" />
+										<label class="label-checkbox">
+											تراس
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house suite villa office">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "6") != -1 ? 'checked' : ''%>
+											value="6-آیفون تصویری" />
+										<label class="label-checkbox">
+											آیفون تصویری
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house suite villa shop office">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "7") != -1 ? 'checked' : ''%>
+											value="7-درب ضد سرقت" />
+										<label class="label-checkbox">
+											درب ضد سرقت
+										</label>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-2 penthouse apartment complex villa shop office hotel workshop hall store factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "8") != -1 ? 'checked' : ''%>
+											value="8-دوربین مداربسته" />
+										<label class="label-checkbox">
+											دوربین مداربسته
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 apartment complex house villa">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "9") != -1 ? 'checked' : ''%>
+											value="9-درب برقی" />
+										<label class="label-checkbox">
+											درب برقی
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house suite villa shop office hotel">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "10") != -1 ? 'checked' : ''%>
+											value="10-سرویس فرنگی" />
+										<label class="label-checkbox">
+											سرویس فرنگی
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house suite villa shop office hotel">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "11") != -1 ? 'checked' : ''%>
+											value="11-کاغذ دیواری" />
+										<label class="label-checkbox">
+											کاغذ دیواری
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house suite villa">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "12") != -1 ? 'checked' : ''%>
+											value="12-گاز رومیزی" />
+										<label class="label-checkbox">
+											گاز رومیزی
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house suite villa">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "13") != -1 ? 'checked' : ''%>
+											value="13-هود" />
+										<label class="label-checkbox">
+											هود
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house villa hotel">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "14") != -1 ? 'checked' : ''%>
+											value="14-استخر" />
+										<label class="label-checkbox">
+											استخر
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house villa hotel">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "15") != -1 ? 'checked' : ''%>
+											value="15-سونا" />
+										<label class="label-checkbox">
+											سونا
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house villa hotel">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "16") != -1 ? 'checked' : ''%>
+											value="16-جکوزی" />
+										<label class="label-checkbox">
+											جکوزی
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 garden land farm">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "17") != -1 ? 'checked' : ''%>
+											value="17-دور دیوار" />
+										<label class="label-checkbox">
+											دور دیوار
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 garden land farm">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "18") != -1 ? 'checked' : ''%>
+											value="18-چاه آب" />
+										<label class="label-checkbox">
+											چاه آب
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 shop">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "19") != -1 ? 'checked' : ''%>
+											value="19-کرکره محافظ" />
+										<label class="label-checkbox">
+											کرکره محافظ
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 shop office hotel workshop hall store factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "20") != -1 ? 'checked' : ''%>
+											value="20-آبدارخانه" />
+										<label class="label-checkbox">
+											آبدارخانه
+										</label>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-2 penthouse apartment complex house suite villa shop office hotel workshop hall store factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "21") != -1 ? 'checked' : ''%>
+											value="21-دزدگیر" />
+										<label class="label-checkbox">
+											دزدگیر
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 shop">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "22") != -1 ? 'checked' : ''%>
+											value="22-ویترین" />
+										<label class="label-checkbox">
+											ویترین
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 shop">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "23") != -1 ? 'checked' : ''%>
+											value="23-قفسه" />
+										<label class="label-checkbox">
+											قفسه
+										</label>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-2 penthouse apartment complex house suite villa shop office hotel workshop hall store factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "24") != -1 ? 'checked' : ''%>
+											value="24-اعلام حریق" />
+										<label class="label-checkbox">
+											اعلام حریق
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 complex office hotel factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "25") != -1 ? 'checked' : ''%>
+											value="25-رستوران" />
+										<label class="label-checkbox">
+											رستوران
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 hotel office">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "26") != -1 ? 'checked' : ''%>
+											value="26-لابی" />
+										<label class="label-checkbox">
+											لابی
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 hotel office">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "27") != -1 ? 'checked' : ''%>
+											value="27-کافی شاپ" />
+										<label class="label-checkbox">
+											کافی شاپ
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 penthouse apartment complex house suite villa hotel office">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "28") != -1 ? 'checked' : ''%>
+											value="28-مبلمان" />
+										<label class="label-checkbox">
+											مبلمان
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 complex office hotel factory store">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "29") != -1 ? 'checked' : ''%>
+											value="29-نگهبانی" />
+										<label class="label-checkbox">
+											نگهبانی
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 complex">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "30") != -1 ? 'checked' : ''%>
+											value="30-اتاق مهمانی" />
+										<label class="label-checkbox">
+											اتاق مهمانی
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 complex">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="possibilities" class="input-checkbox" type="checkbox"
+											<%= ads.possibilities.findIndex(i => i.id === "31") != -1 ? 'checked' : ''%>
+											value="31-اتاق ورزش" />
+										<label class="label-checkbox">
+											اتاق ورزش
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<h5 class="mt-4">سیستم گرمایشی و سرمایشی</h5>
+						<div class="row">
+							<div class="col-md-2 apartment complex house suite villa shop office workshop hall">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											<%= ads.heatingCooling.findIndex(i => i.id === "1") != -1 ? 'checked' : ''%>
+											value="1-کولرآبی" />
+										<label class="label-checkbox">
+											کولرآبی
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 apartment complex house suite villa shop office workshop hall">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											<%= ads.heatingCooling.findIndex(i => i.id === "2") != -1 ? 'checked' : ''%>
+											value="2-بخاری" />
+										<label class="label-checkbox">
+											بخاری
+										</label>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-2 penthouse apartment complex house suite villa shop office hotel workshop hall store">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											<%= ads.heatingCooling.findIndex(i => i.id === "3") != -1 ? 'checked' : ''%>
+											value="3-پکیج" />
+										<label class="label-checkbox">
+											پکیج
+										</label>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-2 penthouse apartment complex house suite villa shop office hotel workshop hall store">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											<%= ads.heatingCooling.findIndex(i => i.id === "4") != -1 ? 'checked' : ''%>
+											value="4-رادیاتور" />
+										<label class="label-checkbox">
+											رادیاتور
+										</label>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-2 apartment complex house suite villa shop office hotel workshop hall store">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											<%= ads.heatingCooling.findIndex(i => i.id === "5") != -1 ? 'checked' : ''%>
+											value="5-آبگرمکن" />
+										<label class="label-checkbox">
+											آبگرمکن
+										</label>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-2 penthouse apartment complex house suite villa shop office hotel workshop hall store factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											value="6-کولرگازی"
+											<%= ads.heatingCooling.findIndex(i => i.id === "6") != -1 ? 'checked' : ''%> />
+										<label class="label-checkbox">
+											کولرگازی
+										</label>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-2 penthouse apartment complex house suite villa shop office hotel workshop hall store factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											<%= ads.heatingCooling.findIndex(i => i.id === "7") != -1 ? 'checked' : ''%>
+											value="7-شوفاژ" />
+										<label class="label-checkbox">
+											شوفاژ
+										</label>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-2 penthouse apartment complex house suite villa shop office hotel workshop hall store factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											<%= ads.heatingCooling.findIndex(i => i.id === "8") != -1 ? 'checked' : ''%>
+											value="8-گرمایش از کف" />
+										<label class="label-checkbox">
+											گرمایش از کف
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 complex shop office hotel workshop hall store factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											<%= ads.heatingCooling.findIndex(i => i.id === "9") != -1 ? 'checked' : ''%>
+											value="9-هواساز" />
+										<label class="label-checkbox">
+											هواساز
+										</label>
+									</div>
+								</div>
+							</div>
+							<div
+								class="col-md-2 penthouse apartment complex house villa shop office hotel workshop hall store factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											<%= ads.heatingCooling.findIndex(i => i.id === "10") != -1 ? 'checked' : ''%>
+											value="10-چیلر" />
+										<label class="label-checkbox">
+											چیلر
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2 complex shop office hotel workshop hall store factory">
+								<div class="checkbox-body">
+									<div class="card checkbox-item">
+										<input name="heatingCooling" class="input-checkbox" type="checkbox"
+											<%= ads.heatingCooling.findIndex(i => i.id === "11") != -1 ? 'checked' : ''%>
+											value="11-فن کوئل" />
+										<label class="label-checkbox">
+											فن کوئل
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="swiper-slide" style="margin-bottom: 50px;">
+						<label>توضیحات عمومی</label>
+						<textarea class="form-control" name="desc" rows="4" type="text"
+							required><%= ads.desc %></textarea>
+
+						<div class="alert alert-primary" role="alert">
+							این توضیحات فقط برای شما نمایش داده می شود
+						</div>
+						<label>توضیحات خصوصی</label>
+						<textarea class="form-control" name="privateDesc" rows="4"><%= ads.privateDesc %></textarea>
+
+						<div style="display: flex; justify-content: center; align-items: center; margin-top: 15px;">
+							<label class="toggle">
+								<input name="cooperation" type="checkbox" id="cooperateCheck"
+									onclick="cooperateChecks()" <%= ads.cooperation ? 'checked' : '' %> />
+								<span class="trigger"></span>
+							</label>
+							<h6>مایلم در این معامله با سایر مشاورین همکاری کنم</h6>
+						</div>
+						<div id="cooperate" style="display: none;">
+							<div class="alert alert-primary" role="alert">
+								این توضیحات فقط برای مشاورین املاک نمایش داده می شود
+							</div>
+							<label>توضیحات نحوه ی معامله</label>
+							<textarea class="form-control" name="cooperateDesc"
+								rows="4"><%= ads.cooperateDesc %></textarea>
+						</div>
+
+						<a style="margin-top: 10px; color: white;" id="submit" class="btn btn-success">
+							ثبت آگهی
+						</a>
+					</div>
+				</div>
+				<div class="swiper-scrollbar"></div>
+				<div class="swiper-pagination"></div>
+			</div>
+			<div class="btn button-next swipe">مرحله بعد</div>
+			<div class="btn button-prev swipe">مرحله قبل</div>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/js/image-picker.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+<script src="/js/fetch.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script type="text/javascript">
+	$("#submit").click(function () {
+		let check = [];
+		let errors = [];
+		$('input,textarea').filter('[required]:visible').each(function () {
+			if (!$(this).val().length) {
+				check.push('e');
+				errors.push($(this).parent('div').children('label').html());
+			}
+		});
+
+		if (check.length == 0)
+			$("#myForm").submit();
+		else {
+			let strError = "";
+			errors.map(error => {
+				strError += `● ${error} را وارد کنید </br>`;
+			})
+			$(".alert-danger").html(strError);
+			$(".alert-danger").show();
+		}
+	});
+
+	var mySwiper = new Swiper('.swiper-container', {
+		// Optional parameters
+		direction: 'horizontal',
+		loop: false,
+		allowTouchMove: false,
+
+		// If we need pagination
+		pagination: {
+			el: '.swiper-pagination',
+			clickable: true,
+			renderBullet: function (index, className) {
+				return '<span class="' + className + '">' + (index + 1) + '</span>';
+			},
+		},
+
+		// Navigation arrows
+		navigation: {
+			nextEl: '.button-next',
+			prevEl: '.button-prev',
+		},
+
+		// And if we need scrollbar
+		scrollbar: {
+			el: '.swiper-scrollbar',
+		},
+	})
+
+	//* Image Picker Config
+	$(function () {
+		$('#image').spartanMultiImagePicker({
+			fieldName: 'images',
+			maxCount: 10,
+			rowHeight: '200px',
+			groupClassName: 'col-md-4 col-sm-4 col-xs-6',
+			maxFileSize: '1000000', // 1MB Max Image Size
+			placeholderImage: {
+				image: '/images/placeholder.png',
+				width: '100%',
+			},
+			dropFileLabel: 'Drop Here',
+			onAddRow: function (index) {
+				console.log(index);
+			},
+			onRenderedPreview: function (index) {
+				console.log(index);
+				document.getElementById('pic-danger').style.display = 'none';
+			},
+			onRemoveRow: function (index) {
+				console.log(index);
+			},
+			onExtensionErr: function (index, file) {
+				console.log(index, file, 'extension err');
+				document.getElementById('pic-danger').style.display = 'block';
+				document.getElementById('pic-danger').innerHTML =
+					'لطفا فرمت های JPG یا PNG را وارد نمایید';
+			},
+			onSizeErr: function (index, file) {
+				console.log(index, file, 'file size too big');
+				document.getElementById('pic-danger').style.display = 'block';
+				document.getElementById('pic-danger').innerHTML =
+					'حجم فایل بیشتر از 1 مگابایت می باشد';
+			},
+		});
+	});
+
+	const CITY_URL = '/agent/ads/create/city?_csrf=<%= req.csrfToken() %>';
+	const REGION_URL = '/agent/ads/create/region?_csrf=<%= req.csrfToken() %>';
+
+	$(document).ready(async function () {
+		if ('<%= ads.price.loanCheck %>' == 'true') {
+			var div = document.getElementById("loan");
+			div.style.display = "flex";
+		}
+		if ('<%= ads.cooperation %>' == 'true') {
+			var div = document.getElementById("cooperate");
+			div.style.display = "block";
+		}
+		$(".alert-danger").hide();
+		let stateId = $('#state option:selected').val();
+		await postData(CITY_URL, { id: stateId }).then((data) => {
+			data.map((city) => {
+				if (([city._id]).indexOf('<%= ads.location.city._id %>') >= 0)
+					$('#city').append(`<option value="${city._id}" selected>${city.title}</option>`);
+				else
+					$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+			});
+		});
+
+		let cityId = $('#city option:selected').val();
+		await postData(REGION_URL, { id: cityId }).then((data) => {
+			data.map((region) => {
+				if (([region._id]).indexOf('<%= ads.location.region._id %>') >= 0)
+					$('#region').append(`<option value="${region._id}" selected>${region.title}</option>`);
+				else
+					$('#region').append(`<option value="${region._id}">${region.title}</option>`);
+			});
+		});
+	});
+
+	$('#state').change(async () => {
+		let stateId = $('#state option:selected').val();
+		$('#city option').remove();
+		await postData(CITY_URL, { id: stateId }).then((data) => {
+			data.map((city) => {
+				$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+			});
+		});
+
+		let cityId = $('#city option:selected').val();
+		$('#region option').remove();
+		await postData(REGION_URL, { id: cityId }).then((data) => {
+			data.map((region) => {
+				$('#region').append(`<option value="${region._id}">${region.title}</option>`);
+			});
+		});
+	});
+
+	$('#city').change(() => {
+		let id = $('#city option:selected').val();
+		$('#region option').remove();
+		postData(REGION_URL, { id }).then((data) => {
+			data.map((region) => {
+				$('#region').append(`<option value="${region._id}">${region.title}</option>`);
+			});
+		});
+	});
+
+	$('#age').append(`<option value="0">نوساز</option>`);
+	for (let i = 1; i <= 100; i++) {
+		if ('<%= ads.material.age %>' == i)
+			$('#age').append(`<option value="${i}" selected>به مدت ${i} سال ساخت</option>`);
+		else
+			$('#age').append(`<option value="${i}">به مدت ${i} سال ساخت</option>`);
+	}
+
+	var myMap = new L.Map('map', {
+		key: 'web.VoTGvNjZqrBisGIHnHGVAPy7iMe2QrTQiwNOShxh',
+		maptype: 'neshan',
+		center: ['<%= ads.location.lat %>', '<%= ads.location.lon %>'],
+		zoom: 14
+	});
+
+	$('.leaflet-container').css('cursor', 'crosshair');
+
+	var marker = null;
+	let latlng = L.latLng('<%= ads.location.lat %>', '<%= ads.location.lon %>');
+	marker = new L.Marker(latlng).addTo(myMap);
+	myMap.on('click', function (e) {
+		if (marker != null)
+			myMap.removeLayer(marker)
+		marker = new L.Marker(e.latlng).addTo(myMap);
+		document.getElementById("lat").value = e.latlng.lat;
+		document.getElementById("lon").value = e.latlng.lng;
+	});
+
+	$('#adsType').hide();
+	$('.swipe').hide();
+	$('.swiper-pagination').hide();
+
+	$('.adsType').click(() => {
+		$('.swipe').show();
+		$('.swiper-pagination').show();
+	});
+
+	if ('<%= ads.transactionType %>' != '') {
+		$('.swipe').show();
+		$('.swiper-pagination').show();
+		$('#adsType').show();
+
+		switch ($('.transactionType:checked').val()) {
+			case '1': sale();
+				break;
+			case '2': mortage();
+				break;
+			case '3': rents();
+				break;
+			case '4': preSale();
+				break;
+			case '5': exchange();
+				break;
+			case '6': participation();
+				break;
+		}
+
+		switch ($('.adsType:checked').val()) {
+			case '1': penthouse();
+				break;
+			case '2': apartment();
+				break;
+			case '3': complex();
+				break;
+			case '4': house();
+				break;
+			case '5': suite();
+				break;
+			case '6': villa();
+				break;
+			case '7': garden();
+				break;
+			case '8': land();
+				break;
+			case '9': farm();
+				break;
+			case '10': shop();
+				break;
+			case '11': office();
+				break;
+			case '12': hotel();
+				break;
+			case '13': hotel();
+				break;
+			case '14': workshop();
+				break;
+			case '15': hall();
+				break;
+			case '16': store();
+				break;
+			case '17': factory();
+				break;
+		}
+	}
+
+	function cooperateChecks() {
+		var checkBox = document.getElementById("cooperateCheck");
+		var div = document.getElementById("cooperate");
+		if (checkBox.checked == true)
+			div.style.display = "block";
+		else
+			div.style.display = "none";
+	}
+
+	function loanChecks() {
+		var checkBox = document.getElementById("loanCheck");
+		var div = document.getElementById("loan");
+		if (checkBox.checked == true)
+			div.style.display = "flex";
+		else
+			div.style.display = "none";
+	}
+
+	function sale() {
+		$('.mortage').hide();
+		$('.rents').hide();
+		$('.preSale').hide();
+		$('.exchange').hide();
+		$('.participation').hide();
+		$('.sale').show();
+		$('#adsType').show();
+		$('#price').text("قیمت (تومان)");
+	}
+
+	function mortage() {
+		$('.sale').hide();
+		$('.rents').hide();
+		$('.preSale').hide();
+		$('.exchange').hide();
+		$('.participation').hide();
+		$('.mortage').show();
+		$('#adsType').show();
+		$('#price').text("مبلغ رهن (تومان)");
+	}
+
+	function rents() {
+		$('.sale').hide();
+		$('.mortage').hide();
+		$('.preSale').hide();
+		$('.exchange').hide();
+		$('.participation').hide();
+		$('.rents').show();
+		$('#adsType').show();
+		$('#price').text("پول پیش (تومان)");
+	}
+
+	function preSale() {
+		$('.sale').hide();
+		$('.mortage').hide();
+		$('.rents').hide();
+		$('.exchange').hide();
+		$('.participation').hide();
+		$('.preSale').show();
+		$('#adsType').show();
+		$('#price').text("قیمت (تومان)");
+	}
+
+	function exchanges() {
+		$('.sale').hide();
+		$('.mortage').hide();
+		$('.rents').hide();
+		$('.preSale').hide();
+		$('.participation').hide();
+		$('.exchange').show();
+		$('#adsType').show();
+		$('#price').text("ارزش (تومان)");
+	}
+
+	function participation() {
+		$('.sale').hide();
+		$('.mortage').hide();
+		$('.rents').hide();
+		$('.preSale').hide();
+		$('.exchange').hide();
+		$('.participation').show();
+		$('#adsType').show();
+		$('#price').text("مبلغ کل (تومان)");
+	}
+
+	function penthouse() {
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.penthouse').show();
+	}
+
+	function apartment() {
+		$('.penthouse').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.apartment').show();
+	}
+
+	function complex() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.complex').show();
+	}
+
+	function house() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.house').show();
+	}
+
+	function suite() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.suite').show();
+	}
+
+	function villa() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.villa').show();
+	}
+
+	function garden() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.garden').show();
+	}
+
+	function land() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.land').show();
+	}
+
+	function farm() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.farm').show();
+	}
+
+	function shop() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.shop').show();
+	}
+
+	function office() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.office').show();
+	}
+
+	function hotel() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.hotel').show();
+	}
+
+	function workshop() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.workshop').show();
+	}
+
+	function hall() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.store').hide();
+		$('.factory').hide();
+		$('.hall').show();
+	}
+
+	function store() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.factory').hide();
+		$('.store').show();
+	}
+
+	function factory() {
+		$('.penthouse').hide();
+		$('.apartment').hide();
+		$('.complex').hide();
+		$('.house').hide();
+		$('.suite').hide();
+		$('.villa').hide();
+		$('.garden').hide();
+		$('.land').hide();
+		$('.farm').hide();
+		$('.shop').hide();
+		$('.office').hide();
+		$('.hotel').hide();
+		$('.workshop').hide();
+		$('.hall').hide();
+		$('.store').hide();
+		$('.factory').show();
+	}
+</script>

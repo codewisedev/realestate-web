@@ -1,0 +1,266 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/css/ckeditor.css" />
+<style>
+  /*TODO: CKEditor Styles */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    word-break: break-word;
+  }
+
+  .blog_details p {
+    word-break: break-word;
+    text-align: justify;
+  }
+
+  .blog_details p strong {
+    font-weight: bold;
+  }
+
+  .property_box ul {
+    list-style: disc !important;
+    margin-right: 50px;
+  }
+
+  .property_box ol {
+    list-style: decimal !important;
+    margin-right: 50px;
+  }
+
+  .property_box ol,
+  .property_box ul {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    list-style: none;
+  }
+
+  .property_box .text-huge {
+    font-size: 1.8em;
+  }
+
+  .property_box .text-big {
+    font-size: 1.4em;
+  }
+
+  .property_box .text-small {
+    font-size: .85em;
+  }
+
+  .property_box .text-tiny {
+    font-size: .7em;
+  }
+
+  .property_box .image {
+    display: flex;
+    justify-content: center;
+  }
+
+  .property_box table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px double #b3b3b3;
+  }
+
+  .property_box th,
+  .property_box td {
+    min-width: 2em;
+    padding: .4em;
+    border: 1px solid #b3b3b3;
+  }
+
+  .property_box th {
+    font-weight: 700;
+    background: hsla(0, 0%, 0%, 5%);
+  }
+
+  .property_box a {
+    text-decoration: none !important;
+  }
+
+  .property_box a span {
+    color: var(--accent) !important;
+  }
+
+  .property_box code {
+    color: var(--accent);
+    background-color: hsla(0, 0%, 78%, .3);
+    padding: .15em;
+    border-radius: 2px;
+  }
+
+  .property_box sub {
+    bottom: -0.25em;
+  }
+
+  .property_box sup {
+    top: -0.5em;
+  }
+
+  .property_box sub,
+  .property_box sup {
+    position: relative;
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: baseline;
+  }
+
+  .property_box pre code {
+    background-color: unset;
+  }
+
+  .property_box pre {
+    padding: 1em;
+    color: #353535;
+    background: hsla(0, 0%, 78%, .3);
+    border: 1px solid #c4c4c4;
+    border-radius: 2px;
+    text-align: left;
+    direction: ltr;
+    tab-size: 4;
+    white-space: pre-wrap;
+    font-style: normal;
+    min-width: 200px;
+  }
+
+  .property_box .marker-yellow {
+    background-color: #fdfd77;
+  }
+
+  .property_box .marker-green {
+    background-color: #63f963;
+  }
+
+  .property_box .marker-pink {
+    background-color: #fc7999;
+  }
+
+  .property_box .marker-blue {
+    background-color: #72cdfd;
+  }
+
+  .property_box .pen-red {
+    color: #e91313;
+    background-color: transparent;
+  }
+
+  .property_box .pen-green {
+    color: #180;
+    background-color: transparent;
+  }
+
+  .property_box blockquote p:before,
+  .property_box blockquote p:after {
+    font-size: 2em !important;
+    font-family: 'FontAwesome';
+    padding: 10px;
+    display: inline-block;
+    vertical-align: bottom;
+    color: var(--accent);
+    font-size: 1em;
+    position: relative;
+  }
+
+  .property_box blockquote p:before {
+    content: '\f10e';
+    margin-left: 10px;
+    top: .2em;
+  }
+
+  .property_box blockquote p:after {
+    content: '\f10d';
+    float: left;
+    margin-right: 10px;
+  }
+
+  .title {
+    display: flex;
+    justify-content: center;
+    word-break: break-word;
+    color: var(--white);
+    font-size: 1.3em;
+    font-weight: bold;
+  }
+
+  .comment {
+    margin: 15px 0px !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .comment .card-header {
+    text-align: right;
+  }
+</style>
+
+<%
+
+  let { search } = req.query; 
+
+%>
+
+<% contentFor('body') %>
+<!--? Inner Heading Start -->
+<div class="innerHeading blogHeading">
+  <div class="container title">
+    <span><%= blog.title %></span>
+  </div>
+</div>
+<!--! Inner Heading End -->
+
+<!--? Inner Content Start -->
+<div class="innercontent">
+  <div class="container">
+    <div class="row blog_details">
+      <div class="col-lg-8">
+        <div class="property_box wow fadeInUp">
+          <div class="propertyImg"><img alt="" src="<%= blog.image["720"] %>"></div>
+          <h3><a href="#"><%= blog.title %></a></h3>
+          <div class="post-meta">
+            <span><%= date(blog.createdAt).format('jYYYY/jMM/jDD') %></span>
+            <span>0 نظر</span>
+            <span><%= blog.like %> کاربر پسندیده</span> </div>
+          <%- blog.text %>
+        </div>
+        <%- include(viewPath('layouts/comments') , { subject : blog , comments : blog.comments}) -%>
+      </div>
+      <div class="col-lg-4">
+        <div class="single-widgets widget_search fadeInRight wow">
+          <h4>جستجو</h4>
+          <form action="/blog" class="sidebar-search-form">
+            <input type="search" name="search" value="<%= search %>" placeholder="جستجو...">
+            <button type="submit"><i class="fas fa-search"></i></button>
+          </form>
+        </div>
+        <div class="single-widgets widget_category fadeInRight wow">
+          <h4>املاک اخیر</h4>
+          <ul class="property_sec">
+            <li>
+              <div class="rec_proprty">
+                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                <div class="property_info">
+                  <h4><a href="#">ملک فروشی</a></h4>
+                  <p>تهران / زعفرانیه</p>
+                  <div class="priceWrp">400,000,000 تومان</div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="single-widgets widget_category fadeInRight wow">
+          <h4>برچسب ها</h4>
+          <ul class="tags">
+            <% blog.tags.map((tag) => { %>
+            <li><a href=" #"><%= tag %></a></li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--! Inner Content End -->

@@ -1,0 +1,31 @@
+/*TODO: Multi Image Picker Style */
+
+#images {
+	display: flex;
+	overflow-x: auto;
+}
+
+.pic-danger {
+	color: var(--red);
+	margin-top: 10px;
+	font-size: 13px;
+	width: 100%;
+	display: none;
+}
+
+.spartan_remove_row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.file_upload {
+	padding: 0px !important;
+}
+
+.img_ {
+	max-width: 100% !important;
+	height: auto !important;
+}
+
+/*! *****************************/

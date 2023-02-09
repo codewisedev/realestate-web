@@ -1,0 +1,147 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/css/imagepicker.css" />
+<link rel="stylesheet" href="/css/ckeditor.css" />
+<script src="/plugins/ckeditor5/build/ckeditor.js"></script>
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/select.css" />
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>ایجاد بلاگ جدید</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">بلاگ</a></li>
+					<li class="breadcrumb-item active">ایجاد بلاگ جدید</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<form class="form-horizontal content"
+			action="/admin/blog/<%= blog._id %>?_method=PUT&_csrf=<%= req.csrfToken() %>" method="POST"
+			enctype="multipart/form-data">
+			<%- include(viewPath('layouts/errors')) -%>
+
+			<input name="title" type="text" class="form-control formObject" placeholder="* عنوان"
+				value="<%= blog.title %>" />
+
+			<input name="summary" type="text" class="form-control formObject" placeholder="* خلاصه مطلب" maxlength="100"
+				value="<%= blog.summary %>" />
+
+			<!--? Blog Picture -->
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="control-label col-md-3">
+						تصویر بلاگ
+						<p id="pic-danger" class="pic-danger"></p>
+					</label>
+					<div class="col-md-12">
+						<div class="row">
+							<div id="image"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--! Blog Picture -->
+
+			<div style="margin-bottom: 15px;">
+				<label>تگ ها</label>
+				<select style="text-align: right; direction: rtl;" class="form-control formObject select"
+					multiple="multiple" name="tags">
+					<% blog.tags.forEach((tag) => { %>
+					<option value="<%= tag %>" selected="selected"><%= tag %></option>
+					<% }) %>
+				</select>
+			</div>
+
+			<textarea name="text" class="form-control formObject" id="editor" placeholder="* متن بلاگ...">
+				<%= blog.text %>
+			</textarea>
+
+			<!--? Blog Text Counter -->
+			<div class="demo-update">
+				<div class="demo-update__controls">
+					<span class="demo-update__words"></span>
+					<svg class="demo-update__chart" viewbox="0 0 40 40" width="60" height="60"
+						xmlns="http://www.w3.org/2000/svg">
+						<circle stroke="hsl(0, 0%, 93%)" stroke-width="3" fill="none" cx="20" cy="20" r="17" />
+						<circle class="demo-update__chart__circle" stroke="hsl(202, 92%, 59%)" stroke-width="3"
+							stroke-dasharray="134,534" stroke-linecap="round" fill="none" cx="20" cy="20" r="17" />
+						<text class="demo-update__chart__characters" x="50%" y="50%" dominant-baseline="central"
+							text-anchor="middle"></text>
+					</svg>
+				</div>
+			</div>
+			<!--! Blog Text Counter -->
+
+			<button style="margin-top: 10px;" type="submit" class="btn btn-primary">
+				ویرایش
+			</button>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/js/image-picker.js"></script>
+<script src="/js/ckeditor.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+
+<script type="text/javascript">
+	$('.select').select2({
+		tags: true,
+		dir: "rtl",
+		"language": {
+			"noResults": function () {
+				return "موردی یافت نشد";
+			}
+		},
+	});
+
+	$(function () {
+		$('#image').spartanMultiImagePicker({
+			fieldName: 'image',
+			maxCount: 1,
+			rowHeight: '200px',
+			groupClassName: 'col-md-4 col-sm-4 col-xs-6',
+			maxFileSize: '1000000',
+			placeholderImage: {
+				image: '<%= blog.image.original %>',
+				width: '100%',
+			},
+			dropFileLabel: 'Drop Here',
+			onAddRow: function (index) {
+				console.log(index);
+			},
+			onRenderedPreview: function (index) {
+				console.log(index);
+				document.getElementById('pic-danger').style.display = 'none';
+			},
+			onRemoveRow: function (index) {
+				console.log(index);
+			},
+			onExtensionErr: function (index, file) {
+				console.log(index, file, 'extension err');
+				document.getElementById('pic-danger').style.display = 'block';
+				document.getElementById('pic-danger').innerHTML =
+					'لطفا فرمت های JPG یا PNG را وارد نمایید';
+			},
+			onSizeErr: function (index, file) {
+				console.log(index, file, 'file size too big');
+				document.getElementById('pic-danger').style.display = 'block';
+				document.getElementById('pic-danger').innerHTML =
+					'حجم فایل بیشتر از 1 مگابایت می باشد';
+			},
+		});
+	});
+
+	ckEditor(150);
+</script>

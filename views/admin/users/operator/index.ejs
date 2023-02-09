@@ -1,0 +1,52 @@
+<% contentFor('body') %>
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+	<h2>اپراتور سایت</h2>
+	<a href="/admin/users/operator/create" class="btn btn-sm btn-danger">
+		ایجاد اپراتور جدید
+	</a>
+</div>
+<div class="table-responsive">
+	<table class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<th>نام کاربر</th>
+				<th>ایمیل کاربر</th>
+				<th>تاریخ عضویت</th>
+				<th>تنظیمات</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% operators.forEach(user => { %>
+			<tr>
+				<td><a href="#"><%= user.name %></a></td>
+				<td><a href="#"><%= user.email %></a></td>
+				<td>
+					<%= date(user.createdAt).fromNow() %>
+				</td>
+				<td>
+					<% if(!req.user.operator) { %>
+					<form action="/admin/users/operator/<%= user.id %>?_method=DELETE" method="post">
+						<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+						<div class="btn-group btn-group-sm">
+							<a href="/admin/users/operator/toggleadmin/<%= user.id %>" class="btn btn-warning">
+								<%= user.admin ? 'مدیر' : 'عدم مدیریت' %>
+							</a>
+							<a href="/admin/users/operator/addrole/<%= user.id %>" class="btn btn-success">
+								اعمال سطح دسترسی
+							</a>
+							<button type="submit" class="btn btn-danger">حذف</button>
+						</div>
+					</form>
+					<% } else { %>
+					<div class="btn-group btn-group-sm">
+						<a href="/admin/users/operator/addrole/<%= user.id %>" class="btn btn-success">
+							اعمال سطح دسترسی
+						</a>
+					</div>
+					<% } %>
+				</td>
+			</tr>
+			<% }) %>
+		</tbody>
+	</table>
+</div>

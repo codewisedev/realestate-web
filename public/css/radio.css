@@ -1,0 +1,46 @@
+/*TODO: Scroll Style */
+
+.radio input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.radio-checkmark {
+	position: absolute;
+	height: 30px;
+	width: 30px;
+	background-color: var(--light-gray);
+	border-radius: 50%;
+}
+
+.radio-checkmark:hover {
+	cursor: pointer;
+}
+
+.radio:hover input~.radio-checkmark {
+	background-color: var(--middle-gray);
+}
+
+.radio input:checked~.radio-checkmark {
+	background-color: var(--main);
+}
+
+.radio:after {
+	content: '';
+	position: absolute;
+	display: none;
+}
+
+.radio input:checked~.radio-checkmark:after {
+	display: block;
+}
+
+.radio .radio-checkmark:after {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--white);
+}
+
+/*! *****************************/

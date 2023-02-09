@@ -1,0 +1,85 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap4.css" />
+<link rel="stylesheet" href="/css/table.css" />
+<style>
+	td {
+		line-height: 60px;
+	}
+
+	.profile-pic {
+		width: 70px;
+		height: 70px;
+		border-radius: 70px;
+		border: 3px solid rgb(218, 218, 218);
+		padding: 2px;
+		object-fit: cover;
+	}
+</style>
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>نشان شده ها</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">ملک ها</a></li>
+					<li class="breadcrumb-item active">نشان شده ها</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<div class="search-wrapper">
+			<div class="input-holder">
+				<input id="search" type="text" class="search-input" placeholder="جستجو در جدول..." />
+				<button class="search-icon" onclick="searchToggle(this, event);">
+					<span></span>
+				</button>
+			</div>
+			<span class="close" onclick="searchToggle(this, event);"></span>
+			<div class="result-container"></div>
+		</div>
+
+		<!--? Table -->
+		<table id="table" class="table table-bordered table-striped display responsive nowrap dt-center">
+			<thead>
+				<tr>
+					<th>تصویر</th>
+					<th>عنوان</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% advertisings.forEach(ads => { %>
+				<tr>
+					<td>
+						<img class="profile-pic" src="<%= ads.images[0] %>" />
+					</td>
+					<td><a href="http://localhost:3000/ads/<%= ads._id %>" target="_blank"><%= ads.title %></a></td>
+				</tr>
+				<% }) %>
+			</tbody>
+		</table>
+		<!--! Table -->
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap4.js"></script>
+<script src="/js/datatables.js"></script>
+
+<script>
+	datatable(
+		'#table',
+		[1, 'desc'],
+		[{ orderable: false, targets: [0] }]
+	);
+</script>

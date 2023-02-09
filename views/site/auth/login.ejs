@@ -1,0 +1,58 @@
+<% contentFor('style') %>
+<style>
+  .close {
+    float: left !important;
+    margin-right: 10px;
+  }
+</style>
+
+<% contentFor('body') %>
+<!--? Inner Heading Start -->
+<div class="innerHeading loginHeading">
+  <div class="container">
+    <h1>ورود</h1>
+  </div>
+</div>
+<!--! Inner Heading End -->
+
+<!--? Inner Content Start -->
+<div class="innercontent">
+  <div class="container auth-wrap">
+    <%- include(viewPath('layouts/errors')) -%>
+    <div class="card mx-auto loginForm">
+      <div class="card-body">
+        <form action="/login?_csrf=<%= req.csrfToken() %>" method="POST">
+          <a href=" /google" class="btn btn-primary btn-block google_plus mb-4">
+            <i class="fab fa-google-plus-g"></i> &nbsp;
+            ورود با گوگل
+          </a>
+          <div class="form-group">
+            <input type="text" name="mobile" class="form-control" placeholder="شماره موبایل" dir="ltr">
+          </div>
+          <div class="form-group">
+            <input class="form-control" name="password" type="password" placeholder="کلمه عبور" dir="ltr">
+          </div>
+          <div class="flex-m w-full contact-form-checkbox">
+            <input class="input-checkbox" id="ckb" type="checkbox" name="remember" />
+            <label class="label-checkbox" for="ckb">
+              مرا به خاطر بسپار
+            </label>
+            <div>
+              <a style="text-decoration: none;" href="/password">
+                فراموشی رمز عبور؟
+              </a>
+            </div>
+          </div>
+          <div class="form-group">
+            <%- recaptcha %>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn login_btn btn-primary btn-block">ورود</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <p class="text-center mt-4">حساب کاربری ندارید؟ <a href="/register">ثبت نام</a></p>
+  </div>
+</div>
+<!--! Inner Content End -->

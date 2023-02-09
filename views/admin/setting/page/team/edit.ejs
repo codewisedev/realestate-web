@@ -1,0 +1,122 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/css/imagepicker.css" />
+
+<% contentFor('body') %>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>عضو جدید</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="#">تیم مشاوره املاک</a></li>
+                    <li class="breadcrumb-item active">عضو جدید</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="card">
+    <!--? Card Body -->
+    <div class="card-body">
+        <form class="form-horizontal content"
+            action="/admin/setting/page/team/edit/<%= team._id %>?_method=PUT&_csrf=<%= req.csrfToken() %>"
+            method="POST" enctype="multipart/form-data">
+            <%- include(viewPath('layouts/errors')) -%>
+
+            <input name="name" type="text" class="form-control formObject" placeholder="نام و نام خانوادگی *"
+                value="<%= team.name %>" />
+
+            <div class="input-group" style="margin-top: 15px;">
+                <input type="text" name="twitter" value="<%= team.twitter %>" class="form-control formObject"
+                    placeholder="آدرس توئیتر" style="text-align: left; direction: ltr;" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fab fa-twitter"></i></span>
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-top: 15px;">
+                <input type="text" name="instagram" value="<%= team.instagram %>" class="form-control formObject"
+                    placeholder="آدرس اینستاگرام" style="text-align: left; direction: ltr;" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fab fa-instagram"></i></span>
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-top: 15px;">
+                <input type="text" name="linkedin" value="<%= team.linkedin %>" class="form-control formObject"
+                    placeholder="آدرس لینکداین" style="text-align: left; direction: ltr;" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
+                </div>
+            </div>
+
+            <!--? Blog Picture -->
+            <div class="form-horizontal" style="margin-top: 20px;">
+                <div class="form-group">
+                    <label class="control-label col-md-3">
+                        عکس کاربر *
+                        <p id="pic-danger" class="pic-danger"></p>
+                    </label>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div id="image"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--! Blog Picture -->
+
+            <button type="submit" class="btn btn-primary">
+                ویرایش
+            </button>
+            <a href="/admin/setting/page/team" class="btn btn-danger">انصراف</a>
+        </form>
+    </div>
+    <!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/js/image-picker.js"></script>
+
+<script type="text/javascript">
+    //* Image Picker Config
+    $(function () {
+        $('#image').spartanMultiImagePicker({
+            fieldName: 'image',
+            maxCount: 1,
+            rowHeight: '200px',
+            groupClassName: 'col-md-4 col-sm-4 col-xs-6',
+            maxFileSize: '1000000', // 1MB Max Image Size
+            placeholderImage: {
+                image: '<%= team.image[480] %>',
+                width: '100%',
+            },
+            dropFileLabel: 'Drop Here',
+            onAddRow: function (index) {
+                console.log(index);
+            },
+            onRenderedPreview: function (index) {
+                console.log(index);
+                document.getElementById('pic-danger').style.display = 'none';
+            },
+            onRemoveRow: function (index) {
+                console.log(index);
+            },
+            onExtensionErr: function (index, file) {
+                console.log(index, file, 'extension err');
+                document.getElementById('pic-danger').style.display = 'block';
+                document.getElementById('pic-danger').innerHTML =
+                    'لطفا فرمت های JPG یا PNG را وارد نمایید';
+            },
+            onSizeErr: function (index, file) {
+                console.log(index, file, 'file size too big');
+                document.getElementById('pic-danger').style.display = 'block';
+                document.getElementById('pic-danger').innerHTML =
+                    'حجم فایل بیشتر از 1 مگابایت می باشد';
+            },
+        });
+    });
+</script>

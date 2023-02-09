@@ -1,0 +1,220 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap4.css" />
+<link rel="stylesheet" href="/css/table.css" />
+<link rel="stylesheet" href="/css/modal.css" />
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>مدیریت استان ها</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">مدیریت مناطق</a></li>
+					<li class="breadcrumb-item active">مدیریت استان ها</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<div class="card-header">
+		<h3 class="card-title">
+			لیست استان ها
+			<a href="#" class="btn btn-sm btn-success card-btn" data-toggle="modal" data-target="#StateModal">
+				<span>
+					<i class="fa fa-plus"></i>
+				</span>
+				استان جدید
+			</a>
+
+			<!--? Create State Modal -->
+			<div class="modal fade" id="StateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered" role="form">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">ثبت استان جدید</h5>
+							<button type="button" class="close modal-close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form action="/admin/location/state" method="POST">
+								<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+								<div class="form-group">
+									<label for="recipient-name" class="col-form-label">
+										عنوان
+									</label>
+									<input type="text" name="title" class="form-control" id="recipient-name" />
+								</div>
+								<button type="submit" class="btn btn-primary">ثبت</button>
+								<button type="button" class="btn btn-danger" data-dismiss="modal">
+									بستن
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--! Create State Modal -->
+		</h3>
+	</div>
+
+	<!--? Card Body -->
+	<div class="card-body">
+		<div class="search-wrapper">
+			<div class="input-holder">
+				<input id="search" type="text" class="search-input" placeholder="جستجو در جدول..." />
+				<button class="search-icon" onclick="searchToggle(this, event);">
+					<span></span>
+				</button>
+			</div>
+			<span class="close" onclick="searchToggle(this, event);"></span>
+			<div class="result-container"></div>
+		</div>
+		<table id="table" class="table table-bordered table-striped display responsive nowrap dt-center">
+			<thead>
+				<tr>
+					<th>عنوان</th>
+					<th>لیست شهر ها</th>
+					<th>وضعیت</th>
+					<th>تنظیمات</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% states.forEach(state => { %>
+				<tr>
+					<td><%= state.title %></td>
+					<td>
+						<button type="button" class="btn btn-info" data-toggle="modal"
+							data-target="#modal_<%= state._id %>">
+							نمایش شهر ها
+						</button>
+
+						<div class="modal fade" id="modal_<%= state._id %>" tabindex="-1" role="dialog"
+							aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+							<div class="large-modal-dialog modal-dialog modal-dialog-centered" role="document">
+								<div class="large-modal-content modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLongTitle">
+											لیست شهر ها (<%= state.city.length %> شهر)
+										</h5>
+										<button type="button" class="close modal-close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="large-modal-body modal-body">
+										<table
+											class="table table-bordered table-striped display responsive nowrap dt-center table-mini">
+											<% if(state.city.length > 0) { %>
+											<thead>
+												<tr>
+													<th>عنوان</th>
+												</tr>
+											</thead>
+											<tbody>
+												<% state.city.forEach(city => { %>
+												<tr>
+													<td><%= city.title %></td>
+												</tr>
+												<% }); %>
+											</tbody>
+											<% } else { %>
+											<img src="/images/no-data.jpg" />
+											<% } %>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<% if(state.condition == true) { %>
+						<form action="/admin/location/state/condition/false/<%= state._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-success">
+									فعال
+								</button>
+							</div>
+						</form>
+						<% } else { %>
+						<form action="/admin/location/state/condition/true/<%= state._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-danger">
+									غیر فعال
+								</button>
+							</div>
+						</form>
+						<% } %>
+					</td>
+					<td>
+						<form action="/admin/location/state/<%= state._id %>?_method=DELETE" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<a href="#" class="btn btn-primary" data-toggle="modal"
+									data-target="#editModal_<%= state._id %>">
+									ویرایش
+								</a>
+								<button type="submit" class="btn btn-danger">
+									حذف
+								</button>
+							</div>
+						</form>
+
+						<!--? Edit State Modal -->
+						<div class="modal fade" id="editModal_<%= state._id %>" tabindex="-1" role="dialog"
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="form">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">ویرایش استان</h5>
+										<button type="button" class="close modal-close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<form action="/admin/location/state/edit/<%= state._id %>?_method=PUT"
+											method="POST">
+											<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+											<div class="form-group">
+												<label for="recipient-name" class="col-form-label">
+													عنوان
+												</label>
+												<input type="text" name="title" class="form-control" id="recipient-name"
+													value="<%= state.title %>" />
+											</div>
+											<button type="submit" class="btn btn-warning">ویرایش</button>
+											<button type="button" class="btn btn-danger" data-dismiss="modal">
+												بستن
+											</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--! Edit State Modal -->
+					</td>
+				</tr>
+				<% }) %>
+			</tbody>
+		</table>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap4.js"></script>
+<script src="/js/datatables.js"></script>
+
+<script>
+	datatable('#table', [], [{ orderable: false, targets: [1, 2, 3] }]);
+</script>

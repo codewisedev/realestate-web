@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="description" content="The Real Estate Management" />
+	<meta name="keywords" content="RealEstate" />
+	<meta name="author" content="SMR" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<title><%- defineContent('title') || 'مشاوره املاک | ورود/عضویت' %></title>
+
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="/images/favicon.ico" />
+
+	<!-- Fonts -->
+	<link rel="stylesheet" type="text/css" href="/fonts/font.css" />
+	<link rel="stylesheet" href="/plugins/fontawesome/css/all.min.css" />
+	<link rel="stylesheet" href="/plugins/fontawesome/css/fontawesome.css" />
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="/plugins/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap-rtl.min.css" />
+	<link rel="stylesheet" href="/css/reset.css" />
+	<link rel="stylesheet" href="/css/color.css" />
+	<link rel="stylesheet" href="/css/scroll.css" />
+	<link rel="stylesheet" href="/css/pace.css" />
+	<link rel="stylesheet" href="/css/alert.css" />
+	<%- style %>
+</head>
+
+<body>
+	<%- body %>
+
+	<!-- Script -->
+	<script src="/plugins/jquery/dist/jquery.min.js"></script>
+	<script src="/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="/js/sweetalert.min.js"></script>
+	<script src="/plugins/PACE/pace.min.js"></script>
+
+	<!-- Sweet Alert -->
+	</script>
+	<% let sweetalert = req.flash('sweetalert')
+				if(sweetalert.length) {
+				let data = sweetalert[0]; %>
+	<script>
+		Swal.fire({
+			title: '<%= data.title %>',
+			text: '<%= data.text %>',
+			icon: '<%= data.icon %>',
+			showConfirmButton: < %= data.button !== null ? true : false % > ,
+			confirmButtonText: '<%= data.button %>',
+			timer: < %= data.button !== null ? 'null' : data.timer % > ,
+		})
+	</script>
+	<% } %>
+
+	<%- script %>
+</body>
+
+</html>

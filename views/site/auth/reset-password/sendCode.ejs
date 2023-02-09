@@ -1,0 +1,40 @@
+<% contentFor('style') %>
+<style>
+  .close {
+    float: left !important;
+    margin-right: 10px;
+  }
+</style>
+
+<% contentFor('body') %>
+<!--? Inner Heading Start -->
+<div class="innerHeading passwordHeading">
+  <div class="container">
+    <h1>بازیابی کلمه عبور</h1>
+  </div>
+</div>
+<!--! Inner Heading End -->
+
+<!--? Inner Content Start -->
+<div class="innercontent">
+  <div class="container auth-wrap">
+    <%- include(viewPath('layouts/errors')) -%>
+    <div class="card mx-auto loginForm">
+      <div class="card-body">
+        <form action="/password?_csrf=<%= req.csrfToken() %>" method="POST">
+          <div class="form-group">
+            <input type="text" name="mobile" class="form-control" placeholder="شماره موبایل" dir="ltr" maxlength="11">
+          </div>
+          <div class="form-group">
+            <%- recaptcha %>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn login_btn btn-primary btn-block">بازیابی</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <a href="/login">فرم ورود</a>
+  </div>
+</div>
+<!--! Inner Content End -->

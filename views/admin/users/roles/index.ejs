@@ -1,0 +1,45 @@
+<% contentFor('body') %>
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+	<h2>لیست نقش ها</h2>
+	<div class="btn-group">
+		<a href="/admin/users/roles/create" class="btn btn-sm btn-danger">
+			افزودن نقش جدید
+		</a>
+		<a href="/admin/users/permissions" class="btn btn-sm btn-info">
+			بخش مجوز دسترسی
+		</a>
+	</div>
+</div>
+<div class="table-responsive">
+	<table class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<th>عنوان نقش</th>
+				<th>برچسب</th>
+				<th>تنظیمات</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% roles.docs.forEach(role => { %>
+			<tr>
+				<td><%= role.title %></td>
+				<td><%= role.label %></td>
+				<td>
+					<form action="/admin/users/roles/<%= role.id %>?_method=DELETE" method="post">
+						<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+
+						<div class="btn-group btn-group-sm">
+							<a href="/admin/users/roles/<%= role.id %>/edit" class="btn btn-primary">
+								ویرایش
+							</a>
+							<button type="submit" class="btn btn-danger">حذف</button>
+						</div>
+					</form>
+				</td>
+			</tr>
+			<% }) %>
+		</tbody>
+	</table>
+
+	<%- include(viewPath('layouts/pagination') ,{ pagination : roles}) %>
+</div>

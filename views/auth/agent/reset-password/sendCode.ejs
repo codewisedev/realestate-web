@@ -1,0 +1,56 @@
+<% contentFor('style') %>
+<link rel="stylesheet" type="text/css" href="/plugins/animate.css/animate.css" />
+<link rel="stylesheet" type="text/css" href="/plugins/hamburgers/hamburgers.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/util.css" />
+<link rel="stylesheet" type="text/css" href="/css/agent-auth.css" />
+
+<% contentFor('body') %>
+<!--? Main -->
+<section class="limiter">
+	<div class="container-login">
+		<%- include(viewPath('layouts/errors')) -%>
+		<div class="wrap-login">
+			<div class="login-pic js-tilt" data-tilt>
+				<img src="/images/auth-reset.png" alt="IMG" />
+			</div>
+			<div id="reset" class="animated">
+				<span class="login-form-title">بازیابی رمز عبور</span>
+				<form class="login-form validate-form" action="/auth/agent/password/reset" role="form" method="POST">
+					<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+					<div class="wrap-input validate-input">
+						<input type="text" id="mobile" name="mobile" class="form-control input"
+							data-inputmask='"mask": "0999 99 99 999"' data-mask dir="ltr"
+							value="<%= complete('mobile') %>" />
+						<span class="focus-input"></span>
+						<span class="symbol-input">
+							<i class="fa fa-phone" aria-hidden="true"></i>
+						</span>
+					</div>
+					<div class="container-login-form-btn">
+						<button class="login-form-btn">بازیابی</button>
+					</div>
+				</form>
+				<div class="text-center p-t-136">
+					<a class="txt2 hide" href="/auth/agent">
+						فرم ورود
+						<i class="fa fa-long-arrow-left m-l-5" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!--! Main -->
+
+<% contentFor('script') %>
+<script src="/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<script src="/plugins/tilt/tilt.jquery.min.js"></script>
+<script>
+	$('.js-tilt').tilt({
+		scale: 1.1,
+	});
+	$('[data-mask]').inputmask();
+</script>
+<script src="/js/agent-auth.js"></script>

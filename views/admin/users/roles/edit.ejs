@@ -1,0 +1,77 @@
+<% contentFor('style') %>
+<style>
+    .input-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    .label-checkbox {
+        cursor: pointer;
+        margin: 5px 10px 5px 0px;
+    }
+
+    .checkbox-body {
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 0;
+    }
+
+    .checkbox-item {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        margin: 5px;
+        padding: 10px;
+    }
+</style>
+
+<% contentFor('body') %>
+<div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+    <h2>ویرایش سطح</h2>
+</div>
+<form class="form-horizontal" action="/admin/users/roles/<%= role.id %>?_method=put" method="post">
+    <input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+
+    <%- include(viewPath('layouts/errors')) -%>
+
+    <div class="form-group row">
+        <div class="col">
+            <label for="title" class="control-label font-weight-bold">عنوان نقش</label>
+            <input type="text" class="form-control" name="title" id="title" placeholder="عنوان را وارد کنید"
+                value="<%= complete('title' , role.title) %>">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+            <label for="label" class="control-label font-weight-bold">برچسب</label>
+            <input type="text" class="form-control" name="label" id="label" placeholder="توضیح را وارد کنید"
+                value="<%= complete('label' , role.label) %>">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            <label for="permissions" class="control-label font-weight-bold font-weight-bold">مجوز ها</label>
+            <div class="checkbox-body">
+                <% permissions.forEach(permission => { %>
+                <div class="card checkbox-item">
+                    <input name="permissions" id="<%= permission.id %>" class="input-checkbox" type="checkbox"
+                        value="<%= permission.id %>"
+                        <%= complete('permissions' , role.permissions).indexOf(permission.id) !== -1 ? 'checked' : ''%> />
+                    <label class="label-checkbox" for="<%= permission.id %>">
+                        <%= permission.label %>
+                    </label>
+                </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            <button type="submit" class="btn btn-warning">ویرایش</button>
+        </div>
+    </div>
+</form>

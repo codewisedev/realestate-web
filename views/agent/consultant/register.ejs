@@ -1,0 +1,249 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/persian-datepicker.min.css" />
+<link rel="stylesheet" href="/css/select2.css" />
+<link rel="stylesheet" href="/css/profilepicker.css" />
+<link rel="stylesheet" href="/css/radio.css" />
+
+<style>
+	.verify {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+</style>
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>ثبت مشتری جدید</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">نمایندگی مشاوره املاک</a></li>
+					<li class="breadcrumb-item active">ثبت مشتری جدید</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+
+		<form class="form-horizontal content" action="/agent/consultant/register?_csrf=<%= req.csrfToken() %>"
+			method="POST">
+			<%- include(viewPath('layouts/errors')) -%>
+
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">* اطلاعات اولیه ( پر کردن تمامی موارد الزامی است )</h3>
+					<div class="card-tools" style="position: absolute; left: 15px;">
+						<button style="position: absolute; left: 0;" type="button" class="btn btn-tool"
+							data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="card-body p-0">
+					<div class="col-md-12">
+						<div style="padding: 15px;">
+							<div class="row">
+
+								<!--? Select Avatar -->
+								<label>انتخاب آواتار مشاور</label>
+								<div class="content-group" style="margin-bottom: 20px;">
+									<div class="row">
+										<div class="col-xs-4">
+											<label class="radio">
+												<input type="radio" name="avatar" class="radio-select"
+													value="/images/avatar-01.png" checked />
+												<span class="radio-checkmark"></span>
+												<img src="/images/avatar-01.png" class="img-avatar" />
+											</label>
+										</div>
+										<div class="col-xs-4">
+											<label class="radio">
+												<input type="radio" class="radio-select" name="avatar"
+													value="/images/avatar-02.png" />
+												<span class="radio-checkmark"></span>
+												<img src="/images/avatar-02.png" class="img-avatar" />
+											</label>
+										</div>
+										<div class="col-xs-4">
+											<label class="radio">
+												<input type="radio" name="avatar" class="radio-select"
+													value="/images/avatar-03.png" />
+												<span class="radio-checkmark"></span>
+												<img src="/images/avatar-03.png" class="img-avatar" />
+											</label>
+										</div>
+										<div class="col-xs-4">
+											<label class="radio">
+												<input type="radio" class="radio-select" name="avatar"
+													value="/images/avatar-04.png" />
+												<span class="radio-checkmark"></span>
+												<img src="/images/avatar-04.png" class="img-avatar" />
+											</label>
+										</div>
+										<div class="col-xs-4">
+											<label class="radio">
+												<input type="radio" name="avatar" class="radio-select"
+													value="/images/avatar-06.png" />
+												<span class="radio-checkmark"></span>
+												<img src="/images/avatar-06.png" class="img-avatar" />
+											</label>
+										</div>
+										<div class="col-xs-4">
+											<label class="radio">
+												<input type="radio" class="radio-select" name="avatar"
+													value="/images/avatar-05.png" />
+												<span class="radio-checkmark"></span>
+												<img src="/images/avatar-05.png" class="img-avatar" />
+											</label>
+										</div>
+										<div class="col-xs-4">
+											<label class="radio">
+												<input type="radio" name="avatar" class="radio-select"
+													value="/images/avatar-07.png" />
+												<span class="radio-checkmark"></span>
+												<img src="/images/avatar-07.png" class="img-avatar" />
+											</label>
+										</div>
+										<div class="col-xs-4">
+											<label class="radio">
+												<input type="radio" class="radio-select" name="avatar"
+													value="/images/avatar-08.png" />
+												<span class="radio-checkmark"></span>
+												<img src="/images/avatar-08.png" class="img-avatar" />
+											</label>
+										</div>
+										<div class="col-xs-4">
+											<label class="radio">
+												<input type="radio" name="avatar" class="radio-select"
+													value="/images/avatar-09.png" />
+												<span class="radio-checkmark"></span>
+												<img src="/images/avatar-09.png" class="img-avatar" />
+											</label>
+										</div>
+										<div class="col-xs-4">
+											<label class="radio">
+												<input type="radio" name="avatar" class="radio-select"
+													value="/images/avatar-10.png" />
+												<span class="radio-checkmark"></span>
+												<img src="/images/avatar-10.png" class="img-avatar" />
+											</label>
+										</div>
+									</div>
+								</div>
+								<!--! Select Avatar -->
+
+								<div class="col-md-6">
+									<input name="name" type="text" class="form-control formObject"
+										placeholder="نام و نام خانوادگی" value="<%= complete('name') %>" />
+								</div>
+
+								<div class="col-md-6">
+									<div class="row">
+										<div class="col-md-4">
+											<label>جنسیت</label>
+										</div>
+										<div class="custom-control custom-radio col-md-8">
+											<div class="row">
+												<div class="col-md-6">
+													<input style="cursor: pointer; width: 15px; height: 15px;"
+														type="radio" id="male" name="gender" value="true" checked>
+													<label for="male">مرد</label><br>
+												</div>
+												<div class="col-md-6">
+													<input style="cursor: pointer; width: 15px; height: 15px;"
+														type="radio" id="female" name="gender" value="false">
+													<label for="female">زن</label><br>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>استان</label>
+										<select class="form-control select" id="state" name="state">
+											<% states.forEach(state => { %>
+											<option value="<%= state._id %>"
+												<%= complete('state').indexOf(state._id.toString()) >= 0 ? 'selected' : '' %>>
+												<%= state.title %></option>
+											<% }) %>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label>شهر</label>
+										<select class="form-control select" id="city" name="city"></select>
+									</div>
+								</div>
+								<input class="col-md-4" type="text" name="code" value="<%= code %>" hidden />
+								<input class="col-md-4" type="text" name="mobile" value="<%= mobile %>" hidden />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<button style="margin-top: 20px;" type="submit" class="btn btn-danger">
+				ثبت
+			</button>
+		</form>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/js/persian-date.min.js"></script>
+<script src="/js/persian-datepicker.min.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+<script src="/js/profilepicker.js"></script>
+<script src="/js/datepicker.js"></script>
+<script src="/js/fetch.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+
+<script>
+	$('[data-mask]').inputmask();
+
+	const CITY_URL = '/agent/ads/create/city?_csrf=<%= req.csrfToken() %>';
+
+	$(document).ready(async function () {
+		let stateId = $('#state option:selected').val();
+		await postData(CITY_URL, {
+			id: stateId
+		}).then((data) => {
+			data.map((city) => {
+				if (([city._id]).indexOf('<%= complete("city") %>') >= 0)
+					$('#city').append(
+						`<option value="${city._id}" selected>${city.title}</option>`);
+				else
+					$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+			});
+		});
+	});
+
+	$('#state').change(async () => {
+		let stateId = $('#state option:selected').val();
+		$('#city option').remove();
+		await postData(CITY_URL, {
+			id: stateId
+		}).then((data) => {
+			data.map((city) => {
+				$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+			});
+		});
+	});
+</script>

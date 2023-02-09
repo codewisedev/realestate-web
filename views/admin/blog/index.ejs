@@ -1,0 +1,99 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap4.css" />
+<link rel="stylesheet" href="/css/table.css" />
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>لیست بلاگ ها</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">بلاگ</a></li>
+					<li class="breadcrumb-item active">لیست بلاگ ها</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<!--? Card Body -->
+	<div class="card-body">
+		<div class="search-wrapper">
+			<div class="input-holder">
+				<input id="search" type="text" class="search-input" placeholder="جستجو در جدول..." />
+				<button class="search-icon" onclick="searchToggle(this, event);">
+					<span></span>
+				</button>
+			</div>
+			<span class="close" onclick="searchToggle(this, event);"></span>
+			<div class="result-container"></div>
+		</div>
+
+		<!--? Table -->
+		<table id="table" class="table table-bordered table-striped display responsive nowrap dt-center">
+			<thead>
+				<tr>
+					<th>عنوان</th>
+					<th>تعداد بازدید</th>
+					<th>پسندیده ها</th>
+					<th>تاریخ ثبت</th>
+					<th>وضعیت</th>
+					<th>تنظیمات</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% blogs.forEach(blog => { %>
+				<tr>
+					<td><%= blog.title %></td>
+					<td><%= blog.viewCount %></td>
+					<td><%= blog.like %></td>
+					<td><%= date(blog.createdAt).format('jYYYY/jMM/jDD') %></td>
+					<td>
+						<% if(blog.condition == true) { %>
+						<form action="/admin/blog/condition/false/<%= blog._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-success">فعال</button>
+							</div>
+						</form>
+						<% } else { %>
+						<form action="/admin/blog/condition/true/<%= blog._id %>?_method=PUT" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<button type="submit" class="btn btn-danger">غیر فعال</button>
+							</div>
+						</form>
+						<% } %>
+					</td>
+					<td>
+						<form action="/admin/blog/<%= blog._id %>?_method=DELETE" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<a href="/admin/blog/edit/<%= blog._id %>" class="btn btn-primary">
+									ویرایش
+								</a>
+								<button type="submit" class="btn btn-danger">حذف</button>
+							</div>
+						</form>
+					</td>
+				</tr>
+				<% }) %>
+			</tbody>
+		</table>
+		<!--! Table -->
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap4.js"></script>
+<script src="/js/datatables.js"></script>
+
+<script>
+	datatable('#table', [3, 'desc'], [{ orderable: false, targets: [4, 5] }]);
+</script>

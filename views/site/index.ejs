@@ -1,0 +1,1204 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/owlcarousel/dist/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/plugins/owlcarousel/dist/assets/owl.theme.default.min.css">
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/select2.css" />
+<link href="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.css" rel="stylesheet" type="text/css">
+<script src="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.js" type="text/javascript"></script>
+
+<% contentFor('body') %>
+<!--? Slider Start -->
+<div class="video">
+	<div class="slider-wrap videoWrp" id="home">
+		<div class="hero-image">
+			<video id="bgvid" muted="" poster="" autoplay loop>
+				<source src="/videos/construction-background.mp4" type="video/mp4" />
+			</video>
+		</div>
+		<div class="videohover hero-wrapper">
+			<div class="container">
+				<div class="sliderTxt video_hoverText">
+					<h1>خانه خودت را پیدا کن!</h1>
+					<p>سیستم هوشمند مدیریت و جستجوی املاک مشاوره املاک</p>
+					<div id="exTab1" class="container">
+						<ul class="nav nav-pills">
+							<li><a href="#sale" onclick="sale()" data-toggle="tab" class="active">فروش</a></li>
+							<li><a href="#mortgage" onclick="mortgage()" data-toggle="tab">رهن کامل</a></li>
+							<li><a href="#rent" onclick="rent()" data-toggle="tab">رهن و اجاره</a></li>
+							<li><a href="#presell" onclick="presell()" data-toggle="tab">پیش فروش</a></li>
+							<li><a href="#exchange" onclick="exchange()" data-toggle="tab">معاوضه</a></li>
+							<li><a href="#participation" onclick="participation()" data-toggle="tab">مشارکت</a></li>
+						</ul>
+						<div class="tab-content clearfix">
+							<div class="tab-pane active">
+								<div class="form-wrap">
+									<form action="/ads?_csrf=<%= req.csrfToken() %>" method="GET">
+										<div class="row">
+											<input type="hidden" name="transactionType" id="transactionType"
+												value="1" />
+											<div class="col-lg-3 origin">
+												<select class="input-group form-control select" id="state" name="state">
+													<option value="none">انتخاب استان</option>
+													<% states.forEach(state => { %>
+													<option value="<%= state._id %>"><%= state.title %></option>
+													<% }) %>
+												</select>
+											</div>
+											<div class="col-lg-3 origin">
+												<select class="form-control select input-group" id="city"
+													name="city"></select>
+											</div>
+											<div class="col-lg-3 origin">
+												<select class="form-control select input-group" id="region"
+													name="region"></select>
+											</div>
+											<div class="col-lg-3 origin">
+												<select class="form-control select input-group" name="adsType">
+													<option value="all">نوع ملک</option>
+													<option value="1">پنت هاوس</option>
+													<option value="2">آپارتمان</option>
+													<option value="3">مجتمع مسکونی</option>
+													<option value="4">خانه ویلایی</option>
+													<option value="5">سوییت</option>
+													<option value="6">ویلا</option>
+													<option value="7">باغ</option>
+													<option value="8">زمین ملکی</option>
+													<option value="9">زمین زراعی</option>
+													<option value="10">مغازه و تجاری</option>
+													<option value="11">اداری</option>
+													<option value="12">هتل</option>
+													<option value="13">هتل آپارتمان</option>
+													<option value="14">کارگاه</option>
+													<option value="15">سالن</option>
+													<option value="16">انبار</option>
+													<option value="17">کارخانه</option>
+												</select>
+											</div>
+											<div class="col-lg-3 origin">
+												<div class="input-group">
+													<div class="input-group-prepend collaps">
+														<span class="input-group-text" style="cursor: pointer;">
+															<i class="fas fa-search-location"></i>
+														</span>
+													</div>
+													<input type="text" name="latlon" class="form-control" id="latlon"
+														placeholder="انتخاب محدوده روی نقشه" readonly />
+												</div>
+											</div>
+											<div class="col-lg-6">
+												<div class="input-group origin">
+													<input type="text" name="search"
+														placeholder="جستجو در عنوان، آدرس، امکانات، نام مشاور املاک ..."
+														class="form-control" />
+												</div>
+											</div>
+											<div class="col-lg-3">
+												<div class="input-btn">
+													<button class="sbutn">
+														<i class="fa fa-search" aria-hidden="true"></i>
+														جستجو
+													</button>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div id="map"
+								style="min-height: 300px; width:100%; background: #eee; border: 2px solid #aaa;">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--! Slider End -->
+
+<!--? Favorite Slider Start -->
+<div class="property-wrap wow fadeInUp">
+	<div class="container">
+		<section class="user-blog">
+			<div class="container">
+				<div class="heading">
+					<h1>
+						پیشنهاد های مشاوره املاک
+					</h1>
+				</div>
+				<div id="demo1">
+					<div class="customNavigation">
+						<a class="btn customPrevBtn"><img src="/images/prev.png"></a>
+						<a class="btn customNextBtn"><img src="/images/next.png"></a>
+					</div>
+					<div id="owl-demo1" class="owl-carousel">
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-1.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-2.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-3.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-4.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-5.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-6.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<!--! Favorite Slider Start -->
+
+<!--? About Us Start -->
+<div class="why-wrap wow fadeInUp">
+	<div class="container">
+		<div class="title">
+			<h1>چرا مشاوره املاک؟</h1>
+		</div>
+		<p>
+			مشاوره املاک امکان ثبت آسان ملک همراه با عکس، امکانات، نقشه، آدرس و موقعیت مکانی را فراهم میکند. با مشاوره
+			املاک بهترین
+			ملک را بر اساس نیاز مشتری با یک جستجوی ساده بیابید.
+		</p>
+		<div class="start_btn">
+			<span><a href="/auth/agent">ثبت نام مشاور املاک</a></span>
+			<span><a href="/contact">تماس با ما</a></span>
+		</div>
+	</div>
+</div>
+<!--! About Us End -->
+
+<!--? City Block Start -->
+<section class="popular_wrap wow fadeInUp">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="popular_img position-relative">
+					<img alt="" src="/images/tehran.jpg" />
+					<div class="popular_img_text"><a href="#">تهران</a></div>
+				</div>
+			</div>
+			<div class="col-md-4 mt_md">
+				<div class="popular_img position-relative">
+					<img alt="" src="/images/esfahan.jpg" />
+					<div class="popular_img_text"><a href="#">اصفهان</a></div>
+				</div>
+				<div class="popular_img position-relative mt">
+					<img alt="" src="/images/rasht.jpg" />
+					<div class="popular_img_text"><a href="#">رشت</a></div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="popular_img position-relative mt">
+					<img alt="" src="/images/tabriz.jpg" />
+					<div class="popular_img_text"><a href="#">تبریز</a></div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="popular_img position-relative mt">
+					<img alt="" src="/images/karaj.jpg" />
+					<div class="popular_img_text"><a href="#">کرج</a></div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="popular_img position-relative mt">
+					<img alt="" src="/images/shiraz.jpg" />
+					<div class="popular_img_text"><a href="#">شیراز</a></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!--! City Block End -->
+
+<!--? Rent Slider Start -->
+<div class="property-wrap property_rent wow fadeInUp">
+	<div class="container">
+		<section class="user-blog">
+			<div class="container" style="padding-top: 40px;">
+				<div class="heading">
+					<h1>
+						رهن و اجاره
+					</h1>
+				</div>
+				<div id="demo2">
+					<div class="customNavigation">
+						<a class="btn customPrevBtn"><img src="/images/prev.png"></a>
+						<a class="btn customNextBtn"><img src="/images/next.png"></a>
+					</div>
+					<div id="owl-demo1" class="owl-carousel">
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-7.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-8.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-9.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-10.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-11.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="blog-grid property_box wow fadeInUp">
+								<div class="propertyImg">
+									<img class="slider-img" alt="" src="/images/slider-12.jpg" />
+								</div>
+								<h3><a href="#">ویلا شمال تهران برای فروش</a></h3>
+								<div class="property_location">
+									<i class="fas fa-map-marker-alt" aria-hidden="true"></i> تهران /
+									زعفرانیه
+								</div>
+								<div class="heart_info">
+									<div class="property_price">
+										400،000،000 تومان
+									</div>
+								</div>
+								<div class="propert_info">
+									<ul class="row">
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bedroom_icon.png" />
+											</div>
+											<h5>اتاق خواب</h5>
+											<h5>3</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/bathroom_icon.png" />
+											</div>
+											<h5>سرویس بهداشتی</h5>
+											<h5>2</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/shower_icon.png" />
+											</div>
+											<h5>حمام</h5>
+											<h5>1</h5>
+										</li>
+										<li class="info-item col-3">
+											<div class="proprty_icon">
+												<img alt="" src="/images/garage_icon.png" />
+											</div>
+											<h5>پارکینگ</h5>
+											<h5>1</h5>
+										</li>
+									</ul>
+								</div>
+								<div class="rent_info">
+									<div class="aType">آپارتمان</div>
+									<div class="tType">فروش</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+<!--! Rent Slider End -->
+
+<!--? Slogan Start -->
+<section class="slogan wow fadeInUp">
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-lg-8">
+				<div class="perfect_text">
+					<h1>شک نکن، بهترین رو انتخاب کردی!</h1>
+					<span>
+						مشاوره املاک جایگزینی مدرن و هوشمند برای روش سنتی دفاتر ثبت ملک مشاوران املاک
+					</span>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="readmore"><a href="/about">ویژگی های مشاوره املاک</a></div>
+			</div>
+		</div>
+	</div>
+</section>
+<!--! Slogan End -->
+
+<!--? Blog Start -->
+<div class="property-wrap property_blog wow fadeInUp">
+	<div class="container">
+		<section class="user-blog">
+			<div class="heading">
+				<h1>
+					بلاگ
+				</h1>
+			</div>
+			<div class="cards">
+				<% blogs.forEach(blog => { %>
+				<div class="card">
+					<div class="card__image-holder">
+						<img class="card__image" src="<%= blog.image["480"] %>" alt="مشاوره املاک" />
+					</div>
+					<div class="card-title">
+						<a href="#" class="toggle-info blogbtn">
+							<span class="left"></span>
+							<span class="right"></span>
+						</a>
+						<h2><%= blog.title %></h2>
+					</div>
+					<div class="card-flap flap1">
+						<div class="card-description"><%= blog.summary %></div>
+						<div class="card-flap flap2">
+							<div class="card-actions">
+								<a target="_blank" href="/blog/<%= blog.slug %>" class="blogbtn">
+									ادامه مطلب
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<% }) %>
+			</div>
+		</section>
+		<div class="readmore"
+			style="width: 100%; display: flex; justify-content: center; align-items: center; margin-top: 30px; margin-bottom: 0 !important;">
+			<a href="/blog">مشاهده تمام مطالب...</a>
+		</div>
+	</div>
+</div>
+<!--! Blog End -->
+
+<!--? Price Plan Start -->
+<section class="price_wrap wow fadeInUp" dir="ltr">
+	<div class="container">
+		<div class="align-items-center price">
+			<h1 class="text-center">تعرفه سامانه مدیریت املاک</h1>
+			<div class="card-slider">
+				<ul class="card-slider_list">
+					<li class="card-slider_card">
+						<div class="panel">
+							<h3>اشتراک رایگان</h3>
+							<ul>
+								<li>توضیحات<span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+							</ul>
+						</div>
+					</li>
+					<li class="card-slider_card">
+						<div class="panel">
+							<h3>اشتراک 1 ماهه</h3>
+							<ul>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span class="no">✗</span></li>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+							</ul>
+						</div>
+					</li>
+					<li class="card-slider_card active">
+						<div class="panel">
+							<h3>اشتراک یکساله</h3>
+							<ul>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span class="no">✗</span></li>
+								<li>توضیحات <span class="no">✗</span></li>
+								<li>توضیحات <span>✓</span></li>
+							</ul>
+						</div>
+					</li>
+					<li class="card-slider_card">
+						<div class="panel">
+							<h3>اشتراک 3 ماهه</h3>
+							<ul>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span>✓</span></li>
+							</ul>
+						</div>
+					</li>
+					<li class="card-slider_card">
+						<div class="panel">
+							<h3>اشتراک 6 ماهه</h3>
+							<ul>
+								<li>توضیحات <span class="no">✗</span></li>
+								<li>توضیحات <span>✓</span></li>
+								<li>توضیحات <span class="no">✗</span></li>
+								<li>توضیحات <span class="no">✗</span></li>
+								<li>توضیحات <span>✓</span></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+<!--! Price Plan End -->
+
+<!--? Application Start -->
+<section class="our_team_wrap wow fadeInUp">
+	<div id="particles-js"></div>
+	<div class="as-wrapper">
+		<div class="as-container">
+			<div class="col-lg-11">
+				<div class="app visible-description">
+					<h2>اپلیکیشن مشاوره املاک</h2>
+					<h5>راحت ترین روش جستجوی ملک!</h5>
+					<form class="form-group app-form mt-3" action="/app/link" method="POST">
+						<div class="input-group mb-3">
+							<input type="text" id="mobile" name="mobile" class="form-control"
+								data-inputmask='"mask": "0999 99 99 999"' data-mask dir="ltr"
+								style="text-align: left" />
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-phone"></i></span>
+							</div>
+						</div>
+						<button class="btn btn-success form-control" type="submit">دریافت لینک دانلود</button>
+					</form>
+				</div>
+			</div>
+
+			<div class="as-frame preventSelect" id="as-frame">
+				<img src="/images/mobile.png" alt="Omnia Phone Frame" />
+			</div>
+
+			<div class="as-nav-buttons" id="as-nav-buttons"></div>
+
+			<button class="as-button as-left-button preventSelect" id="as-left-nav-button">
+				<i style="color: white;" class="fas fa-arrow-left"></i>
+			</button>
+			<button class="as-button as-right-button preventSelect" id="as-right-nav-button">
+				<i style="color: white;" class="fas fa-arrow-right"></i>
+			</button>
+
+			<div id="draggable" class="as-screen preventSelect">
+				<img src="/images/download.png">
+			</div>
+		</div>
+
+		<div class="as-app-description preventSelect" id="as-app-description">
+			<h2>اپلیکیشن مشاوره املاک</h2>
+			<p style="text-align: justify;">
+				لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و
+				متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و
+				کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده،
+				شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی
+				الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و
+				دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای
+				اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
+			</p>
+		</div>
+	</div>
+
+	<div class="download-help">
+		<p style="margin-bottom: 0 !important;">برای مشاهده توضیحات نرم افزار تصویر را به سمت چپ بکشید!</p>
+		<i style="margin-right: 30px; font-size: 30px;" class="fas fa-arrow-left"></i>
+	</div>
+
+	<ul class="platform">
+		<li>
+			<a href="#">
+				<div class="download android">
+					<i class="fa-style fab fa-android"></i>
+					<span class="df">دانلود برنامه اندروید</span>
+					<span class="dfn">Google Play</span>
+				</div>
+			</a>
+		</li>
+		<li>
+			<div class="download apple">
+				<i class="fa-style fab fa-apple fa-3x"></i>
+				<span class="df">به زودی!</span>
+				<span class="dfn">App Store</span>
+			</div>
+		</li>
+		<li>
+			<div class="download windows">
+				<i class="fa-style fab fa-windows fa-3x"></i>
+				<span class="df">به زودی!</span>
+				<span class="dfn">Windows</span>
+			</div>
+		</li>
+	</ul>
+</section>
+<!--! Application End -->
+
+<% contentFor('script') %>
+<script src="/plugins/owlcarousel/dist/owl.carousel.min.js"></script>
+<script src="/js/coursel.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+<script src="/js/download.js"></script>
+<script src="/js/plan.js"></script>
+<script src="/js/blog-slider.js"></script>
+<script src="/js/fetch.js"></script>
+
+<script>
+	var myMap = new L.Map('map', {
+		key: 'web.VoTGvNjZqrBisGIHnHGVAPy7iMe2QrTQiwNOShxh',
+		maptype: 'neshan',
+		center: [35.699739, 51.338097],
+		zoom: 14
+	});
+
+	$('.leaflet-container').css('cursor', 'crosshair');
+
+	var marker = null;
+	myMap.on('click', function (e) {
+		if (marker != null)
+			myMap.removeLayer(marker)
+		marker = new L.Marker(e.latlng).addTo(myMap);
+		document.getElementById("latlon").value = e.latlng.lat + '-' + e.latlng.lng;
+	});
+
+	$('[data-mask]').inputmask();
+
+	const CITY_URL = '/city?_csrf=<%= req.csrfToken() %>';
+	const REGION_URL = '/region?_csrf=<%= req.csrfToken() %>';
+
+	$('#state').change(async () => {
+		if ($('#state option:selected').val() === 'none') {
+			$('#city option').remove();
+			$('#region option').remove();
+		} else {
+			$('#region option').remove();
+			$('#city option').remove();
+			let stateId = $('#state option:selected').val();
+			await postData(CITY_URL, {
+				id: stateId
+			}).then((data) => {
+				$('#city').append('<option value="none">انتخاب شهر</option>');
+				data.map((city) => {
+					$('#city').append(`<option value="${city._id}">${city.title}</option>`);
+				});
+			});
+		}
+	});
+
+	$('#city').change(async () => {
+		if ($('#city option:selected').val() === 'none') {
+			$('#region option').remove();
+		} else {
+			let cityId = $('#city option:selected').val();
+			$('#region option').remove();
+			await postData(REGION_URL, {
+				id: cityId
+			}).then((data) => {
+				$('#region').append('<option value="none">انتخاب ناحیه</option>');
+				data.map((region) => {
+					$('#region').append(
+						`<option value="${region._id}">${region.title}</option>`);
+				});
+			});
+		}
+	});
+
+	function sale() {
+		$('#transactionType').val('1');
+		$('#minPrice').attr("placeholder", "کم ترین قیمت");
+		$('#maxPrice').attr("placeholder", "بیشترین قیمت");
+	}
+
+	function mortgage() {
+		$('#transactionType').val('2');
+		$('#minPrice').attr("placeholder", "کم ترین پول پیش");
+		$('#maxPrice').attr("placeholder", "بیشترین پول پیش");
+	}
+
+	function rent() {
+		$('#transactionType').val('3');
+		$('#minPrice').attr("placeholder", "کم ترین پول پیش");
+		$('#maxPrice').attr("placeholder", "بیشترین پول پیش");
+	}
+
+	function presell() {
+		$('#transactionType').val('4');
+		$('#minPrice').attr("placeholder", "کم ترین قیمت");
+		$('#maxPrice').attr("placeholder", "بیشترین قیمت");
+	}
+
+	function exchange() {
+		$('#transactionType').val('5');
+		$('#minPrice').attr("placeholder", "کم ترین قیمت");
+		$('#maxPrice').attr("placeholder", "بیشترین قیمت");
+	}
+
+	function participation() {
+		$('#transactionType').val('16');
+		$('#minPrice').attr("placeholder", "کم ترین قیمت");
+		$('#maxPrice').attr("placeholder", "بیشترین قیمت");
+	}
+
+	$('#map').hide();
+	$(".collaps").click(function () {
+		$('#map').toggle("slow");
+	});
+</script>

@@ -1,0 +1,1162 @@
+<% contentFor('style') %>
+<link href="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.css" rel="stylesheet" type="text/css">
+<script src="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/plugins/owlcarousel/dist/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/plugins/owlcarousel/dist/assets/owl.theme.default.min.css">
+<link rel="stylesheet" href="/css/flexslider.css">
+
+<style>
+    .map {
+        min-height: 350px;
+        width: 100%;
+        background: #eee;
+        border: 2px solid #aaa;
+        margin-bottom: 15px;
+    }
+</style>
+
+<% contentFor('body') %>
+<!--? Inner Heading Start -->
+<div class="innerHeading adsHeading">
+    <div class="container">
+        <h1><%= ads.title %></h1>
+    </div>
+</div>
+<!--! Inner Heading End -->
+
+<!--? Inner Content Start -->
+<div class="innercontent">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="single-widgets widget_category fadeInRight wow">
+                    <h4>املاک مرتبط</h4>
+                    <ul class="property_sec">
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div id="slider" class="flexslider wow fadeInUp">
+                    <ul class="slides">
+                        <% ads.images.forEach(img => { %>
+                        <li> <img alt="" src="<%= img %>" /> </li>
+                        <% }) %>
+                    </ul>
+                </div>
+                <div id="carousel" class="flexslider wow fadeInUp">
+                    <ul class="slides">
+                        <% ads.images.forEach(img => { %>
+                        <li> <img alt="" src="<%= img %>" /> </li>
+                        <% }) %>
+                    </ul>
+                </div>
+                <div class="property_details">
+                    <div class="row property_head wow fadeInUp">
+                        <div class="col-lg-7 col-md-7">
+                            <h3><%= ads.title %></h3>
+                            <div class="rent_info">
+                                <% if(ads.adsType == 1) { %>
+                                پنت هاوس
+                                <% } else if(ads.adsType == 2) { %>
+                                آپارتمان
+                                <% } else if(ads.adsType == 3) { %>
+                                مجتمع مسکونی
+                                <% } else if(ads.adsType == 4) { %>
+                                خانه ویلایی
+                                <% } else if(ads.adsType == 5) { %>
+                                سوییت
+                                <% } else if(ads.adsType == 6) { %>
+                                ویلا
+                                <% } else if(ads.adsType == 7) { %>
+                                باغ
+                                <% } else if(ads.adsType == 8) { %>
+                                زمین ملکی
+                                <% } else if(ads.adsType == 9) { %>
+                                زمین زراعی
+                                <% } else if(ads.adsType == 10) { %>
+                                مغازه و تجاری
+                                <% } else if(ads.adsType == 11) { %>
+                                اداری
+                                <% } else if(ads.adsType == 12) { %>
+                                هتل
+                                <% } else if(ads.adsType == 13) { %>
+                                هتل آپارتمان
+                                <% } else if(ads.adsType == 14) { %>
+                                کارگاه
+                                <% } else if(ads.adsType == 15) { %>
+                                سالن
+                                <% } else if(ads.adsType == 16) { %>
+                                انبار
+                                <% } else { %>
+                                کارخانه
+                                <% } %>
+                                /
+                                <% if(ads.transactionType == 1) { %>
+                                فروش
+                                <% } else if(ads.transactionType == 2) { %>
+                                رهن کامل
+                                <% } else if(ads.transactionType == 3) { %>
+                                رهن و اجاره
+                                <% } else if(ads.transactionType == 4) { %>
+                                پیش خرید
+                                <% } else if(ads.transactionType == 5) { %>
+                                معاوضه
+                                <% } else { %>
+                                مشارکت
+                                <% } %>
+                            </div>
+                            <div class="property_location mt-2">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <%= ads.location.state.title %> / <%= ads.location.city.title %> /
+                                <%= ads.location.region.title %>
+                            </div>
+                            <div class="property_address mt-2"><%= ads.location.address %></div>
+                        </div>
+                        <div class="col-lg-5 col-md-5">
+                            <div class="heart_info" style="flex-direction: column;">
+                                <% if(ads.price.price) { %>
+                                <div class="property_price participation exchange preSale sale mortage rents">
+                                    <p class="price_title">قیمت</p>
+                                    <%= financial(ads.price.price) %> تومان
+                                </div>
+                                <% } %>
+
+                                <% if(ads.price.rent) { %>
+                                <div class="property_price rents">
+                                    <p class="price_title">اجاره</p>
+                                    <%= financial(ads.price.rent) %> تومان
+                                </div>
+                                <% } %>
+
+                                <% if(ads.price.exchangeable) { %>
+                                <div class="property_price rents">
+                                    قابل تبدیل رهن و اجاره دارد
+                                </div>
+                                <% } %>
+
+                                <% if(ads.price.exchange) { %>
+                                <div class="property_price exchange">
+                                    <p class="price_title">قابل معاوضه با</p>
+                                    <%= ads.price.exchange %>
+                                </div>
+                                <% } %>
+
+                                <% if(ads.price.deliveredMonth) { %>
+                                <div class="property_price preSale">
+                                    <p class="price_title">ماه تحویل</p>
+                                    <%= ads.price.deliveredMonth %>
+                                </div>
+                                <% } %>
+
+                                <% if(ads.price.deliveredYear) { %>
+                                <div class="property_price preSale">
+                                    <p class="price_title">سال تحویل</p>
+                                    <%= ads.price.deliveredYear %>
+                                </div>
+                                <% } %>
+
+                                <% if(ads.price.loan) { %>
+                                <div class="property_price sale preSale exchange">
+                                    <p class="price_title">مبلغ وام</p>
+                                    <%= financial(ads.price.loan) %> تومان
+                                </div>
+                                <% } %>
+
+                                <% if(ads.price.installment) { %>
+                                <div class="property_price sale preSale exchange">
+                                    <p class="price_title">قسط وام</p>
+                                    <%= financial(ads.price.installment) %> تومان
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <% if(ads.isEmpty) { %>
+                        <div class="col-lg-12 mt-3" style="color: var(--red); text-align: center;">
+                            ملک تخلیه است و آماده ی بازدید در شرایط کرونایی می باشد.
+                        </div>
+                        <% } %>
+                        <% if(ads.location.lat && ads.location.lon) { %>
+                        <div id="map" class="map col-md-12 mt-5"></div>
+                        <% } %>
+                    </div>
+                    <div class="property_widget wow fadeInUp mt-5">
+                        <h3 class="desc_head">جزئیات ملک</h3>
+                        <div class="row prop_del">
+                            <div class="col-lg-12">
+                                <ul class="property_list" style="display: flex; flex-wrap: wrap;">
+                                    <% if(ads.material.doc) { %>
+                                    <li class="col-lg-6 sale preSale exchange participation">
+                                        <span>نوع سند</span>
+                                        <% let doc = ads.material.doc %>
+                                        <% if(doc == 1) { %>
+                                        ملکی
+                                        <% } else if (doc == 2) { %>
+                                        قولنامه ای
+                                        <% } else if (doc == 3) { %>
+                                        سرقفلی
+                                        <% } else if (doc == 4) { %>
+                                        وکالتی
+                                        <% } else if (doc == 5) { %>
+                                        مشاع
+                                        <% } else if (doc == 6) { %>
+                                        اوقاف
+                                        <% } else { %>
+                                        آستان قدس
+                                        <% } %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.age) { %>
+                                    <li
+                                        class="col-lg-6 penthouse apartment complex house suite villa shop office hotel workshop hall store factory">
+                                        <span>سن بنا</span>
+                                        <%= ads.material.age %> سال ساخت
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.width) { %>
+                                    <li class="col-lg-6 land">
+                                        <span>عرض گذر</span>
+                                        <%= ads.material.width %> متر
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.height) { %>
+                                    <li class="col-lg-6 shop">
+                                        <span>ارتفاع</span>
+                                        <%= ads.material.height %> متر
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.breadth) { %>
+                                    <li class="col-lg-6 land farm">
+                                        <span>عرض زمین</span>
+                                        <%= ads.material.breadth %> متر
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.length) { %>
+                                    <li class="col-lg-6 house land shop garden workshop">
+                                        <span>طول بر</span>
+                                        <%= ads.material.length %> متر
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.landArea) { %>
+                                    <li
+                                        class="col-lg-6 apartment complex house villa garden land farm hotel workshop hall store factory">
+                                        <span>متراژ زمین</span>
+                                        <%= ads.material.landArea %> متر
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.infrastructureArea) { %>
+                                    <li
+                                        class="col-lg-6 penthouse apartment complex house suite villa shop office hotel workshop hall store factory">
+                                        <span>زیر بنا</span>
+                                        <%= ads.material.infrastructureArea %> متر
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.modifiedArea) { %>
+                                    <li class="col-lg-6 land farm">
+                                        <span>متراژ اصلاحی</span>
+                                        <%= ads.material.modifiedArea %> متر
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.position) { %>
+                                    <li
+                                        class="col-lg-6 penthouse apartment complex house suite villa land farm office hotel factory">
+                                        <span>موقعیت</span>
+                                        <% let position = ads.material.position %>
+                                        <% if(position == 1) { %>
+                                        شمالی
+                                        <% } else if (position == 2) { %>
+                                        جنوبی
+                                        <% } else if (position == 3) { %>
+                                        شمالی و جنوبی
+                                        <% } else if (position == 4) { %>
+                                        شرقی
+                                        <% } else if (position == 5) { %>
+                                        غربی
+                                        <% } else if (position == 6) { %>
+                                        شرقی و غربی
+                                        <% } else if (position == 7) { %>
+                                        دونبش
+                                        <% } else { %>
+                                        سه نبش
+                                        <% } %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.floorCount) { %>
+                                    <li class="col-lg-6 penthouse apartment complex hotel">
+                                        <span>تعداد طبقات</span>
+                                        <%= ads.material.floorCount %> طبقه
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.floor) { %>
+                                    <li class="col-lg-6 apartment complex">
+                                        <span>طبقه</span>
+                                        <%= ads.material.floor %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.unitPerFloor) { %>
+                                    <li class="col-lg-6 apartment complex office hotel">
+                                        <span>تعداد واحد در هر طبقه</span>
+                                        <%= ads.material.unitPerFloor %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.unitType != 0) { %>
+                                    <li class="col-lg-6 penthouse house villa">
+                                        <span>نوع واحد</span>
+                                        <% let unitType = ads.material.unitType %>
+                                        <% if(unitType == 1) { %>
+                                        دوبلکس
+                                        <% } else if (unitType == 2) { %>
+                                        تریبلکس
+                                        <% } %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.unitCount) { %>
+                                    <li class="col-lg-6 hotel">
+                                        <span>تعداد کل واحد ها</span>
+                                        <%= ads.material.unitCount %> واحد
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.density != 0) { %>
+                                    <li class="col-lg-6 house land">
+                                        <span>تراکم</span>
+                                        <% let density = ads.material.density %>
+                                        <% if(density == 1) { %>
+                                        کم
+                                        <% } else if (density == 2) { %>
+                                        متوسط
+                                        <% } else if (density == 3) { %>
+                                        زیاد
+                                        <% } %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.constructionPermit) { %>
+                                    <li class="col-lg-6 land">
+                                        <span>مجوز ساخت</span>
+                                        <% let constructionPermit = ads.material.constructionPermit %>
+                                        <% if(constructionPermit == 1) { %>
+                                        دارد
+                                        <% } else if (constructionPermit == 2) { %>
+                                        ندارد
+                                        <% } %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.businessPermit) { %>
+                                    <li class="col-lg-6 shop office">
+                                        <span>مجوز تجاری</span>
+                                        <% let businessPermit = ads.material.businessPermit %>
+                                        <% if(businessPermit == 1) { %>
+                                        ندارد
+                                        <% } else if (businessPermit == 2) { %>
+                                        موقت
+                                        <% } else { %>
+                                        دائم
+                                        <% } %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.suitableFor) { %>
+                                    <li class="col-lg-6 land farm shop office workshop hall store factory">
+                                        <span>مناسب برای</span>
+                                        <%= ads.material.suitableFor %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.front) { %>
+                                    <li class="col-lg-6 apartment complex house suite villa shop office hotel">
+                                        <span>نما</span>
+                                        <% let front = ads.material.front %>
+                                        <% if(front == 1) { %>
+                                        سنگ
+                                        <% } else if (front == 2) { %>
+                                        آجر سه سانت
+                                        <% } else if (front == 3) { %>
+                                        ترکیبی
+                                        <% } else if (front == 4) { %>
+                                        آجر سفال
+                                        <% } else if (front == 5) { %>
+                                        شیشه سکوریت
+                                        <% } else if (front == 6) { %>
+                                        رومی
+                                        <% } else if (front == 7) { %>
+                                        آجر نما
+                                        <% } else if (front == 8) { %>
+                                        سرامیک
+                                        <% } else if (front == 9) { %>
+                                        سیمان
+                                        <% } else if (front == 10) { %>
+                                        آجر گری
+                                        <% } else if (front == 11) { %>
+                                        کامپوزیت
+                                        <% } else if (front == 12) { %>
+                                        گرانولیت
+                                        <% } else if (front == 13) { %>
+                                        تراورتن
+                                        <% } else if (front == 14) { %>
+                                        گرانیت
+                                        <% } else if (front == 15) { %>
+                                        سیمان سفید
+                                        <% } else if (front == 16) { %>
+                                        آلومینیوم
+                                        <% } else if (front == 17) { %>
+                                        شیشه رفلکس
+                                        <% } else if (front == 18) { %>
+                                        سنگ و شیشه
+                                        <% } else if (front == 19) { %>
+                                        سیمان رنگی
+                                        <% } else if (front == 20) { %>
+                                        کنیتکس
+                                        <% } else if (front == 21) { %>
+                                        آلوتایل
+                                        <% } else { %>
+                                        چوب
+                                        <% } %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.cabinet) { %>
+                                    <li
+                                        class="col-lg-6 penthouse apartment complex house suite villa shop office hotel">
+                                        <span>نما</span>
+                                        <% let cabinet = ads.material.cabinet %>
+                                        <% if(cabinet == 1) { %>
+                                        ام دی اف
+                                        <% } else if (cabinet == 2) { %>
+                                        فلزی
+                                        <% } else if (cabinet == 3) { %>
+                                        های گلاس
+                                        <% } else if (cabinet == 4) { %>
+                                        طرح ام دی اف
+                                        <% } else if (cabinet == 5) { %>
+                                        چوب
+                                        <% } else if (cabinet == 6) { %>
+                                        وکیوم
+                                        <% } else if (cabinet == 7) { %>
+                                        ملامینه
+                                        <% } else if (cabinet == 8) { %>
+                                        اچ دی اف
+                                        <% } else if (cabinet == 9) { %>
+                                        ماج نما
+                                        <% } else if (cabinet == 10) { %>
+                                        فورمات
+                                        <% } else if (cabinet == 11) { %>
+                                        اچ پی ال
+                                        <% } else { %>
+                                        گازر
+                                        <% } %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.flooring) { %>
+                                    <li
+                                        class="col-lg-6 penthouse apartment complex house suite villa shop office hotel">
+                                        <span>کفپوش</span>
+                                        <% let flooring = ads.material.flooring %>
+                                        <% if(flooring == 1) { %>
+                                        سرامیک
+                                        <% } else if (flooring == 2) { %>
+                                        موکت
+                                        <% } else if (flooring == 3) { %>
+                                        پارکت
+                                        <% } else if (flooring == 4) { %>
+                                        سنگ
+                                        <% } else if (flooring == 5) { %>
+                                        موزاییک
+                                        <% } else if (flooring == 6) { %>
+                                        تک سرام
+                                        <% } else if (flooring == 7) { %>
+                                        سیمان
+                                        <% } else if (flooring == 8) { %>
+                                        گرانیت
+                                        <% } else if (flooring == 9) { %>
+                                        لمینت
+                                        <% } else if (flooring == 10) { %>
+                                        کاشی
+                                        <% } else if (flooring == 11) { %>
+                                        اچ دی اف
+                                        <% } else { %>
+                                        برنز
+                                        <% } %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.oneBedUnitCount) { %>
+                                    <li class="col-lg-6 hotel">
+                                        <span>تعداد اتاق های یک تخته</span>
+                                        <%= ads.material.oneBedUnitCount %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.twoBedUnitCount) { %>
+                                    <li class="col-lg-6 hotel">
+                                        <span>تعداد اتاق های دو تخته</span>
+                                        <%= ads.material.twoBedUnitCount %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.threeBedUnitCount) { %>
+                                    <li class="col-lg-6 hotel">
+                                        <span>تعداد اتاق های سه تخته</span>
+                                        <%= ads.material.threeBedUnitCount %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.bedCount) { %>
+                                    <li class="col-lg-6 hotel">
+                                        <span>تعداد تخت خواب</span>
+                                        <%= ads.material.bedCount %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.suiteCount) { %>
+                                    <li class="col-lg-6 hotel">
+                                        <span>تعداد سوئیت ها</span>
+                                        <%= ads.material.suiteCount %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.bedroomCount) { %>
+                                    <li class="col-lg-6 penthouse apartment complex house villa">
+                                        <span>تعداد اتاق خواب</span>
+                                        <%= ads.material.bedroomCount %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.showerCount) { %>
+                                    <li class="col-lg-6 penthouse apartment complex house suite villa office">
+                                        <span>تعداد حمام</span>
+                                        <%= ads.material.showerCount %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.bathCount) { %>
+                                    <li class="col-lg-6 penthouse apartment complex house suite shop office">
+                                        <span>تعداد سرویس بهداشتی</span>
+                                        <%= ads.material.bathCount %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.parkingCount) { %>
+                                    <li class="col-lg-6 penthouse apartment complex suite office">
+                                        <span>تعداد پارکینگ</span>
+                                        <%= ads.material.parkingCount %>
+                                    </li>
+                                    <% } %>
+
+                                    <% if(ads.material.treeCount) { %>
+                                    <li class="col-lg-6 garden">
+                                        <span>تعداد اصله درخت</span>
+                                        <%= ads.material.treeCount %>
+                                    </li>
+                                    <% } %>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="property_widget wow fadeInUp mt-5">
+                        <h3 class="desc_head">امکانات</h3>
+                        <ul class="list-unstyled icon-checkbox">
+                            <% ads.possibilities.forEach(pos => { %>
+                            <li><%= pos.name %></li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                    <div class="property_widget wow fadeInUp mt-5">
+                        <h3 class="desc_head">سیستم گرمایشی و سرمایشی</h3>
+                        <ul class="list-unstyled icon-checkbox">
+                            <% ads.heatingCooling.forEach(pos => { %>
+                            <li><%= pos.name %></li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                    <div class="property_widget wow fadeInUp mt-5">
+                        <h3 class="desc_head">توضیحات</h3>
+                        <p><%= ads.desc %></p>
+                    </div>
+
+                    <% if(auth.check && user.agent && ads.cooperation) { %>
+                    <div class="property_widget wow fadeInUp mt-5">
+                        <h3 class="desc_head">شرایط همکاری</h3>
+                        <p><%= ads.cooperateDesc %></p>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--! Inner Content End -->
+
+<% contentFor('script') %>
+<script src="/plugins/owlcarousel/dist/owl.carousel.min.js"></script>
+<script src="/js/coursel.js"></script>
+<script src="/js/jquery.flexslider.js"></script>
+
+<script>
+    $('#carousel').flexslider({
+        animation: "slide",
+        controlNav: false,
+        animationLoop: false,
+        slideshow: false,
+        itemWidth: 210,
+        itemMargin: 5,
+        asNavFor: '#slider'
+    });
+
+    $('#slider').flexslider({
+        animation: "slide",
+        controlNav: false,
+        animationLoop: false,
+        slideshow: false,
+        sync: "#carousel"
+    });
+
+    var myMap = new L.Map('map', {
+        key: 'web.VoTGvNjZqrBisGIHnHGVAPy7iMe2QrTQiwNOShxh',
+        maptype: 'neshan',
+        center: ['<%= ads.location.lat %>', '<%= ads.location.lon %>'],
+        zoom: 14
+    });
+
+    let latlng = L.latLng('<%= ads.location.lat %>', '<%= ads.location.lon %>');
+    new L.Marker(latlng).addTo(myMap);
+
+    $(document).ready(async function () {
+        switch ('<%= ads.transactionType %>') {
+            case '1': sale();
+                break;
+            case '2': mortage();
+                break;
+            case '3': rents();
+                break;
+            case '4': preSale();
+                break;
+            case '5': exchanges();
+                break;
+            case '6': participation();
+                break;
+        }
+
+        switch ('<%= ads.adsType %>') {
+            case '1': penthouse();
+                break;
+            case '2': apartment();
+                break;
+            case '3': complex();
+                break;
+            case '4': house();
+                break;
+            case '5': suite();
+                break;
+            case '6': villa();
+                break;
+            case '7': garden();
+                break;
+            case '8': land();
+                break;
+            case '9': farm();
+                break;
+            case '10': shop();
+                break;
+            case '11': office();
+                break;
+            case '12': hotel();
+                break;
+            case '13': hotel();
+                break;
+            case '14': workshop();
+                break;
+            case '15': hall();
+                break;
+            case '16': store();
+                break;
+            case '17': factory();
+                break;
+        }
+    });
+
+    function sale() {
+        $('.mortage').hide();
+        $('.rents').hide();
+        $('.preSale').hide();
+        $('.exchange').hide();
+        $('.participation').hide();
+        $('.sale').show();
+        $('#adsType').show();
+        $('#price').text("قیمت (تومان)");
+    }
+
+    function mortage() {
+        $('.sale').hide();
+        $('.rents').hide();
+        $('.preSale').hide();
+        $('.exchange').hide();
+        $('.participation').hide();
+        $('.mortage').show();
+        $('#adsType').show();
+        $('#price').text("مبلغ رهن (تومان)");
+    }
+
+    function rents() {
+        $('.sale').hide();
+        $('.mortage').hide();
+        $('.preSale').hide();
+        $('.exchange').hide();
+        $('.participation').hide();
+        $('.rents').show();
+        $('#adsType').show();
+        $('#price').text("پول پیش (تومان)");
+    }
+
+    function preSale() {
+        $('.sale').hide();
+        $('.mortage').hide();
+        $('.rents').hide();
+        $('.exchange').hide();
+        $('.participation').hide();
+        $('.preSale').show();
+        $('#adsType').show();
+        $('#price').text("قیمت (تومان)");
+    }
+
+    function exchanges() {
+        $('.sale').hide();
+        $('.mortage').hide();
+        $('.rents').hide();
+        $('.preSale').hide();
+        $('.participation').hide();
+        $('.exchange').show();
+        $('#adsType').show();
+        $('#price').text("ارزش (تومان)");
+    }
+
+    function participation() {
+        $('.sale').hide();
+        $('.mortage').hide();
+        $('.rents').hide();
+        $('.preSale').hide();
+        $('.exchange').hide();
+        $('.participation').show();
+        $('#adsType').show();
+        $('#price').text("مبلغ کل (تومان)");
+    }
+
+    function penthouse() {
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.penthouse').show();
+    }
+
+    function apartment() {
+        $('.penthouse').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.apartment').show();
+    }
+
+    function complex() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.complex').show();
+    }
+
+    function house() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.house').show();
+    }
+
+    function suite() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.suite').show();
+    }
+
+    function villa() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.villa').show();
+    }
+
+    function garden() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.garden').show();
+    }
+
+    function land() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.land').show();
+    }
+
+    function farm() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.farm').show();
+    }
+
+    function shop() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.shop').show();
+    }
+
+    function office() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.office').show();
+    }
+
+    function hotel() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.hotel').show();
+    }
+
+    function workshop() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.workshop').show();
+    }
+
+    function hall() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.store').hide();
+        $('.factory').hide();
+        $('.hall').show();
+    }
+
+    function store() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.factory').hide();
+        $('.store').show();
+    }
+
+    function factory() {
+        $('.penthouse').hide();
+        $('.apartment').hide();
+        $('.complex').hide();
+        $('.house').hide();
+        $('.suite').hide();
+        $('.villa').hide();
+        $('.garden').hide();
+        $('.land').hide();
+        $('.farm').hide();
+        $('.shop').hide();
+        $('.office').hide();
+        $('.hotel').hide();
+        $('.workshop').hide();
+        $('.hall').hide();
+        $('.store').hide();
+        $('.factory').show();
+    }
+</script>

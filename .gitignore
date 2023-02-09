@@ -1,0 +1,9 @@
+.nyc_output/
+coverage/
+log
+*.log
+node_modules/
+public/plugins/
+public/uploads/
+.eslintrc.json
+package-lock.json

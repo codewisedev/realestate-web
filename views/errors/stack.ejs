@@ -1,0 +1,16 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/css/highlight.min.css" />
+
+<% contentFor('body') %>
+<section class="container mt-5">
+	<h4><%= message %></h4>
+	<pre>
+		<code><%= stack %></code>
+	</pre>
+</section>
+
+<% contentFor('script') %>
+<script src="/js/highlight.min.js"></script>
+<script>
+	hljs.initHighlightingOnLoad();
+</script>

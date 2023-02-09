@@ -1,0 +1,140 @@
+<% contentFor('style') %>
+<style>
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        word-break: break-word;
+    }
+</style>
+
+<% contentFor('body') %>
+
+<!--? Inner Heading Start -->
+<div class="innerHeading blogGridHeading">
+    <div class="container">
+        <h1>لیست مطالب سایت</h1>
+    </div>
+</div>
+<!--! Inner Heading End -->
+
+<% let { search } = req.query; %>
+
+<form action="/blog" method="GET">
+    <% if(search) { %>
+    <div class="form-group col-md-3">
+        <input type="hidden" name="search" value="<%= search %>" />
+        <span
+            >عبارت جستجو شده : <%= search %>
+            <a href="/blog?<%= type ? 'type=' + type : '' %><%= order ? '&order=1' : '' %>" class="btn btn-sm btn-dark">
+                حذف
+            </a>
+        </span>
+    </div>
+    <% } %>
+</form>
+
+<hr />
+
+<!--? Inner Content Start -->
+<div class="innercontent">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <ul class="row blog_post">
+                    <% if(blogs.docs.length) { %> <% blogs.docs.forEach(blog => { %>
+                    <li class="col-lg-6 col-md-6">
+                        <div class="property_box wow fadeInUp">
+                            <div class="propertyImg"><img alt="" src="<%= blog.image["480"] %>"></div>
+                            <h3><a href="#"><%= blog.title %></a></h3>
+                            <div class="post-meta">
+                                <span><%= date(blog.createdAt).format('jYYYY/jMM/jDD') %></span>
+                                <span>0 نظر</span>
+                                <span><%= blog.like %> کاربر پسندیده</span>
+                            </div>
+                            <p style="word-break: break-word"><%= blog.summary %></p>
+                        </div>
+                    </li>
+                    <% }) %> <% } else { %>
+                    <div class="row">
+                        <p>مطلبی یافت نشد</p>
+                    </div>
+                    <%} %>
+                </ul>
+                <%- include(viewPath('layouts/pagination'), { pagination : blogs }) %>
+            </div>
+            <div class="col-lg-4">
+                <div class="single-widgets widget_search fadeInRight wow">
+                    <h4>جستجو</h4>
+                    <form action="/blog" class="sidebar-search-form">
+                        <input type="search" name="search" value="<%= search %>" placeholder="جستجو..." />
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="single-widgets widget_category fadeInRight wow">
+                    <h4>دسته بندی ها</h4>
+                    <ul>
+                        <li>
+                            <a href="#">آپارتمان <span>9</span></a>
+                        </li>
+                        <li>
+                            <a href="#">ویلا <span>12</span></a>
+                        </li>
+                        <li>
+                            <a href="#">خانه <span>19</span></a>
+                        </li>
+                        <li>
+                            <a href="#">ویلای مدرن <span>17</span></a>
+                        </li>
+                        <li>
+                            <a href="#">خانه شهری <span>10</span></a>
+                        </li>
+                        <li>
+                            <a href="#">دفتر <span>10</span></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="single-widgets widget_category fadeInRight wow">
+                    <h4>املاک اخیر</h4>
+                    <ul class="property_sec">
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg" /></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="single-widgets widget_category fadeInRight wow">
+                    <h4>بایگانی</h4>
+                    <ul class="categories">
+                        <li><a href="#">بهمن 1399 </a></li>
+                        <li><a href="#">فروردین 1398 </a></li>
+                        <li><a href="#">مرداد 1397 </a></li>
+                    </ul>
+                </div>
+                <div class="single-widgets widget_category fadeInRight wow">
+                    <h4>برچسب ها</h4>
+                    <ul class="tags">
+                        <li><a href="#">خانه</a></li>
+                        <li><a href="#">داخلی</a></li>
+                        <li><a href="#">آپارتمان</a></li>
+                        <li><a href="#">مشاور املاک</a></li>
+                        <li><a href="#">لوکس</a></li>
+                        <li><a href="#">اجاره</a></li>
+                        <li><a href="#">نمایندگان</a></li>
+                        <li><a href="#">فروش</a></li>
+                        <li><a href="#">خانواده</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--! Inner Content End -->

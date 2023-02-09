@@ -1,0 +1,174 @@
+<% contentFor('body') %>
+<!--? Inner Heading Start -->
+<div class="innerHeading profileHeading">
+  <div class="container">
+    <h1>پروفایل</h1>
+  </div>
+</div>
+<!--! Inner Heading End -->
+
+<!--? Inner Content Start -->
+<div class="innercontent">
+  <div class="container">
+    <div class="row listing_wrap agent_details">
+      <div class="col-lg-4">
+        <div class="single-widgets widget_category fadeInUp wow">
+          <h4>مشخصات</h4>
+          <ul>
+            <li><a>نام و نام خانوادگی <span><%= user.name %></span></a></li>
+            <li><a>شماره موبایل <span><%= user.mobile %></span></a></li>
+            <li><a>آدرس ایمیل <span><%= user.email %></span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="desc_head profile-head">
+          <h3>لیست آگهی های نشان شده</h3>
+        </div>
+        <ul class="property_listWp">
+          <!--? Ads Start -->
+          <% if(myUser.bookmark.length) { %>
+          <% myUser.bookmark.forEach(ads => { %>
+          <li>
+            <div class="property_box wow fadeInUp">
+              <div class="row">
+                <span class="bookmark">
+                  <i id="<%= ads._id %>" class="fas fa-bookmark"></i>
+                </span>
+                <div class="col-lg-5 col-md-5">
+                  <div class="propertyImg"><img alt="" src="<%= ads.images[0] %>"></div>
+                </div>
+                <div class="col-lg-7 col-md-7">
+                  <h3><a href="/ads/<%= ads.slug %>"><%= ads.title %></a></h3>
+                  <div class="property_location mt-2">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <%= ads.location.city.title %> / <%= ads.location.state.title %>
+                  </div>
+                  <div class="heart_info">
+                    قیمت:
+                    <div class="property_price mr-2"><%= ads.price.price %></div>
+                  </div>
+                  <div class="propert_info">
+                    <ul class="row">
+                      <% if(ads.material.bathCount) { %>
+                      <li class="info-item col-3">
+                        <div class="proprty_icon">
+                          <img alt="" src="/images/bedroom_icon.png" />
+                        </div>
+                        <h5>اتاق خواب</h5>
+                        <h5><%= ads.material.bedroomCount %></h5>
+                      </li>
+                      <% } %>
+                      <% if(ads.material.bathCount) { %>
+                      <li class="info-item col-3">
+                        <div class="proprty_icon">
+                          <img alt="" src="/images/bathroom_icon.png" />
+                        </div>
+                        <h5>سرویس بهداشتی</h5>
+                        <h5><%= ads.material.bathCount %></h5>
+                      </li>
+                      <% } %>
+                      <% if(ads.material.showerCount) { %>
+                      <li class="info-item col-3">
+                        <div class="proprty_icon">
+                          <img alt="" src="/images/shower_icon.png" />
+                        </div>
+                        <h5>حمام</h5>
+                        <h5><%= ads.material.showerCount %></h5>
+                      </li>
+                      <% } %>
+                      <% if(ads.material.parkingCount) { %>
+                      <li class="info-item col-3">
+                        <div class="proprty_icon">
+                          <img alt="" src="/images/garage_icon.png" />
+                        </div>
+                        <h5>پارکینگ</h5>
+                        <h5><%= ads.material.parkingCount %></h5>
+                      </li>
+                      <% } %>
+                    </ul>
+                  </div>
+                  <div class="rent_info">
+                    <% if(ads.adsType == 1) { %>
+                    <div class="aType">پنت هاوس</div>
+                    <% } else if(ads.adsType == 2) { %>
+                    <div class="aType">آپارتمان</div>
+                    <% } else if(ads.adsType == 3) { %>
+                    <div class="aType">مجتمع مسکونی</div>
+                    <% } else if(ads.adsType == 4) { %>
+                    <div class="aType">خانه ویلایی</div>
+                    <% } else if(ads.adsType == 5) { %>
+                    <div class="aType">سوییت</div>
+                    <% } else if(ads.adsType == 6) { %>
+                    <div class="aType">ویلا</div>
+                    <% } else if(ads.adsType == 7) { %>
+                    <div class="aType">باغ</div>
+                    <% } else if(ads.adsType == 8) { %>
+                    <div class="aType">زمین ملکی</div>
+                    <% } else if(ads.adsType == 9) { %>
+                    <div class="aType">زمین زراعی</div>
+                    <% } else if(ads.adsType == 10) { %>
+                    <div class="aType">مغازه و تجاری</div>
+                    <% } else if(ads.adsType == 11) { %>
+                    <div class="aType">اداری</div>
+                    <% } else if(ads.adsType == 12) { %>
+                    <div class="aType">هتل</div>
+                    <% } else if(ads.adsType == 13) { %>
+                    <div class="aType">هتل آپارتمان</div>
+                    <% } else if(ads.adsType == 14) { %>
+                    <div class="aType">کارگاه</div>
+                    <% } else if(ads.adsType == 15) { %>
+                    <div class="aType">سالن</div>
+                    <% } else if(ads.adsType == 16) { %>
+                    <div class="aType">انبار</div>
+                    <% } else { %>
+                    <div class="aType">کارخانه</div>
+                    <% } %>
+
+                    <% if(ads.transactionType == 1) { %>
+                    <div class="tType">فروش</div>
+                    <% } else if(ads.transactionType == 2) { %>
+                    <div class="tType">رهن کامل</div>
+                    <% } else if(ads.transactionType == 3) { %>
+                    <div class="tType">رهن و اجاره</div>
+                    <% } else if(ads.transactionType == 4) { %>
+                    <div class="tType">پیش خرید</div>
+                    <% } else if(ads.transactionType == 5) { %>
+                    <div class="tType">معاوضه</div>
+                    <% } else { %>
+                    <div class="tType">مشارکت</div>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <% }) %>
+          <% } else { %>
+          <div>آگهی نشان شده ای ندارید</div>
+          <% } %>
+          <!--! Ads End -->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!--! Inner Content End -->
+
+<script src="/js/fetch.js"></script>
+
+<script>
+  $(document).on("click", ".bookmark", async (event) => {
+    $(event.target).toggleClass("fas far");
+    let check = $(event.target).hasClass("fas")
+    let id = event.target.id;
+    var URL = "";
+    if (check) {
+      URL = `/ads/bookmark/true/${id}?_method=PUT&_csrf=<%= req.csrfToken() %>`;
+    }
+    else {
+      URL = `/ads/bookmark/false/${id}?_method=PUT&_csrf=<%= req.csrfToken() %>`;
+    }
+    await postData(URL, { id });
+  });
+</script>

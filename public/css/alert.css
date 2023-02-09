@@ -1,0 +1,157 @@
+/*TODO: Alert Style */
+
+/** Main Style */
+.alert {
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: center;
+	justify-content: center;
+	margin-top: 15px;
+	font-size: 1rem;
+	line-height: 1.5;
+}
+
+/*! *****************************/
+
+/** Danger */
+.alert-danger {
+	background-color: var(--red) !important;
+	color: var(--white) !important;
+}
+
+.alert-danger::after {
+	font-family: 'FontAwesome';
+	content: '\f06a';
+	font-size: 1.7rem;
+	margin-left: 15px;
+}
+
+.alert-danger>button {
+	color: var(--white) !important;
+	margin-right: 40px;
+	-webkit-transition: font-size 0.3s ease !important;
+	-moz-transition: font-size 0.3s ease !important;
+	-o-transition: font-size 0.3s ease !important;
+	-ms-transition: font-size 0.3s ease !important;
+	transition: font-size 0.3s ease !important;
+}
+
+.alert-danger>button:hover {
+	color: var(--white);
+	-webkit-transition: font-size 0.3s ease !important;
+	-moz-transition: font-size 0.3s ease !important;
+	-o-transition: font-size 0.3s ease !important;
+	-ms-transition: font-size 0.3s ease !important;
+	transition: font-size 0.3s ease !important;
+	font-size: 1.7rem;
+}
+
+/*! *****************************/
+
+/** Success */
+.alert-success {
+	background-color: var(--green) !important;
+	color: var(--white) !important;
+}
+
+.alert-success::after {
+	font-family: 'FontAwesome';
+	content: '\f058';
+	font-size: 1.7rem;
+	margin-left: 15px;
+}
+
+.alert-success>button {
+	color: var(--white);
+	margin-right: 40px;
+	-webkit-transition: font-size 0.3s ease !important;
+	-moz-transition: font-size 0.3s ease !important;
+	-o-transition: font-size 0.3s ease !important;
+	-ms-transition: font-size 0.3s ease !important;
+	transition: font-size 0.3s ease !important;
+	margin-right: 15px !important;
+}
+
+.alert-success>button:hover {
+	color: var(--white);
+	-webkit-transition: font-size 0.3s ease !important;
+	-moz-transition: font-size 0.3s ease !important;
+	-o-transition: font-size 0.3s ease !important;
+	-ms-transition: font-size 0.3s ease !important;
+	transition: font-size 0.3s ease !important;
+	font-size: 1.7rem;
+}
+
+/*! *****************************/
+
+/** info */
+.alert-info {
+	background-color: var(--blue) !important;
+	color: var(--white) !important;
+}
+
+.alert-info::after {
+	font-family: 'FontAwesome';
+	content: '\f058';
+	font-size: 1.7rem;
+	margin-left: 15px;
+}
+
+.alert-info>button {
+	color: var(--white);
+	margin-right: 40px;
+	-webkit-transition: font-size 0.3s ease !important;
+	-moz-transition: font-size 0.3s ease !important;
+	-o-transition: font-size 0.3s ease !important;
+	-ms-transition: font-size 0.3s ease !important;
+	transition: font-size 0.3s ease !important;
+	margin-right: 15px !important;
+}
+
+.alert-info>button:hover {
+	color: var(--white);
+	-webkit-transition: font-size 0.3s ease !important;
+	-moz-transition: font-size 0.3s ease !important;
+	-o-transition: font-size 0.3s ease !important;
+	-ms-transition: font-size 0.3s ease !important;
+	transition: font-size 0.3s ease !important;
+	font-size: 1.7rem;
+}
+
+/*! *****************************/
+
+/** Warning */
+.alert-Warning {
+	background-color: var(--yellow) !important;
+	color: var(--white) !important;
+}
+
+.alert-Warning::after {
+	font-family: 'FontAwesome';
+	content: '\f058';
+	font-size: 1.7rem;
+	margin-left: 15px;
+}
+
+.alert-Warning>button {
+	color: var(--white);
+	margin-right: 40px;
+	-webkit-transition: font-size 0.3s ease !important;
+	-moz-transition: font-size 0.3s ease !important;
+	-o-transition: font-size 0.3s ease !important;
+	-ms-transition: font-size 0.3s ease !important;
+	transition: font-size 0.3s ease !important;
+	margin-right: 15px !important;
+}
+
+.alert-Warning>button:hover {
+	color: var(--white);
+	-webkit-transition: font-size 0.3s ease !important;
+	-moz-transition: font-size 0.3s ease !important;
+	-o-transition: font-size 0.3s ease !important;
+	-ms-transition: font-size 0.3s ease !important;
+	transition: font-size 0.3s ease !important;
+	font-size: 1.7rem;
+}
+
+/*! *****************************/

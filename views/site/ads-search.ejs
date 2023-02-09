@@ -1,0 +1,808 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/css/loader.css" />
+<link rel="stylesheet" href="/plugins/select2/dist/css/select2.min.css" />
+<link rel="stylesheet" href="/css/select2.css" />
+<link href="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.css" rel="stylesheet" type="text/css">
+<script src="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.js" type="text/javascript"></script>
+
+<style>
+    .pageHeading {
+        position: relative;
+        text-align: center;
+        color: white;
+    }
+
+    .pageHeadingText {
+        color: var(--white);
+        font-size: 36px;
+        font-weight: 600;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    div.card {
+        margin: 0px !important;
+        max-width: 500px !important;
+        width: 100% !important;
+        text-align: right !important;
+    }
+
+    .loadingspinner {
+        pointer-events: none;
+        width: 2.5em;
+        height: 2.5em;
+        border: 0.4em solid transparent;
+        border-color: #eee;
+        border-top-color: #3e67ec;
+        border-radius: 50%;
+        -webkit-animation: loadingspin 1s linear infinite;
+        animation: loadingspin 1s linear infinite;
+    }
+
+    @-webkit-keyframes loadingspin {
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes loadingspin {
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+</style>
+
+<% contentFor('body') %>
+<!--? Inner Heading Start -->
+<div class="innerHeading adsSearchHeading">
+    <div class="container">
+        <h1>لیست ملک ها</h1>
+    </div>
+</div>
+<!--! Inner Heading End -->
+
+<% let { search, latlon, transactionType, adsType, possibilities = '', heatingCooling = '' } = req.query; %>
+
+<!--? Inner Content Start -->
+<div class="innercontent">
+    <div class="container">
+        <div class="row listing_wrap">
+            <div class="col-lg-4">
+                <form>
+                    <div id="map" style="min-height: 300px; width:100%; background: #eee; border: 2px solid #aaa;">
+                    </div>
+                    <div class="sidebar_form card card-body wow fadeInUp">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" value="<%= search %>"
+                                placeholder="کلمه کلیدی">
+                            <div class="hover_icon"><a><i class="fas fa-search"></i></a></div>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" name="latlon" id="latlon" class="form-control collaps"
+                                value="<%= latlon %>" placeholder="انتخاب محدوده روی نقشه">
+                            <div class="hover_icon collaps">
+                                <a><i class="fas fa-map-marker-alt" style="cursor: pointer;"></i></a>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <select name="transactionType" class="wide select">
+                                <option value="all" data-display="نوع معامله">بدون انتخاب</option>
+                                <option value="1" <%= transactionType == 1 ? 'selected' : '' %>>فروش</option>
+                                <option value="2" <%= transactionType == 2 ? 'selected' : '' %>>رهن کامل</option>
+                                <option value="3" <%= transactionType == 3 ? 'selected' : '' %>>رهن و اجاره</option>
+                                <option value="4" <%= transactionType == 4 ? 'selected' : '' %>>پیش فروش</option>
+                                <option value="5" <%= transactionType == 5 ? 'selected' : '' %>>معاوضه</option>
+                                <option value="6" <%= transactionType == 6 ? 'selected' : '' %>>مشارکت</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <select name="adsType" class="wide select">
+                                <option value="all" <%= adsType == 'all' ? 'selected' : '' %>>نوع ملک</option>
+                                <option value="1" <%= adsType == 1 ? 'selected' : '' %>>پنت هاوس</option>
+                                <option value="2" <%= adsType == 2 ? 'selected' : '' %>>آپارتمان</option>
+                                <option value="3" <%= adsType == 3 ? 'selected' : '' %>>مجتمع مسکونی</option>
+                                <option value="4" <%= adsType == 4 ? 'selected' : '' %>>خانه ویلایی</option>
+                                <option value="5" <%= adsType == 5 ? 'selected' : '' %>>سوییت</option>
+                                <option value="6" <%= adsType == 6 ? 'selected' : '' %>>ویلا</option>
+                                <option value="7" <%= adsType == 7 ? 'selected' : '' %>>باغ</option>
+                                <option value="8" <%= adsType == 8 ? 'selected' : '' %>>زمین ملکی</option>
+                                <option value="9" <%= adsType == 9 ? 'selected' : '' %>>زمین زراعی</option>
+                                <option value="10" <%= adsType == 10 ? 'selected' : '' %>>مغازه و تجاری</option>
+                                <option value="11" <%= adsType == 11 ? 'selected' : '' %>>اداری</option>
+                                <option value="12" <%= adsType == 12 ? 'selected' : '' %>>هتل</option>
+                                <option value="13" <%= adsType == 13 ? 'selected' : '' %>>هتل آپارتمان</option>
+                                <option value="14" <%= adsType == 14 ? 'selected' : '' %>>کارگاه</option>
+                                <option value="15" <%= adsType == 15 ? 'selected' : '' %>>سالن</option>
+                                <option value="16" <%= adsType == 16 ? 'selected' : '' %>>انبار</option>
+                                <option value="17" <%= adsType == 17 ? 'selected' : '' %>>کارخانه</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="حداقل مساحت"
+                                        style="text-align: center;">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="حداکثر مساحت"
+                                        style="text-align: center;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="advanceWrp faqs mt-2">
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" class="collapsed"
+                                                href="#possibilities">
+                                                امکانات
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="possibilities"
+                                        class="panel-collapse collapse <%= possibilities ? 'show' : '' %>">
+                                        <div class="panel-body">
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="p1" name="possibilities" value="1"
+                                                    <%= possibilities.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="p1"></label>
+                                                آسانسور
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="advanceWrp faqs mt-2">
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" class="collapsed"
+                                                href="#heatingCooling">
+                                                سیستم گرمایشی و سرمایشی
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="heatingCooling"
+                                        class="panel-collapse collapse <%= heatingCooling ? 'show' : '' %>">
+                                        <div class="panel-body">
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc1" name="heatingCooling" value="1"
+                                                    <%= heatingCooling.indexOf('1') != -1 ? 'checked' : ''%>>
+                                                <label for="hc1"></label>
+                                                کولرآبی
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc2" name="heatingCooling" value="2"
+                                                    <%= heatingCooling.indexOf('2') != -1 ? 'checked' : ''%>>
+                                                <label for="hc2"></label>
+                                                بخاری
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc3" name="heatingCooling" value="3"
+                                                    <%= heatingCooling.indexOf('3') != -1 ? 'checked' : ''%>>
+                                                <label for="hc3"></label>
+                                                پکیج
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc4" name="heatingCooling" value="4"
+                                                    <%= heatingCooling.indexOf('4') != -1 ? 'checked' : ''%>>
+                                                <label for="hc4"></label>
+                                                رادیاتور
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc5" name="heatingCooling" value="5"
+                                                    <%= heatingCooling.indexOf('5') != -1 ? 'checked' : ''%>>
+                                                <label for="hc5"></label>
+                                                آبگرمکن
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc6" name="heatingCooling" value="6"
+                                                    <%= heatingCooling.indexOf('6') != -1 ? 'checked' : ''%>>
+                                                <label for="hc6"></label>
+                                                کولرگازی
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc7" name="heatingCooling" value="7"
+                                                    <%= heatingCooling.indexOf('7') != -1 ? 'checked' : ''%>>
+                                                <label for="hc7"></label>
+                                                شوفاژ
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc8" name="heatingCooling" value="8"
+                                                    <%= heatingCooling.indexOf('8') != -1 ? 'checked' : ''%>>
+                                                <label for="hc8"></label>
+                                                گرمایش از کف
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc9" name="heatingCooling" value="9"
+                                                    <%= heatingCooling.indexOf('9') != -1 ? 'checked' : ''%>>
+                                                <label for="hc9"></label>
+                                                هواساز
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc10" name="heatingCooling" value="10"
+                                                    <%= heatingCooling.indexOf('10') != -1 ? 'checked' : ''%>>
+                                                <label for="hc10"></label>
+                                                چیلر
+                                            </div>
+                                            <div class="input-group checkbox">
+                                                <input type="checkbox" id="hc11" name="heatingCooling" value="11"
+                                                    <%= heatingCooling.indexOf('11') != -1 ? 'checked' : ''%>>
+                                                <label for="hc11"></label>
+                                                فن کوئل
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <input type="submit" class="submit" value="جستجو">
+                        </div>
+                    </div>
+                </form>
+                <div class="single-widgets widget_category mt30 fadeInUp wow">
+                    <h4>دسته بندی ها</h4>
+                    <ul>
+                        <li><a href="#">آپارتمان <span>9</span></a></li>
+                        <li><a href="#">ویلا <span>12</span></a></li>
+                        <li><a href="#">خانه <span>19</span></a> </li>
+                        <li><a href="#">ویلای مدرن <span>17</span></a></li>
+                        <li><a href="#">خانه شهری <span>10</span></a></li>
+                        <li><a href="#">دفتر <span>10</span></a></li>
+                    </ul>
+                </div>
+                <div class="single-widgets widget_category fadeInRight wow">
+                    <h4>املاک اخیر</h4>
+                    <ul class="property_sec">
+                        <li>
+                            <div class="rec_proprty">
+                                <div class="propertyImg"><img src="/images/property_small.jpg"></div>
+                                <div class="property_info">
+                                    <h4><a href="#">ملک فروشی</a></h4>
+                                    <p>تهران / زعفرانیه</p>
+                                    <div class="priceWrp">400,000,000 تومان</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <ul class="nav sortWrp wow fadeInUp" role="tablist">
+                    <li>
+                        <span class="title-text">مرتب سازی</span>
+                        <div class="btn-group">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                براساس
+                            </a>
+                            <div class="dropdown-menu" x-placement="top-start">
+                                <a class="dropdown-item" href="#">قیمت پایین تا بالا</a>
+                                <a class="dropdown-item" href="#">قیمت بالا تا پایین </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-inline-item">
+                        <% if(search) { %>
+                        <div class="form-group">
+                            <input type="hidden" name="search" value="<%= search %>" />
+                            <span>عبارت جستجو شده : <%= search %>
+                                <a href="/ads?<%= adsType ? 'adsType=' + adsType : '' %><%= transactionType ? '&transactionType=' + transactionType : '' %>"
+                                    class="btn btn-sm btn-secondary">حذف</a>
+                            </span>
+                        </div>
+                        <% } %>
+                    </li>
+                </ul>
+                <ul class="property_listWp" id="box">
+                    <div id="loader" class="box" style="display: none;">
+                        <div class="loader-37"></div>
+                    </div>
+                    <% if(advertisings.length) { %>
+                    <% advertisings.forEach(ads => { %>
+                    <li>
+                        <div class="property_box wow fadeInUp">
+                            <div class="row">
+                                <% if(req.isAuthenticated()) { %>
+                                <span class="bookmark">
+                                    <% if(user.bookmark.indexOf(ads._id) > -1) { %>
+                                    <i id="<%= ads._id %>" class="fas fa-bookmark"></i>
+                                    <% } else { %>
+                                    <i id="<%= ads._id %>" class="far fa-bookmark"></i>
+                                    <% } %>
+                                </span>
+                                <% } %>
+                                <div class="col-lg-5 col-md-5">
+                                    <div class="propertyImg"><img alt="" src="<%= ads.images[0] %>"></div>
+                                </div>
+                                <div class="col-lg-7 col-md-7">
+                                    <h3><a href="/ads/<%= ads._id %>"><%= ads.title %></a></h3>
+                                    <div class="property_location mt-2">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <%= ads.location.city.title %> / <%= ads.location.state.title %>
+                                    </div>
+                                    <div class="heart_info">
+                                        قیمت:
+                                        <div class="property_price mr-2"><%= financial(ads.price.price) %></div>
+                                    </div>
+                                    <div class="propert_info">
+                                        <ul class="row">
+                                            <% if(ads.material.bedroomCount) { %>
+                                            <li class="info-item col-3">
+                                                <div class="proprty_icon">
+                                                    <img alt="" src="/images/bedroom_icon.png" />
+                                                </div>
+                                                <h5>اتاق خواب</h5>
+                                                <h5><%= ads.material.bedroomCount %></h5>
+                                            </li>
+                                            <% } %>
+                                            <% if(ads.material.bathCount) { %>
+                                            <li class="info-item col-3">
+                                                <div class="proprty_icon">
+                                                    <img alt="" src="/images/bathroom_icon.png" />
+                                                </div>
+                                                <h5>سرویس بهداشتی</h5>
+                                                <h5><%= ads.material.bathCount %></h5>
+                                            </li>
+                                            <% } %>
+                                            <% if(ads.material.showerCount) { %>
+                                            <li class="info-item col-3">
+                                                <div class="proprty_icon">
+                                                    <img alt="" src="/images/shower_icon.png" />
+                                                </div>
+                                                <h5>حمام</h5>
+                                                <h5><%= ads.material.showerCount %></h5>
+                                            </li>
+                                            <% } %>
+                                            <% if(ads.material.parkingCount) { %>
+                                            <li class="info-item col-3">
+                                                <div class="proprty_icon">
+                                                    <img alt="" src="/images/garage_icon.png" />
+                                                </div>
+                                                <h5>پارکینگ</h5>
+                                                <h5><%= ads.material.parkingCount %></h5>
+                                            </li>
+                                            <% } %>
+                                        </ul>
+                                    </div>
+                                    <div class="rent_info">
+                                        <% if(ads.adsType == 1) { %>
+                                        <div class="aType">پنت هاوس</div>
+                                        <% } else if(ads.adsType == 2) { %>
+                                        <div class="aType">آپارتمان</div>
+                                        <% } else if(ads.adsType == 3) { %>
+                                        <div class="aType">مجتمع مسکونی</div>
+                                        <% } else if(ads.adsType == 4) { %>
+                                        <div class="aType">خانه ویلایی</div>
+                                        <% } else if(ads.adsType == 5) { %>
+                                        <div class="aType">سوییت</div>
+                                        <% } else if(ads.adsType == 6) { %>
+                                        <div class="aType">ویلا</div>
+                                        <% } else if(ads.adsType == 7) { %>
+                                        <div class="aType">باغ</div>
+                                        <% } else if(ads.adsType == 8) { %>
+                                        <div class="aType">زمین ملکی</div>
+                                        <% } else if(ads.adsType == 9) { %>
+                                        <div class="aType">زمین زراعی</div>
+                                        <% } else if(ads.adsType == 10) { %>
+                                        <div class="aType">مغازه و تجاری</div>
+                                        <% } else if(ads.adsType == 11) { %>
+                                        <div class="aType">اداری</div>
+                                        <% } else if(ads.adsType == 12) { %>
+                                        <div class="aType">هتل</div>
+                                        <% } else if(ads.adsType == 13) { %>
+                                        <div class="aType">هتل آپارتمان</div>
+                                        <% } else if(ads.adsType == 14) { %>
+                                        <div class="aType">کارگاه</div>
+                                        <% } else if(ads.adsType == 15) { %>
+                                        <div class="aType">سالن</div>
+                                        <% } else if(ads.adsType == 16) { %>
+                                        <div class="aType">انبار</div>
+                                        <% } else { %>
+                                        <div class="aType">کارخانه</div>
+                                        <% } %>
+
+                                        <% if(ads.transactionType == 1) { %>
+                                        <div class="tType">فروش</div>
+                                        <% } else if(ads.transactionType == 2) { %>
+                                        <div class="tType">رهن کامل</div>
+                                        <% } else if(ads.transactionType == 3) { %>
+                                        <div class="tType">رهن و اجاره</div>
+                                        <% } else if(ads.transactionType == 4) { %>
+                                        <div class="tType">پیش خرید</div>
+                                        <% } else if(ads.transactionType == 5) { %>
+                                        <div class="tType">معاوضه</div>
+                                        <% } else { %>
+                                        <div class="tType">مشارکت</div>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <% }) %>
+                    <% } else { %>
+                    <div>آگهی ای یافت نشد</div>
+                    <% } %>
+                    <!--! Ads End -->
+                </ul>
+                <div id="load" class="loadingspinner"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% contentFor('script') %>
+<script src="/js/fetch.js"></script>
+<script src="/plugins/select2/dist/js/select2.full.min.js"></script>
+<script src="/js/select2.js"></script>
+<script src="/js/fetch.js"></script>
+
+<script>
+    $('#load').hide();
+    let page = 1;
+    const ADS_URL = '/ads?_csrf=<%= req.csrfToken() %>';
+    $(window).on('scroll', function () {
+        if ($(window).scrollTop() >= $('#box').offset().top + $('#box').outerHeight() - window.innerHeight) {
+            let id = $('#state option:selected').val();
+            postData(ADS_URL, {
+                page
+            }).then(async (data) => {
+                $('#load').show();
+                console.log(page)
+                console.log(data.length)
+                await data.map((ads) => {
+                    $('#box').append(`
+                    <li>
+                        <div class="property_box wow fadeInUp">
+                            <div class="row">
+                                <div class="col-lg-5 col-md-5">
+                                    <div class="propertyImg"><img alt="" src="${ads.images[0]}"></div>
+                                </div>
+                                <div class="col-lg-7 col-md-7">
+                                    <h3><a href="/ads/<%= ads._id %>"><%= ads.title %></a></h3>
+                                    <div class="property_location mt-2">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <%= ads.location.city.title %> / <%= ads.location.state.title %>
+                                    </div>
+                                    <div class="heart_info">
+                                        قیمت:
+                                        <div class="property_price mr-2"><%= financial(ads.price.price) %></div>
+                                    </div>
+                                    <div class="propert_info">
+                                        <ul class="row">
+                                            <% if(ads.material.bedroomCount) { %>
+                                            <li class="info-item col-3">
+                                                <div class="proprty_icon">
+                                                    <img alt="" src="/images/bedroom_icon.png" />
+                                                </div>
+                                                <h5>اتاق خواب</h5>
+                                                <h5><%= ads.material.bedroomCount %></h5>
+                                            </li>
+                                            <% } %>
+                                            <% if(ads.material.bathCount) { %>
+                                            <li class="info-item col-3">
+                                                <div class="proprty_icon">
+                                                    <img alt="" src="/images/bathroom_icon.png" />
+                                                </div>
+                                                <h5>سرویس بهداشتی</h5>
+                                                <h5><%= ads.material.bathCount %></h5>
+                                            </li>
+                                            <% } %>
+                                            <% if(ads.material.showerCount) { %>
+                                            <li class="info-item col-3">
+                                                <div class="proprty_icon">
+                                                    <img alt="" src="/images/shower_icon.png" />
+                                                </div>
+                                                <h5>حمام</h5>
+                                                <h5><%= ads.material.showerCount %></h5>
+                                            </li>
+                                            <% } %>
+                                            <% if(ads.material.parkingCount) { %>
+                                            <li class="info-item col-3">
+                                                <div class="proprty_icon">
+                                                    <img alt="" src="/images/garage_icon.png" />
+                                                </div>
+                                                <h5>پارکینگ</h5>
+                                                <h5><%= ads.material.parkingCount %></h5>
+                                            </li>
+                                            <% } %>
+                                        </ul>
+                                    </div>
+                                    <div class="rent_info">
+                                        <% if(ads.adsType == 1) { %>
+                                        <div class="aType">پنت هاوس</div>
+                                        <% } else if(ads.adsType == 2) { %>
+                                        <div class="aType">آپارتمان</div>
+                                        <% } else if(ads.adsType == 3) { %>
+                                        <div class="aType">مجتمع مسکونی</div>
+                                        <% } else if(ads.adsType == 4) { %>
+                                        <div class="aType">خانه ویلایی</div>
+                                        <% } else if(ads.adsType == 5) { %>
+                                        <div class="aType">سوییت</div>
+                                        <% } else if(ads.adsType == 6) { %>
+                                        <div class="aType">ویلا</div>
+                                        <% } else if(ads.adsType == 7) { %>
+                                        <div class="aType">باغ</div>
+                                        <% } else if(ads.adsType == 8) { %>
+                                        <div class="aType">زمین ملکی</div>
+                                        <% } else if(ads.adsType == 9) { %>
+                                        <div class="aType">زمین زراعی</div>
+                                        <% } else if(ads.adsType == 10) { %>
+                                        <div class="aType">مغازه و تجاری</div>
+                                        <% } else if(ads.adsType == 11) { %>
+                                        <div class="aType">اداری</div>
+                                        <% } else if(ads.adsType == 12) { %>
+                                        <div class="aType">هتل</div>
+                                        <% } else if(ads.adsType == 13) { %>
+                                        <div class="aType">هتل آپارتمان</div>
+                                        <% } else if(ads.adsType == 14) { %>
+                                        <div class="aType">کارگاه</div>
+                                        <% } else if(ads.adsType == 15) { %>
+                                        <div class="aType">سالن</div>
+                                        <% } else if(ads.adsType == 16) { %>
+                                        <div class="aType">انبار</div>
+                                        <% } else { %>
+                                        <div class="aType">کارخانه</div>
+                                        <% } %>
+
+                                        <% if(ads.transactionType == 1) { %>
+                                        <div class="tType">فروش</div>
+                                        <% } else if(ads.transactionType == 2) { %>
+                                        <div class="tType">رهن کامل</div>
+                                        <% } else if(ads.transactionType == 3) { %>
+                                        <div class="tType">رهن و اجاره</div>
+                                        <% } else if(ads.transactionType == 4) { %>
+                                        <div class="tType">پیش خرید</div>
+                                        <% } else if(ads.transactionType == 5) { %>
+                                        <div class="tType">معاوضه</div>
+                                        <% } else { %>
+                                        <div class="tType">مشارکت</div>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    `);
+                });
+                page++;
+            });
+        }
+    });
+
+    var myMap = new L.Map('map', {
+        key: 'web.VoTGvNjZqrBisGIHnHGVAPy7iMe2QrTQiwNOShxh',
+        maptype: 'neshan',
+        center: [35.699739, 51.338097],
+        zoom: 14
+    });
+
+    $('.leaflet-container').css('cursor', 'crosshair');
+
+    var marker = null;
+    myMap.on('click', function (e) {
+        if (marker != null)
+            myMap.removeLayer(marker)
+        marker = new L.Marker(e.latlng).addTo(myMap);
+        document.getElementById("latlon").value = e.latlng.lat + '-' + e.latlng.lng;
+    });
+
+    $(document).on("click", ".bookmark", async (event) => {
+        $(event.target).toggleClass("fas far");
+        let check = $(event.target).hasClass("fas")
+        let id = event.target.id;
+        var URL = "";
+        if (check) {
+            URL = `/ads/bookmark/true/${id}?_method=PUT&_csrf=<%= req.csrfToken() %>`;
+        } else {
+            URL = `/ads/bookmark/false/${id}?_method=PUT&_csrf=<%= req.csrfToken() %>`;
+        }
+        await postData(URL, {
+            id
+        });
+    });
+
+    $('#map').hide();
+    $(".collaps").click(function () {
+        $('#map').toggle("slow");
+    });
+
+</script>

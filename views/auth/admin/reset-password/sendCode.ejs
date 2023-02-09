@@ -1,0 +1,39 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/css/admin-auth.css" />
+
+<% contentFor('body') %>
+<div class="limiter">
+	<div class="container-login">
+		<div class="wrap-login">
+			<div class="login-form-title">
+				<span class="login-form-title-text">
+					بازیابی رمز عبور
+				</span>
+			</div>
+
+			<form class="login-form validate-form" role="form" method="POST" action="/auth/admin/password/email"
+				novalidate>
+				<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+
+				<%-include(viewPath('layouts/errors'))-%>
+				<%-include(viewPath('layouts/messages'))-%>
+
+				<div class="wrap-input validate-input margin-bottom" data-validate="لطفا ایمیل خود را وارد نمایید">
+					<input class="input input-ltr" id="email" type="email" name="email" placeholder="ایمیل"
+						value="<%= complete('email') %>" />
+					<span class="focus-input"></span>
+				</div>
+
+				<div class="form-group">
+					<%- recaptcha %>
+				</div>
+
+				<div class="container-login-form-btn">
+					<button type="submit" class="login-form-btn" style="color: white;">
+						بازیابی رمز
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

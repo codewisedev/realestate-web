@@ -1,0 +1,275 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/css/radio.css" />
+<link rel="stylesheet" href="/css/profilePicker.css" />
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="row mb-2">
+			<div class="col-sm-6">
+				<h1>پروفایل</h1>
+			</div>
+			<div class="col-sm-6">
+				<ol class="breadcrumb float-sm-left">
+					<li class="breadcrumb-item"><a href="#">پروفایل</a></li>
+					<li class="breadcrumb-item active">نمایش پروفایل</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="card">
+	<div class="card-body">
+		<section class="content">
+			<div class="container-fluid">
+				<div class="row">
+					<!--? Profile Image -->
+					<div class="col-md-3">
+						<div class="card card-info card-outline">
+							<div class="card-body box-profile">
+								<div class="text-center">
+									<img class="profile-user-img img-fluid img-circle" src="<%= user.avatar %>"
+										alt="User profile picture" />
+								</div>
+								<h3 class="profile-username text-center"><%= user.name %></h3>
+								<p class="text-muted text-center"><%= user.role %></p>
+								<ul class="list-group list-group-unbordered mb-3">
+									<% if(user.mobile && !user.admin) { %>
+									<li class="list-group-item">
+										<strong>
+											<i class="fa fa-mobile margin-r-5"></i>
+											موبایل
+										</strong>
+										<p><%= user.mobile %></p>
+									</li>
+									<% } %>
+									<% if(user.email) { %>
+									<li class="list-group-item">
+										<strong>
+											<i class="fa fa-envelope margin-r-5"></i>
+											ایمیل
+										</strong>
+										<p><%= user.email %></p>
+									</li>
+									<% } %>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!--! Profile Image -->
+					<div class="col-md-9">
+						<div class="card">
+							<div class="card-header p-2">
+								<ul class="nav nav-pills">
+									<li class="nav-item">
+										<a class="nav-link active" href="#activity" data-toggle="tab">اعلانات</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#agent" data-toggle="tab">پروفایل املاک</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#user" data-toggle="tab">پروفایل مدیر</a>
+									</li>
+								</ul>
+							</div>
+
+							<div class="card-body">
+								<div class="tab-content">
+									<div class="active tab-pane" id="activity">
+										<!--? Alerts -->
+										<% myAlerts.forEach(alert => { %>
+										<div class="post">
+											<div class="user-block">
+												<img class="img-circle" src="<%= alert.icon %>" alt="user image" />
+												<span class="username">
+													<a href="#"><%= alert.title %></a>
+												</span>
+												<span class="description"><%= date(alert.createdAt).fromNow() %></span>
+											</div>
+											<p>
+												<%- alert.text %>
+											</p>
+										</div>
+										<% }) %>
+										<!--! Alerts -->
+									</div>
+
+									<div class="tab-pane" id="user">
+										<form class="form-horizontal content"
+											action="/agent/profile/edit/<%= user._id %>?_csrf=<%= req.csrfToken() %>&_method=PUT"
+											method="POST" enctype="application/x-www-form-urlencoded">
+											<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+
+											<input id="name" name="name" type="text" class="form-control formObject"
+												placeholder="نام و نام خانوادگی *" value="<%= user.name %>"
+												style="margin-bottom: 10px;" />
+
+											<input id="email" name="email" type="text" class="form-control formObject"
+												placeholder="* ایمیل" value="<%= user.email %>"
+												style="margin-bottom: 10px; direction: ltr; text-align: left;" />
+
+											<% if(user.mobile) { %>
+											<input id="mobile" name="mobile" type="text" class="form-control formObject"
+												placeholder="موبایل *" value="<%= user.mobile %>" maxlength="11"
+												style="margin-bottom: 10px; direction: ltr; text-align: left;" />
+											<% } %>
+
+											<!--? Select Avatar -->
+											<label class="mt-3">انتخاب آواتار</label>
+											<div class="content-group">
+												<div class="row">
+													<!--? Profile Picker -->
+													<div class="col-xs-4">
+														<div class="small-12 medium-2 large-2 columns">
+															<div class="profile-circle">
+																<img id="profile" class="profile-pic"
+																	src="<%= user.avatar.includes('/images/avatar') ? '/images/profile.png' : user.avatar %>" />
+															</div>
+															<div class="p-image">
+																<i class="fa fa-camera upload-profile-button"></i>
+																<i class="fa fa-remove remove-profile-button"></i>
+																<input name="image" class="profile-upload" type="file"
+																	accept="image/*" hidden />
+															</div>
+														</div>
+													</div>
+													<!--! Profile Picker -->
+													<div class="col-xs-4">
+														<label class="radio">
+															<input type="radio" name="avatar" class="radio-select"
+																value="/images/avatar-01.png" <%= user.avatar == '/images/avatar-01.png' ?
+															'checked' : ''%> />
+															<span class="radio-checkmark"></span>
+															<img src="/images/avatar-01.png" class="img-avatar" />
+														</label>
+													</div>
+													<div class="col-xs-4">
+														<label class="radio">
+															<input type="radio" class="radio-select" name="avatar"
+																value="/images/avatar-02.png" <%=
+															user.avatar == '/images/avatar-02.png' ? 'checked'
+															: ''%> />
+															<span class="radio-checkmark"></span>
+															<img src="/images/avatar-02.png" class="img-avatar" />
+														</label>
+													</div>
+													<div class="col-xs-4">
+														<label class="radio">
+															<input type="radio" name="avatar" class="radio-select"
+																value="/images/avatar-03.png" <%= user.avatar == '/images/avatar-03.png' ?
+															'checked' : ''%> />
+															<span class="radio-checkmark"></span>
+															<img src="/images/avatar-03.png" class="img-avatar" />
+														</label>
+													</div>
+													<div class="col-xs-4">
+														<label class="radio">
+															<input type="radio" class="radio-select" name="avatar"
+																value="/images/avatar-04.png" <%=
+															user.avatar == '/images/avatar-04.png' ? 'checked'
+															: ''%> />
+															<span class="radio-checkmark"></span>
+															<img src="/images/avatar-04.png" class="img-avatar" />
+														</label>
+													</div>
+													<div class="col-xs-4">
+														<label class="radio">
+															<input type="radio" class="radio-select" name="avatar"
+																value="/images/avatar-05.png" <%=
+															user.avatar == '/images/avatar-05.png' ? 'checked'
+															: ''%> />
+															<span class="radio-checkmark"></span>
+															<img src="/images/avatar-05.png" class="img-avatar" />
+														</label>
+													</div>
+													<div class="col-xs-4">
+														<label class="radio">
+															<input type="radio" name="avatar" class="radio-select"
+																value="/images/avatar-06.png" <%= user.avatar == '/images/avatar-06.png' ?
+															'checked' : ''%> />
+															<span class="radio-checkmark"></span>
+															<img src="/images/avatar-06.png" class="img-avatar" />
+														</label>
+													</div>
+													<div class="col-xs-4">
+														<label class="radio">
+															<input type="radio" name="avatar" class="radio-select"
+																value="/images/avatar-07.png" <%= user.avatar == '/images/avatar-07.png' ?
+															'checked' : ''%> />
+															<span class="radio-checkmark"></span>
+															<img src="/images/avatar-07.png" class="img-avatar" />
+														</label>
+													</div>
+													<div class="col-xs-4">
+														<label class="radio">
+															<input type="radio" class="radio-select" name="avatar"
+																value="/images/avatar-08.png" <%=
+															user.avatar == '/images/avatar-08.png' ? 'checked'
+															: ''%> />
+															<span class="radio-checkmark"></span>
+															<img src="/images/avatar-08.png" class="img-avatar" />
+														</label>
+													</div>
+													<div class="col-xs-4">
+														<label class="radio">
+															<input type="radio" name="avatar" class="radio-select"
+																value="/images/avatar-09.png" <%= user.avatar == '/images/avatar-09.png' ?
+															'checked' : ''%> />
+															<span class="radio-checkmark"></span>
+															<img src="/images/avatar-09.png" class="img-avatar" />
+														</label>
+													</div>
+													<div class="col-xs-4">
+														<label class="radio">
+															<input type="radio" name="avatar" class="radio-select"
+																value="/images/avatar-10.png" <%= user.avatar == '/images/avatar-10.png' ?
+															'checked' : ''%> />
+															<span class="radio-checkmark"></span>
+															<img src="/images/avatar-10.png" class="img-avatar" />
+														</label>
+													</div>
+												</div>
+											</div>
+											<!--! Select Avatar -->
+											<button type="submit" class="btn btn-primary mt-4 col-md-3">ویرایش</button>
+										</form>
+									</div>
+
+									<div class="tab-pane" id="agent"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<% contentFor('script') %>
+<script src="/js/profilePicker.js"></script>
+<script>
+	$(document).ready(function () {
+		if ("<%= user.avatar.includes('/images/avatar') %>" != 'true') {
+
+			// Disabled Radio Button
+			var radio = document.getElementsByClassName('radio-select');
+			for (let i = 0; i < radio.length; i++) {
+				radio[i].disabled = true;
+				radio[i].checked = false;
+			}
+
+			// Add Grayscale Filter
+			var img = document.getElementsByClassName('img-avatar');
+			for (let i = 0; i < img.length; i++) {
+				img[i].classList.add('grayscale');
+			}
+
+			// Show Or Hide Element
+			$('.upload-profile-button').hide();
+			$('.radio-checkmark').hide();
+			$('.remove-profile-button').show();
+		}
+	})
+</script>

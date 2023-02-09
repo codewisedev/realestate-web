@@ -1,0 +1,149 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/css/radio.css" />
+
+<% contentFor('body') %>
+<div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+	<h2>ایجاد دسته</h2>
+</div>
+<form class="form-horizontal" method="POST" action="/admin/users/operator/create">
+	<%- include(viewPath('layouts/errors')) -%>
+
+	<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+
+	<!--? Select Avatar -->
+	<label>انتخاب آواتار</label>
+	<div class="content-group">
+		<div class="row">
+			<div class="col-xs-4">
+				<label class="radio">
+					<input type="radio" name="avatar" class="radio-select" value="/images/avatar-01.png" checked />
+					<span class="radio-checkmark"></span>
+					<img src="/images/avatar-01.png" class="img-avatar" />
+				</label>
+			</div>
+			<div class="col-xs-4">
+				<label class="radio">
+					<input type="radio" class="radio-select" name="avatar" value="/images/avatar-02.png" />
+					<span class="radio-checkmark"></span>
+					<img src="/images/avatar-02.png" class="img-avatar" />
+				</label>
+			</div>
+			<div class="col-xs-4">
+				<label class="radio">
+					<input type="radio" name="avatar" class="radio-select" value="/images/avatar-03.png" />
+					<span class="radio-checkmark"></span>
+					<img src="/images/avatar-03.png" class="img-avatar" />
+				</label>
+			</div>
+			<div class="col-xs-4">
+				<label class="radio">
+					<input type="radio" class="radio-select" name="avatar" value="/images/avatar-04.png" />
+					<span class="radio-checkmark"></span>
+					<img src="/images/avatar-04.png" class="img-avatar" />
+				</label>
+			</div>
+			<div class="col-xs-4">
+				<label class="radio">
+					<input type="radio" class="radio-select" name="avatar" value="/images/avatar-05.png" />
+					<span class="radio-checkmark"></span>
+					<img src="/images/avatar-05.png" class="img-avatar" />
+				</label>
+			</div>
+			<div class="col-xs-4">
+				<label class="radio">
+					<input type="radio" name="avatar" class="radio-select" value="/images/avatar-06.png" />
+					<span class="radio-checkmark"></span>
+					<img src="/images/avatar-06.png" class="img-avatar" />
+				</label>
+			</div>
+			<div class="col-xs-4">
+				<label class="radio">
+					<input type="radio" name="avatar" class="radio-select" value="/images/avatar-07.png" />
+					<span class="radio-checkmark"></span>
+					<img src="/images/avatar-07.png" class="img-avatar" />
+				</label>
+			</div>
+			<div class="col-xs-4">
+				<label class="radio">
+					<input type="radio" class="radio-select" name="avatar" value="/images/avatar-08.png" />
+					<span class="radio-checkmark"></span>
+					<img src="/images/avatar-08.png" class="img-avatar" />
+				</label>
+			</div>
+			<div class="col-xs-4">
+				<label class="radio">
+					<input type="radio" name="avatar" class="radio-select" value="/images/avatar-09.png" />
+					<span class="radio-checkmark"></span>
+					<img src="/images/avatar-09.png" class="img-avatar" />
+				</label>
+			</div>
+			<div class="col-xs-4">
+				<label class="radio">
+					<input type="radio" name="avatar" class="radio-select" value="/images/avatar-10.png" />
+					<span class="radio-checkmark"></span>
+					<img src="/images/avatar-10.png" class="img-avatar" />
+				</label>
+			</div>
+		</div>
+	</div>
+	<!--! Select Avatar -->
+
+	<div class="row">
+		<div class="col-md-6 mt-3">
+			<label for="name" class="control-label">
+				نام کامل
+			</label>
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text"><i class="fa fa-user-circle"></i></span>
+				</div>
+				<input id="name" type="text" class="form-control" name="name" value="<%=  complete('name') %>" />
+			</div>
+		</div>
+
+		<div class="col-md-6 mt-3">
+			<label for="name" class="control-label">
+				شماره موبایل
+			</label>
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text"><i class="fa fa-phone"></i></span>
+				</div>
+				<input id="mobile" type="text" class="form-control" name="mobile" value="<%=  complete('mobile') %>"
+					style="direction: ltr; text-align: left;" maxlength="11" />
+			</div>
+		</div>
+
+		<div class="col-md-6 mt-3">
+			<label for="name" class="control-label">
+				ایمیل
+			</label>
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text"><i class="fa fa-envelope"></i></span>
+				</div>
+				<input id="email" type="email" class="form-control" name="email" value="<%=  complete('email') %>"
+					style="direction: ltr; text-align: left;" />
+			</div>
+		</div>
+
+		<div class="form-group col-md-6 mt-3">
+			<label>نقش *</label>
+			<select name="role" class="form-control">
+				<% roles.forEach(role => { %>
+				<option value="<%= role._id %>"><%= role.title %></option>
+				<% }) %>
+			</select>
+		</div>
+	</div>
+
+	<div class="alert alert-warning" role="alert">
+		<h6 style="margin-bottom: 0px; margin-right: 5px; direction: ltr;">@Dr09123456789</h6>
+		رمز عبور پیش فرض @Dr به علاوه شماره موبایل می باشد به عنوان مثال:
+		<i class="fas fa-info-circle" style="margin-left: 20px; font-size: 1.5rem;"></i>
+	</div>
+
+	<div class="form-group">
+		<button type="submit" class="btn btn-success col-md-2 mt-4">ثبت کاربر</button>
+	</div>
+</form>

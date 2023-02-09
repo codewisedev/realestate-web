@@ -1,0 +1,79 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap4.css" />
+<link rel="stylesheet" href="/css/table.css" />
+<link rel="stylesheet" href="/css/modal.css" />
+
+<% contentFor('body') %>
+<section class="content-header">
+	<div class="container-fluid">
+		<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+			<h2>تیم مشاوره املاک</h2>
+			<a href="/admin/setting/page/team/create" class="btn btn-sm btn-danger">
+				عضو جدید
+			</a>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<div class="card-header">
+		<h3 class="card-title">
+			لیست اعضا
+		</h3>
+	</div>
+
+	<!--? Card Body -->
+	<div class="card-body">
+		<div class="search-wrapper">
+			<div class="input-holder">
+				<input id="search" type="text" class="search-input" placeholder="جستجو در جدول..." />
+				<button class="search-icon" onclick="searchToggle(this, event);">
+					<span></span>
+				</button>
+			</div>
+			<span class="close" onclick="searchToggle(this, event);"></span>
+			<div class="result-container"></div>
+		</div>
+		<table id="table" class="table table-bordered table-striped display responsive nowrap dt-center">
+			<thead>
+				<tr>
+					<th>نام</th>
+					<th>تنظیمات</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% teams.forEach(team => { %>
+				<tr>
+					<td><%= team.name %></td>
+					<td>
+						<form action="/admin/setting/page/team/<%= team._id %>?_method=DELETE" method="post">
+							<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+							<div class="btn-group btn-group-sm">
+								<a href="/admin/setting/page/team/edit/<%= team._id %>" class="btn btn-primary">
+									ویرایش
+								</a>
+								<button type="submit" class="btn btn-danger">
+									حذف
+								</button>
+							</div>
+						</form>
+					</td>
+				</tr>
+				<% }) %>
+			</tbody>
+		</table>
+	</div>
+	<!--! Card Body -->
+</section>
+
+<% contentFor('script') %>
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap4.js"></script>
+<script src="/js/datatables.js"></script>
+
+<script>
+	datatable('#table', [0, 'asc'], [{
+		orderable: false,
+		targets: [1]
+	}]);
+</script>

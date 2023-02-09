@@ -1,0 +1,26 @@
+<center>
+	<div class="blog-pagination text-center">
+		<% if (pagination.pages > 1) { %>
+		<% if (pagination.page > 1) { %>
+		<a href="?page=1"><i class="fas fa-angle-right"></i></a>
+		<% } %>
+		<% var i = 1; if (pagination.page > 5) { i = +pagination.page - 4; } %>
+		<% if (i !== 1) { %>
+		<a href="#">...</a>
+		<% } %>
+		<% for (i; i<=pagination.pages; i++) { %>
+		<% if (pagination.page == i) { %>
+		<a class="active" href="#"><%= i %></a>
+		<% } else { %>
+		<a href="?page=<%= i %>"><%= i %></a>
+		<% } %>
+		<% if (i == (+pagination.page + 4)) { %>
+		<a href="#">...</a>
+		<% break; } %>
+		<% } %>
+		<% if (pagination.page != pagination.pages) { %>
+		<a href="?page=<%= pagination.pages %>"><i class="fas fa-angle-left"></i></a>
+		<% } %>
+		<% } %>
+	</div>
+</center>

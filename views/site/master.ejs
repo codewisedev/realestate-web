@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="description" content="The Real Estate Management" />
+	<meta name="keywords" content="RealEstate" />
+	<meta name="author" content="SMR" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<title><%- defineContent('title') || 'مشاوره املاک' %></title>
+
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="/images/favicon.ico" />
+
+	<!-- Fonts -->
+	<link rel="stylesheet" type="text/css" href="/fonts/font.css" />
+	<link rel="stylesheet" href="/plugins/fontawesome/css/all.min.css" />
+	<link rel="stylesheet" href="/plugins/fontawesome/css/fontawesome.css" />
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="/plugins/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap-rtl.min.css" />
+	<link rel="stylesheet" href="/css/reset.css" />
+	<link rel="stylesheet" href="/css/color.css" />
+	<link rel="stylesheet" href="/css/scroll.css" />
+	<link rel="stylesheet" href="/css/pace.css" />
+	<link rel="stylesheet" href="/css/animate.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/css/motion.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/css/site.css" rel="stylesheet" />
+	<%- style %>
+</head>
+
+<body>
+	<!--? Topbar Start -->
+	<div class="topbar-wrap">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-4">
+					<ul class="social_media style_none">
+						<li>
+							<a href="#"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+						</li>
+						<li>
+							<a href="#"><i class="fab fa-telegram" aria-hidden="true"></i></a>
+						</li>
+						<li>
+							<a href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+						</li>
+						<li>
+							<a href="#"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+						</li>
+					</ul>
+				</div>
+				<% if(auth.check) { %>
+				<div class="col-lg-6 col-md-8 login">
+					<div class="top_right">
+						<div class="topbar_login">
+							<% if(user.admin) { %>
+							<a href="/admin">
+								مدیریت سایت
+							</a>
+							<% } else if (user.agent) { %>
+							<a href="/agent">
+								پنل کاربری
+							</a>
+							<% } else { %>
+							<a href="/profile">
+								پروفایل
+							</a>
+							<% } %>
+						</div>
+						<div class="topbar_login">
+							<a class="logout" href="/logout">
+								خروج
+							</a>
+						</div>
+					</div>
+				</div>
+				<% } else { %>
+				<div class="col-lg-6 col-md-8 login">
+					<div class="top_right">
+						<div class="topbar_login">
+							<a href="/login">
+								<i class="fas fa-sign-in-alt ml-2"></i>
+								ورود | ثبت نام
+							</a>
+						</div>
+						<div class="topbar_login">
+							<a href="/auth/agent">
+								<i class="fas fa-sign-in-alt ml-2"></i>
+								پنل مشاوران املاک
+							</a>
+						</div>
+					</div>
+				</div>
+				<% } %>
+			</div>
+		</div>
+	</div>
+	<!--! Topbar End -->
+
+	<!--? Header Start -->
+	<div class="header-wrap wow fadeInUp">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 navbar navbar-expand-lg navbar-light">
+					<div class="header_logo">
+						<a href="/"><img alt="" src="/images/logo.png" /></a>
+					</div>
+					<button class="navbar-toggler" type="button" data-toggle="collapse"
+						data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+				</div>
+				<div class="col-lg-9">
+					<nav class="navbar navbar-expand-lg navbar-light">
+						<a class="navbar-brand" href="#">Navbar</a>
+						<div class="collapse navbar-collapse" id="navbarSupportedContent">
+							<button class="close-toggler" type="button" data-toggle="offcanvas">
+								<span><i class="fas fa-times-circle" aria-hidden="true"></i></span>
+							</button>
+							<ul class="navbar-nav mr-auto">
+								<li class="nav-item">
+									<a class="nav-link" href="/">صفحه اصلی</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="/ads">لیست ملک ها</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#">
+										مشاوران
+										<span class="caret"><i class="fas fa-caret-down"></i></span></a>
+									<i class="fas fa-caret-down"></i>
+									<ul class="submenu">
+										<li><a href="/agencies">لیست املاکی ها</a></li>
+										<li><a href="/consultant">لیست مشاوران</a></li>
+									</ul>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="/blog">بلاگ</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="/about">درباره ما</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="/contact">تماس با ما</a>
+								</li>
+								<li class="nav-item mobile-menu">
+									<a class="nav-link" href="/login">ورود | عضویت</a>
+								</li>
+								<li class="nav-item mobile-menu">
+									<a class="nav-link" href="/auth/agent">پنل مشاوران املاک</a>
+								</li>
+							</ul>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--! Header End -->
+
+	<%- body %>
+
+	<!--? Footer Start -->
+	<footer class="footer bg-style wow fadeInUp">
+		<div class="container">
+			<div class="footer-upper">
+				<div class="row">
+					<div class="col-lg-3 col-md-12">
+						<div class="footer-widget about-widget">
+							<img src="/images/logo-white.png" alt="Awesome Image" />
+							<p style="text-align: justify;" class="mb-3">
+								لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با
+								استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله
+								در ستون و سطرآنچنان که لازم است.
+							</p>
+							<div class="readmore"><a href="/about">آشنایی با مشاوره املاک</a></div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-3">
+						<div class="footer-widget quick-links">
+							<h3 class="title">لینک های سریع</h3>
+							<ul>
+								<li><a href="/support">پشتیبانی و قوانین</a></li>
+								<li><a href="/faqs">سوالات متداول</a></li>
+								<li><a href="/contact">تماس با ما</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-4">
+						<div class="footer-widget contact">
+							<h3 class="title">اطلاعات تماس</h3>
+							<ul class="footer-adress">
+								<li class="footer_address">
+									<i class="fas fa-map-signs"></i>
+									<span class="mr-3">
+										کرج، چهرراه کارخانه قند، مجتمع شهدا، طبقه 4، واحد 11
+									</span>
+								</li>
+								<li class="footer_email">
+									<i class="fas fa-envelope"></i>
+									<span class="mr-3">
+										<a href="mailto:info@real_estate.ir">
+											info@real_estate.ir
+										</a>
+									</span>
+								</li>
+								<li class="footer_phone">
+									<i class="fas fa-phone-alt"></i>
+									<span style="direction: ltr;" class="mr-3">
+										<a href="tel:02632754359"> 02632754359 </a>
+									</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-5">
+						<div class="footer-widget contact">
+							<iframe class="map"
+								src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d808.9195933335718!2d50.98573462919932!3d35.80782839876031!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8dbfc380c3b29b%3A0x20eb4863cc1d181d!2sShahtoot%20System%20Company!5e0!3m2!1sen!2s!4v1600330797435!5m2!1sen!2s"
+								width="100%" height="100%" frameborder="0" allowfullscreen="true" aria-hidden="false"
+								tabindex="0"></iframe>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!--! Footer End -->
+
+	<!-- Script -->
+	<script src="/plugins/jquery/dist/jquery.min.js"></script>
+	<script src="/js/popper.min.js"></script>
+	<script src="/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="/plugins/PACE/pace.min.js"></script>
+	<script src="/js/animate.js"></script>
+	<script src="/js/wow.js"></script>
+	<script src='/js/particles.min.js'></script>
+	<script src="/js/motion.js"></script>
+	<script src="/js/site.js"></script>
+
+	<script>
+		$(window).on('load', function () {
+			new WOW().init();
+		});
+	</script>
+	<%- script %>
+
+</body>
+
+</html>

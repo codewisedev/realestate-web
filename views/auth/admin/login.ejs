@@ -1,0 +1,61 @@
+<% contentFor('style') %>
+<link rel="stylesheet" href="/css/admin-auth.css" />
+
+<% contentFor('body') %>
+<section class="limiter">
+	<div class="container-login">
+		<div class="wrap-login">
+
+			<div class="login-form-title">
+				<span class="login-form-title-text">
+					پنل مدیریت
+				</span>
+			</div>
+
+			<form class="login-form validate-form margin-bottom" role="form" method="POST" action="/auth/admin/login"
+				novalidate>
+
+				<input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+				<%- include(viewPath('layouts/errors')) -%>
+
+				<div class="wrap-input validate-input m-b-26"
+					data-validate="لطفا ایمیل یا شماره موبایل خود را وارد نمایید">
+					<input class="input input-ltr" id="email" type="text" name="email" placeholder="ایمیل"
+						value="<%= complete('email') %>" required />
+					<span class="focus-input"></span>
+				</div>
+
+				<div class="wrap-input validate-input margin-bottom" data-validate="لطفا رمز عبور خود را وارد نمایید">
+					<input class="input input-ltr" id="password" type="password" name="password" placeholder="رمز عبور"
+						value="<%= complete('password') %>" required />
+					<span class="focus-input"></span>
+				</div>
+
+				<div class="flex-m w-full padding-bottom">
+					<div class="contact-form-checkbox">
+						<input class="input-checkbox" id="ckb" type="checkbox" name="remember" />
+						<label class="label-checkbox" for="ckb">
+							مرا به خاطر بسپار
+						</label>
+					</div>
+
+					<div>
+						<a href="/auth/admin/password/reset">
+							فراموشی رمز عبور؟
+						</a>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<%- recaptcha %>
+				</div>
+
+				<div class="container-login-form-btn">
+					<button type="submit" class="login-form-btn" style="color: white;">
+						ورود
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
